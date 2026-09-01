@@ -25,8 +25,10 @@ APK="${1:-}"
 # signing with a device-specific key.
 APKSIGNER="$(ls "${ANDROID_HOME:-$HOME/android-sdk}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)"
 TREE="${LINEAGE_ROOT:-$ROOT/platform}"
-PK8="$TREE/build/make/target/product/security/platform.pk8"
-PEM="$TREE/build/make/target/product/security/platform.x509.pem"
+# The signing key never lives in the repo: pass it via PLATFORM_PK8/PLATFORM_PEM
+# (e.g. from CI secrets). Falls back to the vendored test key for local builds.
+PK8="${PLATFORM_PK8:-$TREE/build/make/target/product/security/platform.pk8}"
+PEM="${PLATFORM_PEM:-$TREE/build/make/target/product/security/platform.x509.pem}"
 
 [ -d "$MAGISK_TEMPLATE" ] || { echo "Magisk template not found: $MAGISK_TEMPLATE" >&2; exit 1; }
 command -v zip >/dev/null || { echo "zip command not found" >&2; exit 1; }

@@ -30,8 +30,18 @@ jobs:
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
           gradle :launcher:assembleRelease
 
-      - name: Package Magisk module (signs with vendored platform key)
-        run: ./package-magisk.sh
+      - name: Set up platform signing key from secrets
+        run: |
+          mkdir -p "$RUNNER_TEMP/platform-key"
+          echo "${{ secrets.PLATFORM_PK8_B64 }}" | base64 -d > "$RUNNER_TEMP/platform-key/platform.pk8"
+          echo "${{ secrets.PLATFORM_PEM_B64 }}" | base64 -d > "$RUNNER_TEMP/platform-key/platform.x509.pem"
+          echo "PLATFORM_PK8=$RUNNER_TEMP/platform-key/platform.pk8" >> "$GITHUB_ENV"
+          echo "PLATFORM_PEM=$RUNNER_TEMP/platform-key/platform.x509.pem" >> "$GITHUB_ENV"
+
+      - name: Package Magisk module (signs with the platform key)
+        run: |
+          export ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          ./package-magisk.sh
 
       - name: Upload module ZIP
         uses: actions/upload-artifact@v4
