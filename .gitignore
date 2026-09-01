@@ -14,5 +14,6 @@ AGENTS.md
 .*
 !.gitignore
 !.github/
+!prebuilts/soong/out/soong/.intermediates/
 /*.png
 /.screen-view.html
