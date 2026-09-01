@@ -1,0 +1,198 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.health",
+    "module": "health-services-client",
+    "version": "1.1.0-alpha05",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "health-services-client-1.1.0-alpha05-sources.jar",
+          "url": "health-services-client-1.1.0-alpha05-sources.jar",
+          "size": 180858,
+          "sha512": "92c10577845d4e42260636fb69ae3f3ed6bcbbe5481872b6dcd56353b16bdf37cf37820f1bfbb560a16ba643613bafbcc87283b9b235feaf73efabdfa391072e",
+          "sha256": "abc69b20f90ce3a1b55eec7659ca9a94276b6e4f13a3f4d9ace4ff94f2c63996",
+          "sha1": "c58bd360d25e78fccecd71a3a62d7133c7867319",
+          "md5": "73929f3385bf1bed5e9712c6672862b6"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "health-services-client-1.1.0-alpha05.aar",
+          "url": "health-services-client-1.1.0-alpha05.aar",
+          "size": 589044,
+          "sha512": "4fc08293b41b078cbf60a83eed70578b7329e0bf0f3485d4b188aeb8cc2375839bab9c01e0c80f687234836053d9b2566894b3da8df64d5cfbaeb1e54adb17ee",
+          "sha256": "b10eb52965c0874b1ace2feb2cbfa8a529cb682d7a5ae89a901ea6bc86fd0333",
+          "sha1": "f31139d55dc42ae1127abaaacfabdbe7b1b2a62e",
+          "md5": "81683842de8e4424853ae19331eabbf5"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.concurrent",
+          "module": "concurrent-futures-ktx",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.health",
+          "module": "health-services-client-proto",
+          "version": {
+            "requires": "1.1.0-alpha05"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "31.1-android"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "listenablefuture",
+          "version": {
+            "requires": "1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "health-services-client-1.1.0-alpha05.aar",
+          "url": "health-services-client-1.1.0-alpha05.aar",
+          "size": 589044,
+          "sha512": "4fc08293b41b078cbf60a83eed70578b7329e0bf0f3485d4b188aeb8cc2375839bab9c01e0c80f687234836053d9b2566894b3da8df64d5cfbaeb1e54adb17ee",
+          "sha256": "b10eb52965c0874b1ace2feb2cbfa8a529cb682d7a5ae89a901ea6bc86fd0333",
+          "sha1": "f31139d55dc42ae1127abaaacfabdbe7b1b2a62e",
+          "md5": "81683842de8e4424853ae19331eabbf5"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "health-services-client-1.1.0-alpha05-versionMetadata.json",
+          "url": "health-services-client-1.1.0-alpha05-versionMetadata.json",
+          "size": 57521,
+          "sha512": "89dfe982410e9d8cd9002e7a6cecc61de08cce9f8f4974416f0055416caa5829372dccead9c51b6034ce6da612bf6ba1a97d3da52ffe96327d6d47fafb5fd13b",
+          "sha256": "6fd25cb87bbb19a1d5489413f8a228116475d9cb9df4d261c4ad4f8f0cb25bbb",
+          "sha1": "1f713f1a91539aad71690340b9c01edc71a51c3c",
+          "md5": "1b5462d9a546d9e746390a4ae0f9416d"
+        }
+      ]
+    }
+  ]
+}

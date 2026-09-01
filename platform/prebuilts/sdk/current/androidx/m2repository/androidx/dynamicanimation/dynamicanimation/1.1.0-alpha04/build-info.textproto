@@ -1,0 +1,29 @@
+version: "1.1.0-alpha04"
+dependency_list {
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "androidx.dynamicanimation"
+group_id: "androidx.dynamicanimation"
+artifact_id: "dynamicanimation"
+path: "/dynamicanimation/dynamicanimation"
+sha: "edd19514b50734044a2a42cd9be3930fdf188b0f"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.dynamicanimation-dynamicanimation-all-12133442-1.1.0-alpha04.zip"
+kotlin_version: "1.9.24"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false

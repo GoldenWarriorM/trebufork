@@ -1,0 +1,44 @@
+version: "1.4.0-alpha03"
+dependency_list {
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.savedstate"
+artifact_id: "savedstate-ktx"
+path: "/savedstate/savedstate-ktx"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.savedstate-savedstate-ktx-all-1.4.0-alpha03.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-compose"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-testing"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "savedstate-savedstate-ktxreleaseAndroidTest.xml"
+test_module_names: ":savedstate:savedstate-ktx:testReleaseUnitTest"

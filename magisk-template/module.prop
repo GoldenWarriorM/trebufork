@@ -1,0 +1,10 @@
+id=trebuchetmagisk
+name=Trebufork (Quickstep)
+version=v0.5.1
+versionCode=501
+author=AINN
+description=Fork of the LineageOS Trebuchet Quickstep launcher (com.android.launcher3) with a scrollable single-column home screen, systemless install via Magisk
+minMagisk=25200
+# Magisk online-update source. The JSON (magisk/update.json) is refreshed by the
+# release workflow (.github/workflows/release.yml) on every v* tag push.
+updateJson=https://raw.githubusercontent.com/GoldenWarriorM/trebufork/main/magisk/update.json

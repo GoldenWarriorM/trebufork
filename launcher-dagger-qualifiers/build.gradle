@@ -1,0 +1,19 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'com.android.launcher3.dagger'
+    compileSdk 36
+    defaultConfig { minSdk 31; targetSdk 36 }
+    sourceSets {
+        main {
+            java.srcDirs = ['../launcher-source/dagger/src']
+        }
+    }
+}
+
+dependencies {
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'androidx.annotation:annotation:1.9.1'
+}

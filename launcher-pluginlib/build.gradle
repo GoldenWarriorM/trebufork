@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// SystemUIPluginLib (com.android.systemui.plugins.*) — migrated from
+// frameworks/base/packages/SystemUI/plugin/Android.bp. The launcher's plugin
+// framework (PluginManagerImpl/PluginActionManager in the shared lib) loads
+// these plugin interfaces at runtime, so they are packaged into the APK
+// (previously two compileOnly Soong jars).
+//
+// Excluded: the keyguard plugin interfaces that depend on the SystemUI
+// compose scene / monet / constraintlayout libs (LockscreenElement*,
+// ClockFaceEvents, ClockFaceLayout, WeatherData). The launcher never loads
+// keyguard plugins — its PluginManager only instantiates launcher plugins
+// (com.android.launcher3.plugins.*). PluginProtector.kt is included (the
+// shared lib calls PluginProtector.protectIfAble).
+def lineageRoot = rootProject.ext.lineageRoot
+def pluginSrc = "${lineageRoot}/frameworks/base/packages/SystemUI/plugin/src"
+
+android {
+    namespace 'com.android.systemui.plugins'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [pluginSrc]
+            kotlin.srcDirs = [pluginSrc]
+            kotlin.exclude '**/keyguard/ui/**'
+            kotlin.exclude '**/keyguard/data/**'
+        }
+    }
+
+    // The mixed java/kotlin source-set wiring in AGP 8.9 adds kotlin files from
+    // java.srcDirs regardless of kotlin.exclude; exclude them from the compiler
+    // tasks directly (same pattern as the launcher module).
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        exclude('**/keyguard/ui/**')
+        exclude('**/keyguard/data/**')
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches Android.bp kotlincflags.
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+dependencies {
+    // Full framework (hidden com.android.internal.logging.InstanceId etc.) —
+    // the root build.gradle puts it first on the compile classpath.
+    compileOnly files(rootProject.ext.frameworkJar)
+    // androidx.core.text.util.LocalePreferences (core-ktx).
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.annotation:annotation:1.9.1'
+    // Composable plugin interfaces (VRect, keyguard data models, ...).
+    implementation 'androidx.compose.foundation:foundation-layout-android:1.10.0-alpha01'
+    implementation 'androidx.compose.runtime:runtime-android:1.10.0-alpha01'
+    implementation 'androidx.compose.ui:ui-android:1.10.0-alpha01'
+    // Expandable/ActivityTransitionAnimator referenced by ActivityStarter etc.
+    implementation project(':launcher-platformanimation')
+    // com.android.systemui.log.core.MessageBuffer (Logger in plugin interfaces).
+    implementation project(':launcher-systemui-log')
+    // Plugin/ProtectedPluginListener (plugin_core) and the plugin annotations
+    // are referenced by the plugin interfaces themselves.
+    implementation project(':launcher-plugin-core')
+    implementation project(':launcher-plugin-annotations')
+}

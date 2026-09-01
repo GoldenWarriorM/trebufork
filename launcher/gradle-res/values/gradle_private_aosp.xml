@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Compatibility resources for the standalone Gradle migration.
+
+    Soong builds Launcher3 with access to private framework/SystemUI symbols.
+    An ordinary application resource link cannot import those symbols, even
+    when framework-res.apk is supplied with -I. These local names mirror the
+    current Lineage tree and are only used by Gradle.
+-->
+<resources>
+    <color name="gradle_androidprv_materialColorPrimaryContainer">@android:color/system_primary_container_light</color>
+    <color name="gradle_androidprv_materialColorOnPrimaryContainer">@android:color/system_on_primary_container_light</color>
+    <color name="gradle_android_surface_effect_1">@android:color/system_neutral1_500</color>
+
+    <dimen name="gradle_android_config_wallpaperMaxScale">1.1</dimen>
+    <dimen name="gradle_android_taskbar_frame_height">56dp</dimen>
+    <!--
+         Lineage's current navigation_bar_frame_height is 48dp. Do not keep a
+         direct @*android reference here: the standalone SDK resource table has
+         a different numeric ID and resolves it to an unrelated 12dp resource,
+         which leaves only the lower half of the navigation pill visible.
+    -->
+    <dimen name="gradle_android_navigation_bar_frame_height">48dp</dimen>
+    <dimen name="gradle_android_taskbar_stashed_size">24dp</dimen>
+
+    <!-- SettingsLibSettingsTheme res the Soong build merges into the launcher
+         package (SplitInstructionsView reads this dimen at runtime). The value
+         mirrors SettingsTheme/res/values-v31/dimens.xml. -->
+    <dimen name="settingslib_preferred_minimum_touch_target">48dp</dimen>
+    <string name="gradle_android_config_bodyFontFamily">sans-serif</string>
+    <string name="gradle_android_config_bodyFontFamilyMedium">sans-serif-medium</string>
+
+    <!-- SettingsLib's switch style is not packaged as a standalone Gradle dependency. -->
+    <style name="Switch.SettingsLib" parent="@android:style/Widget.Material.CompoundButton.Switch" />
+
+    <!-- Self-contained stand-in for SettingsLib's Theme.SubSettingsBase.Expressive
+         (SettingsActivity applies it when the expressive theme is active). The
+         real one references SettingsLib-only resources that are not packaged
+         here; framework-only attributes keep the link resolvable. -->
+    <style name="Theme.SubSettingsBase.Expressive" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'org.jetbrains.kotlin.plugin.compose'
+}
+
+def lineageJar = rootProject.ext.lineageJar
+
+android {
+    namespace 'com.android.launcher3.widgetpicker'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 31
+        targetSdk 36
+    }
+
+    buildFeatures { compose true }
+
+    sourceSets {
+        main {
+            kotlin.srcDirs = ['../launcher-source/modules/widgetpicker/src']
+            res.srcDirs = ['../launcher-source/modules/widgetpicker/res']
+            manifest.srcFile '../launcher-source/modules/widgetpicker/AndroidManifest.xml'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = '17' }
+}
+
+dependencies {
+    implementation 'com.google.dagger:dagger:2.60.1'
+    implementation 'jakarta.inject:jakarta.inject-api:2.0.1'
+    implementation 'javax.inject:javax.inject:1'
+    kapt 'com.google.dagger:dagger-compiler:2.60.1'
+
+    implementation 'androidx.core:core-ktx:1.19.0-alpha01'
+    implementation 'androidx.activity:activity-compose:1.12.0-alpha08'
+    implementation 'androidx.window:window:1.5.0-rc01'
+    implementation 'androidx.compose.animation:animation-android:1.9.0-alpha03'
+    implementation 'androidx.compose.foundation:foundation-android:1.10.0-alpha01'
+    implementation 'androidx.compose.foundation:foundation-layout-android:1.10.0-alpha01'
+    implementation 'androidx.compose.material:material-android:1.7.0-alpha01'
+    implementation 'androidx.compose.material:material-icons-extended-android:1.7.0-alpha01'
+    implementation 'androidx.compose.material3:material3-android:1.4.0-alpha17'
+    implementation 'androidx.compose.runtime:runtime-android:1.10.0-alpha01'
+    implementation 'androidx.compose.runtime:runtime-saveable-android:1.10.0-alpha01'
+    implementation 'androidx.compose.ui:ui-android:1.10.0-alpha01'
+    implementation 'androidx.compose.ui:ui-tooling-preview-android:1.10.0-alpha01'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
+}

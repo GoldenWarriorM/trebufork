@@ -1,0 +1,19 @@
+version: "1.1.0-alpha05"
+dependency_list {
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.health"
+artifact_id: "health-services-client-external-protobuf"
+path: "/health/health-services-client-external-protobuf"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.health-health-services-client-external-protobuf-all-1.1.0-alpha05.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+}
+should_publish_docs: false
+is_kmp: false
+target: "androidx"
+test_module_names: ":health:health-services-client-external-protobuf:test"

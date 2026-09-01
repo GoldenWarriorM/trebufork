@@ -1,0 +1,393 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.wear.tiles",
+    "module": "tiles",
+    "version": "1.6.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-proto",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-renderer",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-testing",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling-preview",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        }
+      ],
+      "files": [
+        {
+          "name": "tiles-1.6.0-alpha01-sources.jar",
+          "url": "tiles-1.6.0-alpha01-sources.jar",
+          "size": 84692,
+          "sha512": "6e4d010b3a349d16eb35b790757bcce2d400db8297bf5861b5adf753449b497eb6da19023bb25eda02a50905e34fa9531a4b150f24313ccf904733f5fc470a47",
+          "sha256": "80e74126a0798e8cec542649cdc6d9871c40684432bd25ca5dbc4d499f6ae10f",
+          "sha1": "1c026567045d7a71ee48f4ca9924922e0affe494",
+          "md5": "465f1c8fff3cdef019ae2cd6994936ac"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "listenablefuture",
+          "version": {
+            "requires": "1.0"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-proto",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-renderer",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-testing",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling-preview",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        }
+      ],
+      "files": [
+        {
+          "name": "tiles-1.6.0-alpha01.aar",
+          "url": "tiles-1.6.0-alpha01.aar",
+          "size": 295578,
+          "sha512": "21972d2bae71e9dfb11e529b6335826223803d163f6799de25f297a09b63ea9bd63592e7ea5c64a6fa73ce4f1742a43bae6971b53f6963f434f6ca37c5294b22",
+          "sha256": "49558a6254f290eda461df2d5e2c6f09795bac95dcf8837300c87cc5e8354a44",
+          "sha1": "7ed836f3105e6a8f717cfcf8e7236436da1e5a1d",
+          "md5": "c6e63d0848ea8d3aff1dd47a416de5f5"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation-experimental",
+          "version": {
+            "requires": "1.4.1"
+          }
+        },
+        {
+          "group": "androidx.concurrent",
+          "module": "concurrent-futures",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-proto",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "listenablefuture",
+          "version": {
+            "requires": "1.0"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-proto",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-renderer",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-testing",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling-preview",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        }
+      ],
+      "files": [
+        {
+          "name": "tiles-1.6.0-alpha01.aar",
+          "url": "tiles-1.6.0-alpha01.aar",
+          "size": 295578,
+          "sha512": "21972d2bae71e9dfb11e529b6335826223803d163f6799de25f297a09b63ea9bd63592e7ea5c64a6fa73ce4f1742a43bae6971b53f6963f434f6ca37c5294b22",
+          "sha256": "49558a6254f290eda461df2d5e2c6f09795bac95dcf8837300c87cc5e8354a44",
+          "sha1": "7ed836f3105e6a8f717cfcf8e7236436da1e5a1d",
+          "md5": "c6e63d0848ea8d3aff1dd47a416de5f5"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-proto",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-renderer",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-testing",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        },
+        {
+          "group": "androidx.wear.tiles",
+          "module": "tiles-tooling-preview",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "tiles is in atomic group androidx.wear.tiles"
+        }
+      ],
+      "files": [
+        {
+          "name": "tiles-1.6.0-alpha01-versionMetadata.json",
+          "url": "tiles-1.6.0-alpha01-versionMetadata.json",
+          "size": 68998,
+          "sha512": "1964adaa82d6b96c8785d18f02f0bfc0917c6f4cadc04ec720f06735e713fef3a2cfe61688758b06ecf0fe07d7381ad9d71e47ba120c6ec289849f4db2de291e",
+          "sha256": "9afbc091be5fafc7156bbeaab802dbb7a6db5c0965ceece699f0493fb08fe67c",
+          "sha1": "0d192c1afe2269ba29388cd7bf4d36e528f3ad64",
+          "md5": "2b5459ab3d55d4f6e871380e9eca8ea2"
+        }
+      ]
+    }
+  ]
+}

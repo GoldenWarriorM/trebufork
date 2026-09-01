@@ -1,0 +1,35 @@
+version: "1.0.0-alpha02"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "androidx.remotecallback"
+group_id: "androidx.remotecallback"
+artifact_id: "remotecallback"
+path: "/remotecallback/remotecallback"
+sha: "edd19514b50734044a2a42cd9be3930fdf188b0f"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.remotecallback-remotecallback-all-12133442-1.0.0-alpha02.zip"
+kotlin_version: "1.9.24"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.remotecallback"
+    artifact_id: "remotecallback-processor"
+    version: "1.0.0-alpha02"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false

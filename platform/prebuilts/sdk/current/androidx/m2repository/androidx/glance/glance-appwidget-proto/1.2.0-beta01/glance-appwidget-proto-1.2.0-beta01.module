@@ -1,0 +1,349 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.glance",
+    "module": "glance-appwidget-proto",
+    "version": "1.2.0-beta01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-external-protobuf",
+          "version": {
+            "requires": "1.2.0-beta01"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-external-protobuf",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-multiprocess",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material3",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-appwidget-proto-1.2.0-beta01.jar",
+          "url": "glance-appwidget-proto-1.2.0-beta01.jar",
+          "size": 90594,
+          "sha512": "28c74da33c2cae7376ced622a61046aa750f1b27220dbe81a205b8c1d6b196a4a90d6e10a6efdfb55d92658b188fd13c5c529be8d1a3d710564b00dab8da8a8a",
+          "sha256": "5d956cae2aa8b896be85b40317c07fce9a7721acc75c15f1eb193425ab600133",
+          "sha1": "9cd7b1dbe79e2e06d9209543f83b737358338c12",
+          "md5": "783fb2e53605e2d1ca22ba3dc6a38054"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-external-protobuf",
+          "version": {
+            "requires": "1.2.0-beta01"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-external-protobuf",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-multiprocess",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material3",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-appwidget-proto-1.2.0-beta01.jar",
+          "url": "glance-appwidget-proto-1.2.0-beta01.jar",
+          "size": 90594,
+          "sha512": "28c74da33c2cae7376ced622a61046aa750f1b27220dbe81a205b8c1d6b196a4a90d6e10a6efdfb55d92658b188fd13c5c529be8d1a3d710564b00dab8da8a8a",
+          "sha256": "5d956cae2aa8b896be85b40317c07fce9a7721acc75c15f1eb193425ab600133",
+          "sha1": "9cd7b1dbe79e2e06d9209543f83b737358338c12",
+          "md5": "783fb2e53605e2d1ca22ba3dc6a38054"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-external-protobuf",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-multiprocess",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material3",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-proto is in atomic group androidx.glance"
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-appwidget-proto-1.2.0-beta01-sources.jar",
+          "url": "glance-appwidget-proto-1.2.0-beta01-sources.jar",
+          "size": 21962,
+          "sha512": "450fc4345afcd1c0a019063893b104fc50fcdfbb8fc217cf76985b634215624b15ea4f782172ab4f1ea6d1d444d02d3b0d3633f9b30786b207e5191a4abb0394",
+          "sha256": "e050f8924ccc174314ec35aed992d0d5d096afc10bae2a147de700ff7c016873",
+          "sha1": "061b6e5c5f3c2dd9eec97d4254881bc063720032",
+          "md5": "787bb902f607e84dab89d0dd3bba192b"
+        }
+      ]
+    }
+  ]
+}

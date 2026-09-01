@@ -1,0 +1,192 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.biometric",
+    "module": "biometric-ktx",
+    "version": "1.4.0-alpha02",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.10"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric",
+          "version": {
+            "requires": "1.4.0-alpha02"
+          },
+          "reason": "biometric-ktx is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-ktx-1.4.0-alpha02-sources.jar",
+          "url": "biometric-ktx-1.4.0-alpha02-sources.jar",
+          "size": 16195,
+          "sha512": "b6f69e465d3d6cab5bd31b5eca5bb6e6ce226f4f226ed7ea30d9ed0b56959e5c878ad647389e48030ad09da797612cbbb78f5850157934dcab2363320a4e80c7",
+          "sha256": "41753bd93a8bfe6d78d3e3f8a53f6f634f0fb994025a91d27f4a58b81f902fa9",
+          "sha1": "169994fabb3c5dd98d4b2c1adbd94a3b5ac15930",
+          "md5": "ed16b046793927cd4b578de2e9203904"
+        },
+        {
+          "name": "biometric-ktx-1.4.0-alpha02-samples-sources.jar",
+          "url": "biometric-ktx-1.4.0-alpha02-samples-sources.jar",
+          "size": 6983,
+          "sha512": "4013114bf6bd45a793d31801c80288ff4020ed208e7b10848ac6362161ec8a7c392478b368942565751386e33738d648ca08b2e194884fb1f928c9b1e44a8dee",
+          "sha256": "c7adc3c710ec03f35f3780d28359472d55c9498714a2860f9708dfb4986745be",
+          "sha1": "e00531ca90aa58a1a3f8aaa4d291ebd8108d8ca8",
+          "md5": "ac0d1f12b1b97a7c6ead2d77c3454096"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric",
+          "version": {
+            "requires": "1.4.0-alpha02"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.8.22"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric",
+          "version": {
+            "requires": "1.4.0-alpha02"
+          },
+          "reason": "biometric-ktx is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-ktx-1.4.0-alpha02.aar",
+          "url": "biometric-ktx-1.4.0-alpha02.aar",
+          "size": 29623,
+          "sha512": "6f81da6a79b69fa6e44bd0cd5e000fe3050f203a959708690c329928a979e48cb609e8a9f1e718ceda0e9c2be6309119ab1279e6d8b3e627c514357e2f73312a",
+          "sha256": "328e731a9dc870235e9837111f7e378fb6dc128b9ffa0aa91fcff72bcd6c107b",
+          "sha1": "a3d7e5f074396c0d01a97290ca11e627c469f36f",
+          "md5": "92bcaf095d78d3d85227842d92d1d697"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric",
+          "version": {
+            "requires": "1.4.0-alpha02"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.8.22"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric",
+          "version": {
+            "requires": "1.4.0-alpha02"
+          },
+          "reason": "biometric-ktx is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-ktx-1.4.0-alpha02.aar",
+          "url": "biometric-ktx-1.4.0-alpha02.aar",
+          "size": 29623,
+          "sha512": "6f81da6a79b69fa6e44bd0cd5e000fe3050f203a959708690c329928a979e48cb609e8a9f1e718ceda0e9c2be6309119ab1279e6d8b3e627c514357e2f73312a",
+          "sha256": "328e731a9dc870235e9837111f7e378fb6dc128b9ffa0aa91fcff72bcd6c107b",
+          "sha1": "a3d7e5f074396c0d01a97290ca11e627c469f36f",
+          "md5": "92bcaf095d78d3d85227842d92d1d697"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric",
+          "version": {
+            "requires": "1.4.0-alpha02"
+          },
+          "reason": "biometric-ktx is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-ktx-1.4.0-alpha02-versionMetadata.json",
+          "url": "biometric-ktx-1.4.0-alpha02-versionMetadata.json",
+          "size": 8580,
+          "sha512": "81b6a5c22e0e834925fd4b7025a9a884856277cec5ee16f5510946d7b1136628323fc6a4441baa3f072c2623c9be919a2eaadb68a517d3b534e7632269c607e3",
+          "sha256": "2895862efb091dd35629648e046b6eb7f96e4e285c9e42fb5e14773cae2930c3",
+          "sha1": "f66d2377d35568b2f2d19b2cb4c020d58fca1413",
+          "md5": "e0841e876c86692f6892c31ac45b0b2b"
+        }
+      ]
+    }
+  ]
+}

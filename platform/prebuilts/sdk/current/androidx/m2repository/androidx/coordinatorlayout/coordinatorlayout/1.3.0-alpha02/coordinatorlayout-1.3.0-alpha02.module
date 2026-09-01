@@ -1,0 +1,150 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.coordinatorlayout",
+    "module": "coordinatorlayout",
+    "version": "1.3.0-alpha02",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "coordinatorlayout-1.3.0-alpha02-sources.jar",
+          "url": "coordinatorlayout-1.3.0-alpha02-sources.jar",
+          "size": 36766,
+          "sha512": "ce05759ab981b9df27cb0a600ed45f0abfd925e13091d1abe154cfcb1d09d429043340f8b14d7d0cc5316ab8c1ea20153a4a68648b13432324af2a0e522b30af",
+          "sha256": "f0e9659a9d2139e58bfab37010522ae359e03d0db25cd58a905e3fd924da7e63",
+          "sha1": "2a1433824ca015cb31f2863233cbfdce11aba770",
+          "md5": "140fa0b0aeaa2b378b69e12ec3705bf0"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "androidx.customview",
+          "module": "customview",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "coordinatorlayout-1.3.0-alpha02.aar",
+          "url": "coordinatorlayout-1.3.0-alpha02.aar",
+          "size": 49583,
+          "sha512": "b68e97c61fc8e6f7b4809f05cda356775157c51d825aae94cd95a5bf02ae370d6fc4787839134fa9b5eb9a0b98e282a6544c7b2713d0a7569595320825128d19",
+          "sha256": "e6b1439f8d737b43319354ac4736ed0167d0f0d8e825a9e96c7a404d0cf9862e",
+          "sha1": "96bcfca28383d94fd294af26944ce33414712aa5",
+          "md5": "92a03dab2feb729f9c4ce41ea0781210"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "androidx.customview",
+          "module": "customview",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "coordinatorlayout-1.3.0-alpha02.aar",
+          "url": "coordinatorlayout-1.3.0-alpha02.aar",
+          "size": 49583,
+          "sha512": "b68e97c61fc8e6f7b4809f05cda356775157c51d825aae94cd95a5bf02ae370d6fc4787839134fa9b5eb9a0b98e282a6544c7b2713d0a7569595320825128d19",
+          "sha256": "e6b1439f8d737b43319354ac4736ed0167d0f0d8e825a9e96c7a404d0cf9862e",
+          "sha1": "96bcfca28383d94fd294af26944ce33414712aa5",
+          "md5": "92a03dab2feb729f9c4ce41ea0781210"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "coordinatorlayout-1.3.0-alpha02-versionMetadata.json",
+          "url": "coordinatorlayout-1.3.0-alpha02-versionMetadata.json",
+          "size": 8017,
+          "sha512": "2d9f68035be70dd6b78cd6b8d690151960ec1fd4f8cedfa21b71d8fde9f1bedb0ad17f86a20862443d2d80e18ca657d0e9f9cb6190d929f5e53f93c383f6cd8e",
+          "sha256": "5a5d85e314caa0c16acd85b6d48c9a8bb1170ea448a06e7ec5ccf8f8a42b37b5",
+          "sha1": "1149bc823a3aaf40eadab94db95b3727f34fd180",
+          "md5": "0d2a4f0494ba8dd3610ce4b08d888c72"
+        }
+      ]
+    }
+  ]
+}

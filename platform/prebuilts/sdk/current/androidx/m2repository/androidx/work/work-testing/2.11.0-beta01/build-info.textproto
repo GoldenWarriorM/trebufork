@@ -1,0 +1,80 @@
+version: "2.11.0-beta01"
+dependency_list {
+  dependency {
+    group_id: "androidx.concurrent"
+    artifact_id: "concurrent-futures-ktx"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-livedata-core"
+    version: "2.6.2"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime"
+    version: "2.7.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime"
+    version: "2.11.0-beta01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.work"
+artifact_id: "work-testing"
+path: "/work/work-testing"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.work-work-testing-all-2.11.0-beta01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-gcm"
+    version: "2.11.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-multiprocess"
+    version: "2.11.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime"
+    version: "2.11.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime-ktx"
+    version: "2.11.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-rxjava2"
+    version: "2.11.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-rxjava3"
+    version: "2.11.0-beta01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "work-work-testingreleaseAndroidTest.xml"
+test_module_names: ":work:work-testing:testReleaseUnitTest"

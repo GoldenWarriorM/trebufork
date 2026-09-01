@@ -1,0 +1,203 @@
+version: "1.4.0-alpha03"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-common"
+    version: "2.9.2"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-android"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-desktop"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-iosarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-iossimulatorarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-iosx64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-js"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-linuxarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-linuxx64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-macosarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-macosx64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-mingwx64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-tvosarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-tvossimulatorarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-tvosx64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-wasm-js"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-watchosarm32"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-watchosarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-watchosdevicearm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-watchossimulatorarm64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-watchosx64"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.savedstate"
+artifact_id: "savedstate"
+path: "/savedstate/savedstate"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.savedstate-savedstate-all-1.4.0-alpha03.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-compose"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-ktx"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-testing"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "android"
+kmp_children: "desktop"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "mingwx64"
+kmp_children: "js"
+kmp_children: "wasm-js"
+test_module_names: ":savedstate:savedstate:desktopTest"
+test_module_names: ":savedstate:savedstate:macosX64Test"
+test_module_names: ":savedstate:savedstate:macosArm64Test"
+test_module_names: ":savedstate:savedstate:linuxX64Test"
+test_module_names: ":savedstate:savedstate:iosX64Test"
+test_module_names: ":savedstate:savedstate:iosSimulatorArm64Test"
+test_module_names: ":savedstate:savedstate:watchosX64Test"
+test_module_names: ":savedstate:savedstate:watchosSimulatorArm64Test"
+test_module_names: ":savedstate:savedstate:tvosX64Test"
+test_module_names: ":savedstate:savedstate:tvosSimulatorArm64Test"
+test_module_names: ":savedstate:savedstate:mingwX64Test"
+test_module_names: ":savedstate:savedstate:jsBrowserTest"
+test_module_names: ":savedstate:savedstate:wasmJsBrowserTest"
+test_module_names: "savedstate-savedstateandroidInstrumentedTest.xml"
+test_module_names: ":savedstate:savedstate:testAndroidHostTest"

@@ -1,0 +1,122 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.percentlayout",
+    "module": "percentlayout",
+    "version": "1.1.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "percentlayout-1.1.0-alpha01-sources.jar",
+          "url": "percentlayout-1.1.0-alpha01-sources.jar",
+          "size": 15305,
+          "sha512": "7a459923062ec249c930a7e468f2f40d2816c67ff6cba00c687544c8e1829c23d4947f62a52030fb4ab530dd16de49e310aa25a7daf529441f2d1820272d5286",
+          "sha256": "e1fa897a8aebbe33c6090ddd480af25f11ce19349dfd81879805949e54fc4650",
+          "sha1": "f8a6509ee796f6b889ba66047293b1a9bf1a44c2",
+          "md5": "fa6a2a300f56fc8a9ff8cdf5b64c9891"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "percentlayout-1.1.0-alpha01.aar",
+          "url": "percentlayout-1.1.0-alpha01.aar",
+          "size": 16526,
+          "sha512": "c554ccf5d3b6da365586e6125d546b38bc8cd6e40c9ce57b11f2ddc3fde1e86511396b15603ab2879102464795d6d4901d001fc23485d96a18d89b49d64cab89",
+          "sha256": "bdd33a49346ecf2f764f84a5993f13671262e7581c2f548be04b01e37087a352",
+          "sha1": "85d0430a703e505036e8967d82b452174a5cfd33",
+          "md5": "cdbdd5f64c3545170ae6b47ab8cd3066"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "percentlayout-1.1.0-alpha01.aar",
+          "url": "percentlayout-1.1.0-alpha01.aar",
+          "size": 16526,
+          "sha512": "c554ccf5d3b6da365586e6125d546b38bc8cd6e40c9ce57b11f2ddc3fde1e86511396b15603ab2879102464795d6d4901d001fc23485d96a18d89b49d64cab89",
+          "sha256": "bdd33a49346ecf2f764f84a5993f13671262e7581c2f548be04b01e37087a352",
+          "sha1": "85d0430a703e505036e8967d82b452174a5cfd33",
+          "md5": "cdbdd5f64c3545170ae6b47ab8cd3066"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "percentlayout-1.1.0-alpha01-versionMetadata.json",
+          "url": "percentlayout-1.1.0-alpha01-versionMetadata.json",
+          "size": 5371,
+          "sha512": "070ed0866d32e8c7281bdbad086a4ae5c6c03a2c2134a81987c5432c0fd1b8012355f18a06fae2ad9bd173b13981a484568f98d0e98023d1688032804a880cc7",
+          "sha256": "c7baa59291f7d9411401a37101da1b0a8c050c2e418209a474f9eaf58362a306",
+          "sha1": "ffde9a075bd7b019c5491483df0b92a4a3a970e4",
+          "md5": "fd6c1396cdbccb17c94cefa991ac78af"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.hilt",
+    "module": "hilt-common",
+    "version": "1.3.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "hilt-common-1.3.0-rc01.jar",
+          "url": "hilt-common-1.3.0-rc01.jar",
+          "size": 6898,
+          "sha512": "65b7a5a1c45c8cc9873b64f8c3f90f64132039a2276af1624d554e709c883f189105c61b72737c6165bc9222871f17b83abae4814dfdeffef42504c0991f5e68",
+          "sha256": "f3bd79f6b830a432574dc734c36bf2c204f75dff963e507c47f6c6c6f91e661f",
+          "sha1": "7e598ad952f14002a6ae86dd69e7b8bcf5d9d6fc",
+          "md5": "ab0a7379ee1469fa5bb784817cf47d4d"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.dagger",
+          "module": "hilt-core",
+          "version": {
+            "requires": "2.54"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "hilt-common-1.3.0-rc01.jar",
+          "url": "hilt-common-1.3.0-rc01.jar",
+          "size": 6898,
+          "sha512": "65b7a5a1c45c8cc9873b64f8c3f90f64132039a2276af1624d554e709c883f189105c61b72737c6165bc9222871f17b83abae4814dfdeffef42504c0991f5e68",
+          "sha256": "f3bd79f6b830a432574dc734c36bf2c204f75dff963e507c47f6c6c6f91e661f",
+          "sha1": "7e598ad952f14002a6ae86dd69e7b8bcf5d9d6fc",
+          "md5": "ab0a7379ee1469fa5bb784817cf47d4d"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "hilt-common-1.3.0-rc01-sources.jar",
+          "url": "hilt-common-1.3.0-rc01-sources.jar",
+          "size": 6060,
+          "sha512": "2e1abdce6d29bd4e3a51e8004fcccc6af1d9a14294e7d7585d98765e4222e970ef271791a86ca9459fcb623ac51d5592e9564ffffa779689ecbb0081511ed596",
+          "sha256": "df96d87c407825255437ce6434f2ccee4c96052305632c8f2c58526f5f777cdb",
+          "sha1": "880cd35adc818c36d1cb15f1e073e2228edfe9cf",
+          "md5": "55d08e1579ef4a72068ebdb3c27ea4ec"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "hilt-common-1.3.0-rc01-versionMetadata.json",
+          "url": "hilt-common-1.3.0-rc01-versionMetadata.json",
+          "size": 86,
+          "sha512": "5b8504a6b241536c4103b8407345f1a909abdfd790ffdef3dc8fb6ae39a86d4f612b72a475fcfcc49eb2d76075e948231fda109f1c534b272dc0bf8a544e1696",
+          "sha256": "69ec085f76cf2a0ce116484c7c4905ab8acc33801e56f30f1dd4a9bb7b3fbb2b",
+          "sha1": "f5084110d6ca46ca071db13d3ccd638f4bd2e22d",
+          "md5": "ef7554844da0fc75e26bf4ba275e8e12"
+        }
+      ]
+    }
+  ]
+}

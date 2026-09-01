@@ -1,0 +1,1 @@
+[{"class":"androidx.savedstate.ViewKt","addedIn":"1.1.0","methods":[{"method":"findViewTreeSavedStateRegistryOwner(android.view.View)","addedIn":"1.1.0","deprecatedIn":"1.2.0"}],"fields":[]}]

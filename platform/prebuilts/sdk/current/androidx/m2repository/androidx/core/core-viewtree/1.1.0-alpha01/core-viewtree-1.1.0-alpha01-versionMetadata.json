@@ -1,0 +1,1 @@
+[{"class":"androidx.core.viewtree.ViewTree","addedIn":"1.0.0","methods":[{"method":"getParentOrViewTreeDisjointParent(android.view.View)","addedIn":"1.0.0"},{"method":"setViewTreeDisjointParent(android.view.View,android.view.ViewParent)","addedIn":"1.0.0"}],"fields":[]}]

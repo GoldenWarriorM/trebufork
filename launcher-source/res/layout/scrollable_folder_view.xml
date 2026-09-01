@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<com.android.launcher3.ScrollableFolderView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/transparent">
+
+    <!-- trebufork: the visible card. Sized in code (80% width, centered). -->
+    <LinearLayout
+        android:id="@+id/scroll_folder_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/scrollable_folder_background"
+        android:padding="16dp"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/scroll_folder_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="18sp"
+                android:textColor="?attr/workspaceTextColor" />
+
+            <!-- trebufork: inline rename field, shown while renaming (replaces the title). -->
+            <EditText
+                android:id="@+id/scroll_folder_rename_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ellipsize="end"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="18sp"
+                android:textColor="?attr/workspaceTextColor"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/scroll_folder_pencil"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/scrollable_folder_rename"
+                android:padding="8dp"
+                android:src="@drawable/gm_edit_24" />
+
+            <ImageView
+                android:id="@+id/scroll_folder_toggle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/scrollable_folder_toggle_layout"
+                android:padding="8dp"
+                android:src="@drawable/ic_folder_list" />
+
+            <TextView
+                android:id="@+id/scroll_folder_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/scrollable_done_background"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:text="@string/scrollable_desktop_done"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/scroll_folder_close"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/scrollable_folder_close"
+                android:padding="8dp"
+                android:src="@drawable/ic_gm_close_24" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/scroll_folder_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/scrollable_folder_empty"
+            android:textColor="?attr/workspaceTextColor"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/scroll_folder_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never" />
+
+    </LinearLayout>
+
+</com.android.launcher3.ScrollableFolderView>

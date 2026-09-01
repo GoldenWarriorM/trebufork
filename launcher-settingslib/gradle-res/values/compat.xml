@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gradle_android_config_headlineFontFamily" translatable="false">sans-serif</string>
+</resources>

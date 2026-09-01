@@ -1,0 +1,26 @@
+version: "1.0.0"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "12982010"
+group_id: "androidx.inspection"
+artifact_id: "inspection"
+path: "/inspection/inspection"
+sha: "51cc66b8617c3ced6f83a94b0d1dc367d2134c9d"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.inspection-inspection-all-12982010-1.0.0.zip"
+kotlin_version: "2.1.0"
+dependency_constraint_list {
+}
+should_publish_docs: false
+is_kmp: false
+target: "androidx"
+test_module_names: "inspection-inspectionreleaseAndroidTest.xml"
+test_module_names: ":inspection:inspection:testReleaseUnitTest"

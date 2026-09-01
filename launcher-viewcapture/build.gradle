@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.protobuf'
+}
+
+// view_capture (com.android.app.viewcapture.*) — migrated from
+// frameworks/libs/systemui/viewcapturelib/Android.bp (android_library
+// "view_capture" + java_library "view_capture_proto"). The launcher calls
+// ViewCaptureFactory at runtime (taskbar drag layers, QuickstepLauncher), so
+// the classes are packaged into the APK (previously vendored Soong jars).
+// The proto (view_capture_proto, com.android.app.viewcapture.data) is compiled
+// here too with the same protobuf-lite setup as the launcher module.
+def lineageRoot = rootProject.ext.lineageRoot
+def vcSrc = "${lineageRoot}/frameworks/libs/systemui/viewcapturelib/src"
+
+android {
+    namespace 'com.android.app.viewcapture'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 31
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [vcSrc]
+            kotlin.srcDirs = [vcSrc]
+            proto.srcDirs = ["${vcSrc}/com/android/app/viewcapture/proto"]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches the platform default kotlincflags (-Xjvm-default=all).
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+protobuf {
+    protoc { artifact = 'com.google.protobuf:protoc:4.31.1' }
+    generateProtoTasks {
+        all().configureEach { task ->
+            task.builtins {
+                java { option 'lite' }
+            }
+        }
+    }
+}
+
+dependencies {
+    // Full framework (android.media.permission.SafeCloseable, android.util.proto,
+    // android.tracing.perfetto.*, android.internal.perfetto.protos.*).
+    compileOnly files(rootProject.ext.frameworkJar)
+    // androidx.core_core (Android.bp static_libs) — annotation deps.
+    implementation 'androidx.core:core-ktx:1.19.0-alpha01'
+    // libprotobuf-java-lite for the generated view_capture data classes.
+    implementation 'com.google.protobuf:protobuf-javalite:4.31.1'
+}

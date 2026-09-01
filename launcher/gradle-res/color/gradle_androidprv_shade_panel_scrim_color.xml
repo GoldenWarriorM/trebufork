@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- framework-res shade_panel_scrim_color.xml: #404040 at 40% alpha -->
+    <item android:color="#404040" android:alpha="0.4" />
+</selector>

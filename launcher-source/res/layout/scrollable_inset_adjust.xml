@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<com.android.launcher3.ScrollableInsetAdjustView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- trebufork: top-left Reset and top-right Done buttons, in the same style as the
+         reorder-mode Done button. The top margin (status bar + 16dp) is applied in code so the
+         buttons never overlap the status bar; the draggable handle line is drawn by the view
+         itself. -->
+    <FrameLayout
+        android:id="@+id/scroll_inset_button_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+
+        <TextView
+            android:id="@+id/scroll_inset_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@drawable/scrollable_done_background"
+            android:elevation="8dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/scrollable_inset_reset"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/scroll_inset_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/scrollable_done_background"
+            android:elevation="8dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/scrollable_desktop_done"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
+</com.android.launcher3.ScrollableInsetAdjustView>

@@ -1,0 +1,92 @@
+version: "1.10.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.3.3"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.startup"
+    artifact_id: "startup-runtime"
+    version: "1.1.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.tracing"
+    artifact_id: "tracing-perfetto"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "13737533"
+group_id: "androidx.compose.runtime"
+artifact_id: "runtime-tracing"
+path: "/compose/runtime/runtime-tracing"
+sha: "84c18801ee8982f06562f6c17cf5b4ee81e28c80"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.compose.runtime-runtime-tracing-all-13737533-1.10.0-alpha01.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-annotation"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-livedata"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-rxjava2"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-rxjava3"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-saveable"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-saveable-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "compose-runtime-runtime-tracingreleaseAndroidTest.xml"
+test_module_names: ":compose:runtime:runtime-tracing:testReleaseUnitTest"

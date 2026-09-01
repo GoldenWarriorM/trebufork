@@ -1,0 +1,62 @@
+version: "1.5.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection"
+    version: "1.4.2"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.16.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.customview"
+    artifact_id: "customview"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.customview"
+    artifact_id: "customview-poolingcontainer"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.profileinstaller"
+    artifact_id: "profileinstaller"
+    version: "1.4.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.recyclerview"
+artifact_id: "recyclerview"
+path: "/recyclerview/recyclerview"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.recyclerview-recyclerview-all-1.5.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.viewpager2"
+    artifact_id: "viewpager2"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "recyclerview-recyclerviewreleaseAndroidTest.xml"
+test_module_names: ":recyclerview:recyclerview:testReleaseUnitTest"

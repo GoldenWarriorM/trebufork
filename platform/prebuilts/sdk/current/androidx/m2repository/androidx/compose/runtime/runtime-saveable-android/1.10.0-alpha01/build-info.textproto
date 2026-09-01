@@ -1,0 +1,103 @@
+version: "1.10.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-saveable-android"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-saveable-jvmstubs"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-saveable-linuxx64stubs"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate-compose"
+    version: "1.3.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "13737533"
+group_id: "androidx.compose.runtime"
+artifact_id: "runtime-saveable"
+path: "/compose/runtime/runtime-saveable"
+sha: "84c18801ee8982f06562f6c17cf5b4ee81e28c80"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.compose.runtime-runtime-saveable-all-13737533-1.10.0-alpha01.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-annotation"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-livedata"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-rxjava2"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-rxjava3"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-saveable-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime-tracing"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx"
+kmp_children: "android"
+kmp_children: "jvmstubs"
+kmp_children: "linuxx64stubs"
+test_module_names: ":compose:runtime:runtime-saveable:jvmStubsTest"
+test_module_names: ":compose:runtime:runtime-saveable:linuxx64StubsTest"
+test_module_names: "compose-runtime-runtime-saveableandroidInstrumentedTest.xml"
+test_module_names: ":compose:runtime:runtime-saveable:testAndroidHostTest"

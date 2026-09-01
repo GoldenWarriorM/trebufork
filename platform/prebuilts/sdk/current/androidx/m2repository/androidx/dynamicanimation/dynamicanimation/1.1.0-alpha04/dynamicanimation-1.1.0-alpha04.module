@@ -1,0 +1,122 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.dynamicanimation",
+    "module": "dynamicanimation",
+    "version": "1.1.0-alpha04",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "dynamicanimation-1.1.0-alpha04-sources.jar",
+          "url": "dynamicanimation-1.1.0-alpha04-sources.jar",
+          "size": 29251,
+          "sha512": "e150ef384ffb40713bc778e3f6e1b8ceb461b6a3f5e8c7c996b001cca057e6211e5e339a0ef5a0c8064205ad544f170209b65051b949f30c16472653ccc6ae5c",
+          "sha256": "6b5ec4133f802e23657abf8aa4ab163c6f0e486591620a5f9b2ff4fd0cd40f8c",
+          "sha1": "0988e1cc9aa9396f966ce0667a31219a911a6dfd",
+          "md5": "b5fd2f67760c150547195edcb07e8d90"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "dynamicanimation-1.1.0-alpha04.aar",
+          "url": "dynamicanimation-1.1.0-alpha04.aar",
+          "size": 37749,
+          "sha512": "65ff783a1e5dcc33170a6c56b0c1e1ea1c986a413aceb2681b670dc77a490f23f430d747435cfa5b83b4e94b3927deab9d9697c88cf7764576b20aa073c34541",
+          "sha256": "4482d38c7a6c7a00808d69ae1582ca041bdea230b62ce8554eaf8c36bf7f7f5b",
+          "sha1": "02f91cefc5c72bf7f9ab7343a152a6bcd26b79f9",
+          "md5": "7219556c7312c71643ea909e9c55d94b"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "dynamicanimation-1.1.0-alpha04.aar",
+          "url": "dynamicanimation-1.1.0-alpha04.aar",
+          "size": 37749,
+          "sha512": "65ff783a1e5dcc33170a6c56b0c1e1ea1c986a413aceb2681b670dc77a490f23f430d747435cfa5b83b4e94b3927deab9d9697c88cf7764576b20aa073c34541",
+          "sha256": "4482d38c7a6c7a00808d69ae1582ca041bdea230b62ce8554eaf8c36bf7f7f5b",
+          "sha1": "02f91cefc5c72bf7f9ab7343a152a6bcd26b79f9",
+          "md5": "7219556c7312c71643ea909e9c55d94b"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "dynamicanimation-1.1.0-alpha04-versionMetadata.json",
+          "url": "dynamicanimation-1.1.0-alpha04-versionMetadata.json",
+          "size": 6223,
+          "sha512": "d61abc52c9f261649052dfec66afe6bb1f005040651aad78f280bad28fe6776fa30ade8624600c62af1607b8bd5d6d5daa3d7d0eed590172aa77d0ec39d7ee53",
+          "sha256": "ddbba446f3890057dc2aba211a173d25c1909cedf08ec2a83b8ff989895db067",
+          "sha1": "d6d9f070e3a674daa930aba5e8befe799123b2eb",
+          "md5": "6bed28c1d0bbf69ad9ebdcd98d303705"
+        }
+      ]
+    }
+  ]
+}

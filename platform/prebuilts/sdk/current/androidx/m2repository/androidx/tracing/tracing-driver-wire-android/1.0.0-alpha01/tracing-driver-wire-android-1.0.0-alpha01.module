@@ -1,0 +1,204 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../tracing-driver-wire/1.0.0-alpha01/tracing-driver-wire-1.0.0-alpha01.module",
+    "group": "androidx.tracing",
+    "module": "tracing-driver-wire",
+    "version": "1.0.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-driver",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          }
+        },
+        {
+          "group": "com.squareup.wire",
+          "module": "wire-runtime",
+          "version": {
+            "requires": "5.4.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-driver",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "tracing-driver-wire is in atomic group androidx.tracing"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tracing-driver-wire.aar",
+          "url": "tracing-driver-wire-android-1.0.0-alpha01.aar",
+          "size": 129995,
+          "sha512": "678b5c67fd5ac3a11148d68bcb8b0496c29d5b682666843ae5d45ba26de38b61c9311a13849a68e7a0d7d4f6ec0aa79e13ee8bbe8e8af03a9339abc6ecc90815",
+          "sha256": "d88187c45cad03b7f8d7406e15168f47ae3fa17481f70466eca7c87fae7c14d6",
+          "sha1": "48e4b7eea5aa5609aee69a43e722832e8c13f6d8",
+          "md5": "6f149ccf0b931c1d6ce438535fb2c4cc"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-driver",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          }
+        },
+        {
+          "group": "com.squareup.okio",
+          "module": "okio",
+          "version": {
+            "requires": "3.9.1"
+          }
+        },
+        {
+          "group": "com.squareup.wire",
+          "module": "wire-runtime",
+          "version": {
+            "requires": "5.4.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-driver",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "tracing-driver-wire is in atomic group androidx.tracing"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tracing-driver-wire.aar",
+          "url": "tracing-driver-wire-android-1.0.0-alpha01.aar",
+          "size": 129995,
+          "sha512": "678b5c67fd5ac3a11148d68bcb8b0496c29d5b682666843ae5d45ba26de38b61c9311a13849a68e7a0d7d4f6ec0aa79e13ee8bbe8e8af03a9339abc6ecc90815",
+          "sha256": "d88187c45cad03b7f8d7406e15168f47ae3fa17481f70466eca7c87fae7c14d6",
+          "sha1": "48e4b7eea5aa5609aee69a43e722832e8c13f6d8",
+          "md5": "6f149ccf0b931c1d6ce438535fb2c4cc"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-driver",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "tracing-driver-wire is in atomic group androidx.tracing"
+        }
+      ],
+      "files": [
+        {
+          "name": "tracing-driver-wire-android-1.0.0-alpha01-sources.jar",
+          "url": "tracing-driver-wire-android-1.0.0-alpha01-sources.jar",
+          "size": 40781,
+          "sha512": "5f12d1179b7a82045393db6fc9335faae8067a4c39bd26aef7fd7e78d66f6897556265c1230c86cb6f82a74bf78ac704b31bdc0184ffef396a9ca7b35097dc8a",
+          "sha256": "0daa96eca87cf89745ebfe1fccdf227f78dbac9b5c5f77f7ab85ba5c2e897835",
+          "sha1": "e33942e3aa2f673fd230507d123170b22a1484e9",
+          "md5": "fed8642bcec68bdf28f20b97cc7957c3"
+        }
+      ]
+    }
+  ]
+}

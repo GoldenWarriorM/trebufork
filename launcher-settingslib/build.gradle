@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+def settingsThemeRoot = file("${rootProject.ext.lineageRoot}/frameworks/base/packages/SettingsLib/SettingsTheme")
+def generatedSettingsThemeRes = file("${buildDir}/generated/settingsThemeRes")
+def compatSettingsThemeRes = file('gradle-res')
+def frameworkRes = rootProject.file('prebuilts/framework-res.apk')
+
+def prepareSettingsThemeResources = tasks.register('prepareSettingsThemeResources', Sync) {
+    from("${settingsThemeRoot}/res")
+    into(generatedSettingsThemeRes)
+    outputs.upToDateWhen { false }
+    filesMatching('**/*.xml') {
+        filter { line ->
+            // SettingsLib is built as a platform static library and uses private
+            // framework resource syntax. A standalone AAPT invocation can use the
+            // vendored framework-res APK, but needs the normal android namespace.
+            line.replace('@*android:string/config_headlineFontFamily', '@string/gradle_android_config_headlineFontFamily')
+                    .replace('@android:string/config_headlineFontFamily', '@string/gradle_android_config_headlineFontFamily')
+                    .replace('@*android:', '@android:')
+        }
+    }
+}
+
+android {
+    namespace 'com.android.settingslib.widget.theme'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ["${settingsThemeRoot}/src"]
+            kotlin.srcDirs = ["${settingsThemeRoot}/src"]
+            res.srcDirs = [generatedSettingsThemeRes, compatSettingsThemeRes]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+    }
+
+    androidResources {
+        additionalParameters += ['-I', frameworkRes.absolutePath]
+    }
+}
+
+tasks.named('preBuild').configure {
+    dependsOn(prepareSettingsThemeResources)
+}
+
+dependencies {
+    implementation project(':launcher-flags-framework')
+    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation 'androidx.core:core-ktx:1.19.0-alpha01'
+    implementation 'androidx.preference:preference:1.3.0-alpha01'
+    implementation 'androidx.recyclerview:recyclerview:1.5.0-alpha01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.3.0-alpha01'
+    implementation 'com.google.android.material:material:1.14.0-alpha02'
+    compileOnly files(rootProject.ext.frameworkJar)
+}

@@ -1,0 +1,59 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// SystemUI rotation pods (com.android.systemui.rotation.*) — migrated from
+// frameworks/base/packages/SystemUI/pods/src/com/android/systemui/rotation/
+// (java_library com.android.systemui.rotation-api + rotation-impl). The
+// launcher instantiates RotationPolicyWrapperImpl directly in
+// TaskbarActivityContext, so the classes are packaged into the APK (previously
+// two compileOnly Soong jars).
+def lineageRoot = rootProject.ext.lineageRoot
+def rotationDir = "${lineageRoot}/frameworks/base/packages/SystemUI/pods/src/com/android/systemui/rotation"
+
+android {
+    namespace 'com.android.systemui.rotation'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            // api sources (RotationPolicyWrapper) + impl sources
+            // (RotationModule, RotationPolicyWrapperImpl).
+            kotlin.srcDirs = ["${rotationDir}", "${rotationDir}/impl"]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches SystemUI_pod_defaults_impl kotlincflags.
+        freeCompilerArgs += ['-Xjvm-default=all', '-Xexplicit-api=strict']
+    }
+}
+
+dependencies {
+    // Full framework (hidden com.android.internal.view.RotationPolicy) — the
+    // root build.gradle puts it first on the compile classpath; the platform
+    // provides it at runtime.
+    compileOnly files(rootProject.ext.frameworkJar)
+    // com.android.systemui.dagger.SysUISingleton lives in the SystemUI
+    // dagger-api pod; the launcher already compileOnly's the same vendored jar.
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/packages/SystemUI/pods/src/com/android/systemui/dagger/com.android.systemui.dagger-api/android_common/javac/com.android.systemui.dagger-api.jar'))
+    // traceSection in RotationPolicyWrapperImpl.
+    implementation project(':launcher-tracing')
+    // @Module/@Binds/@Inject annotations on RotationModule/RotationPolicyWrapperImpl.
+    implementation 'com.google.dagger:dagger:2.60.1'
+    implementation 'javax.inject:javax.inject:1'
+}

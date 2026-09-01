@@ -1,0 +1,403 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.appsearch",
+    "module": "appsearch-compiler",
+    "version": "1.2.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "javax.annotation",
+          "module": "javax.annotation-api",
+          "version": {
+            "requires": "1.2"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-builtin-types",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-debug-view",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-external-protobuf",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-ktx",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-local-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-platform-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-play-services-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        }
+      ],
+      "files": [
+        {
+          "name": "appsearch-compiler-1.2.0-alpha01.jar",
+          "url": "appsearch-compiler-1.2.0-alpha01.jar",
+          "size": 176535,
+          "sha512": "e16ce4be6f53b718ccfd0f5405dd9245b5ae774d308b8e9c3d7eb3d7318412043938a5ce9852510842a7815f81d081a00ace6e57a3f8110f1af1f1bb3cff6d36",
+          "sha256": "4bd8a215f8bd493a0c24025ccd3562c164bccfb5248370b7a5e24358257200aa",
+          "sha1": "8faa0b7cd7e2135dbff208fbf0cf115df20a6802",
+          "md5": "a2da95783074769a8e603a4a862fe007"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.room",
+          "module": "room-compiler-processing",
+          "version": {
+            "requires": "2.7.2"
+          }
+        },
+        {
+          "group": "com.google.auto.service",
+          "module": "auto-service",
+          "version": {
+            "requires": "1.0-rc6"
+          }
+        },
+        {
+          "group": "com.google.auto.service",
+          "module": "auto-service-annotations",
+          "version": {
+            "requires": "1.0-rc6"
+          }
+        },
+        {
+          "group": "com.google.auto.value",
+          "module": "auto-value",
+          "version": {
+            "requires": "1.6.3"
+          }
+        },
+        {
+          "group": "com.google.auto.value",
+          "module": "auto-value-annotations",
+          "version": {
+            "requires": "1.6.3"
+          }
+        },
+        {
+          "group": "com.google.devtools.ksp",
+          "module": "symbol-processing-api",
+          "version": {
+            "requires": "2.0.10-1.0.24"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "33.2.1-jre"
+          }
+        },
+        {
+          "group": "com.squareup",
+          "module": "javapoet",
+          "version": {
+            "requires": "1.13.0"
+          }
+        },
+        {
+          "group": "javax.annotation",
+          "module": "javax.annotation-api",
+          "version": {
+            "requires": "1.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-metadata-jvm",
+          "version": {
+            "requires": "2.1.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.20"
+          }
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-builtin-types",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-debug-view",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-external-protobuf",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-ktx",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-local-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-platform-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-play-services-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        }
+      ],
+      "files": [
+        {
+          "name": "appsearch-compiler-1.2.0-alpha01.jar",
+          "url": "appsearch-compiler-1.2.0-alpha01.jar",
+          "size": 176535,
+          "sha512": "e16ce4be6f53b718ccfd0f5405dd9245b5ae774d308b8e9c3d7eb3d7318412043938a5ce9852510842a7815f81d081a00ace6e57a3f8110f1af1f1bb3cff6d36",
+          "sha256": "4bd8a215f8bd493a0c24025ccd3562c164bccfb5248370b7a5e24358257200aa",
+          "sha1": "8faa0b7cd7e2135dbff208fbf0cf115df20a6802",
+          "md5": "a2da95783074769a8e603a4a862fe007"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-builtin-types",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-debug-view",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-external-protobuf",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-ktx",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-local-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-platform-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        },
+        {
+          "group": "androidx.appsearch",
+          "module": "appsearch-play-services-storage",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          },
+          "reason": "appsearch-compiler is in atomic group androidx.appsearch"
+        }
+      ],
+      "files": [
+        {
+          "name": "appsearch-compiler-1.2.0-alpha01-sources.jar",
+          "url": "appsearch-compiler-1.2.0-alpha01-sources.jar",
+          "size": 74310,
+          "sha512": "3dc3b3e2474709d808a0b3c21bfb80231e5ac0b71d31cb5d2c559adaa553ef5c5511607b2db894d894dc71cb183ecb9ffa9bfb6599cdaadd196a16406e123a6e",
+          "sha256": "53e3de323a83941c18c4113dd8912e17576c3e53af61faf6ca31d21435593a39",
+          "sha1": "5f5cb72804dc5963d45c25d75e9c09ba67626767",
+          "md5": "9877219be5e063c663eb28e1be46420c"
+        }
+      ]
+    }
+  ]
+}

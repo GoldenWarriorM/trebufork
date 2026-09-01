@@ -1,0 +1,40 @@
+// This is a generated file. Do not modify directly.
+
+// *** THIS PACKAGE HAS SPECIAL LICENSING CONDITIONS.  PLEASE
+//     CONSULT THE OWNERS AND opensource-licensing@google.com BEFORE
+//     DEPENDING ON IT IN YOUR PROJECT. ***
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "prebuilts_sdk_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-Apache-2.0
+    //   SPDX-license-identifier-OFL (by exception only)
+    //   SPDX-license-identifier-Unicode-DFS
+    default_applicable_licenses: ["prebuilts_sdk_license"],
+}
+
+android_library_import {
+    name: "androidx.ink_ink-authoring",
+    aars: ["ink-authoring-android-1.0.0-alpha06.aar"],
+    sdk_version: "34",
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    min_sdk_version: "23",
+    manifest: "manifest/AndroidManifest.xml",
+    static_libs: [
+        "androidx.collection_collection",
+        "androidx.core_core",
+        "androidx.core_core-ktx",
+        "androidx.fragment_fragment-ktx",
+        "androidx.graphics_graphics-core",
+        "androidx.ink_ink-brush",
+        "androidx.ink_ink-geometry",
+        "androidx.ink_ink-nativeloader",
+        "androidx.ink_ink-rendering",
+        "androidx.ink_ink-strokes",
+        "androidx.test.espresso.idling-resource",
+    ],
+}

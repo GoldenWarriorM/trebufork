@@ -1,0 +1,386 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../ink-authoring/1.0.0-alpha06/ink-authoring-1.0.0-alpha06.module",
+    "group": "androidx.ink",
+    "module": "ink-authoring",
+    "version": "1.0.0-alpha06",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-strokes",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-authoring.aar",
+          "url": "ink-authoring-android-1.0.0-alpha06.aar",
+          "size": 192044,
+          "sha512": "8f8f5eae222260e0927b71da7c478314086561d5e60399591e5b057491939c53a991b8db4d8e680b9963902b93447797ca9a9042fb4f8f73e3b8e6cfd37a73b4",
+          "sha256": "c9737a0083cadab9fd4bfe9a93297d834492d5c324b89c8a519736dc1fcfc7e9",
+          "sha1": "d93ffe01657a582099d4d6ca62c69c301a226a85",
+          "md5": "6c779d7695fd844ff51aeb43724272da"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.4.3"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.16.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.16.0"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment-ktx",
+          "version": {
+            "requires": "1.5.7"
+          }
+        },
+        {
+          "group": "androidx.graphics",
+          "module": "graphics-core",
+          "version": {
+            "requires": "1.0.3"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-strokes",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "androidx.test.espresso",
+          "module": "espresso-idling-resource",
+          "version": {
+            "requires": "3.5.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-strokes",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-authoring.aar",
+          "url": "ink-authoring-android-1.0.0-alpha06.aar",
+          "size": 192044,
+          "sha512": "8f8f5eae222260e0927b71da7c478314086561d5e60399591e5b057491939c53a991b8db4d8e680b9963902b93447797ca9a9042fb4f8f73e3b8e6cfd37a73b4",
+          "sha256": "c9737a0083cadab9fd4bfe9a93297d834492d5c324b89c8a519736dc1fcfc7e9",
+          "sha1": "d93ffe01657a582099d4d6ca62c69c301a226a85",
+          "md5": "6c779d7695fd844ff51aeb43724272da"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-strokes",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-authoring is in atomic group androidx.ink"
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-authoring-android-1.0.0-alpha06-sources.jar",
+          "url": "ink-authoring-android-1.0.0-alpha06-sources.jar",
+          "size": 89187,
+          "sha512": "03e08e562940d65506bdeea4de7a99169e79072c80adc34c684a4ecdc1e4881d320817d826536f41c13ce849a11ad81d9c6a7392ab3d5cab0bd03903e962f14c",
+          "sha256": "57e435812ca6786466644225ab4710d1056781523bb80d2c6e5d3e7a01bd3009",
+          "sha1": "e8f650e8f78eaef3b6b619ea14d564f1b085b452",
+          "md5": "f7fa2561859947c32a24ce77c73e610f"
+        }
+      ]
+    }
+  ]
+}

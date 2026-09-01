@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- trebufork: top darkening gradient for the scrollable home (desktop + apps list) so the
+     status bar does not blend with the scrolling content beneath it. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="#59000000"
+        android:endColor="#00000000"
+        android:type="linear" />
+</shape>

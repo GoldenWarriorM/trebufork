@@ -1,0 +1,128 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../graphics-shapes/1.1.0-rc01/graphics-shapes-1.1.0-rc01.module",
+    "group": "androidx.graphics",
+    "module": "graphics-shapes",
+    "version": "1.1.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "graphics-shapes.aar",
+          "url": "graphics-shapes-android-1.1.0-rc01.aar",
+          "size": 127385,
+          "sha512": "bbe6ec7b6412157719adc29256454d5170bdad903ef22cb2b5c5c50838f3a14e63fb2da7dff6bfad35a1aef167d9f9f2673316bc6a517f2063a26c5a1998dbb6",
+          "sha256": "a9cbd10111d15fb836c1659b165f63d35f84c17dc5be8c9aaa1b0896defebf7d",
+          "sha1": "be54723262c9e721edcf5da7da48f0f5c54dcb80",
+          "md5": "74419e6f3cf5f82651899c6a581ff00e"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.9.1"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation-experimental",
+          "version": {
+            "requires": "1.4.1"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.5.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.10.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "graphics-shapes.aar",
+          "url": "graphics-shapes-android-1.1.0-rc01.aar",
+          "size": 127385,
+          "sha512": "bbe6ec7b6412157719adc29256454d5170bdad903ef22cb2b5c5c50838f3a14e63fb2da7dff6bfad35a1aef167d9f9f2673316bc6a517f2063a26c5a1998dbb6",
+          "sha256": "a9cbd10111d15fb836c1659b165f63d35f84c17dc5be8c9aaa1b0896defebf7d",
+          "sha1": "be54723262c9e721edcf5da7da48f0f5c54dcb80",
+          "md5": "74419e6f3cf5f82651899c6a581ff00e"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "graphics-shapes-android-1.1.0-rc01-sources.jar",
+          "url": "graphics-shapes-android-1.1.0-rc01-sources.jar",
+          "size": 65511,
+          "sha512": "112033bf5b1d209ffd3850934794017be4472378b03d79af892dcd2039f033412b2ea5777ba368573571c7eb28ca834ffdb139eba4e04f860a2d11652941776b",
+          "sha256": "18a867b1cf6820a21a755ba25d80e27ecc6fa98eb2b3c064c2046c01c97f0e1e",
+          "sha1": "c7bbacc30268eebb09c85c5813f899b896407b88",
+          "md5": "f63df95ea7524f381bb701f1fb392789"
+        }
+      ]
+    }
+  ]
+}
