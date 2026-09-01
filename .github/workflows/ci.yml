@@ -25,10 +25,10 @@ jobs:
         uses: ./.github/actions/setup-build
 
       - name: Build release APK
-        run: gradle :launcher:assembleRelease
-        env:
-          ANDROID_HOME: $ANDROID_HOME
-          ANDROID_SDK_ROOT: $ANDROID_HOME
+        run: |
+          export ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          gradle :launcher:assembleRelease
 
       - name: Package Magisk module (signs with vendored platform key)
         run: ./package-magisk.sh
