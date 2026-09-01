@@ -1,0 +1,111 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.parcelize'
+}
+
+// WindowManager-Shell-shared (com.android.wm.shell.shared.*) — migrated from
+// frameworks/base/libs/WindowManager/Shell/shared/Android.bp (android_library
+// "WindowManager-Shell-shared"). The launcher uses GroupedTaskInfo,
+// TransitionUtil, SplitScreenConstants, bubbles classes etc. at runtime, so
+// they are packaged into the APK (previously four compileOnly Soong jars:
+// javac+kotlin variants, the -AOSP javac variant and the -desktopMode
+// repackaged variant; all of their classes come from this single source set).
+// Includes the shared res (bubbles dismiss drawables) and the wm_shell-shared
+// AIDL interfaces (GroupedTaskInfo, IShellTransitions listeners, ...).
+def lineageRoot = rootProject.ext.lineageRoot
+def wmShellSrc = "${lineageRoot}/frameworks/base/libs/WindowManager/Shell/shared/src"
+def wmShellRes = "${lineageRoot}/frameworks/base/libs/WindowManager/Shell/shared/res"
+// The main WindowManager-Shell module's AIDL interfaces (IBackAnimation,
+// IPip, ISplitScreen, IRecentsAnimationController, ...). Soong compiles them
+// into SystemUISharedLib (:wm_shell-aidls); the launcher's SystemUiProxy
+// calls them at runtime, so they are compiled here instead.
+def generatedRes = file("${buildDir}/generated/gradleWmShellRes")
+// Vendored copies of the framework AIDL declarations the module's interfaces
+// reference: the five full parcelables (RemoteTransition, TransitionFilter,
+// TransitionInfo, InsetsState, InsetsSourceControl) plus bare declarations
+// for the other hidden framework types used by the wm_shell-aidls
+// (IApplicationThread, RemoteAnimationTarget, TaskSnapshot, ...). None of
+// them are in the public SDK framework.aidl (hidden API), so AGP's AIDL
+// compiler cannot resolve them from -p; Soong links them from
+// frameworks/base/core/java. The bare declarations only feed the AIDL
+// compiler's type resolution — the real classes come from framework.jar at
+// compile time and from the bootclasspath at runtime (app android.* classes
+// never shadow the framework).
+
+android {
+    namespace 'com.android.wm.shell.shared'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    buildFeatures {
+        aidl true
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [wmShellSrc]
+            kotlin.srcDirs = [wmShellSrc]
+            aidl.srcDirs = [wmShellSrc, 'src/main/aidl', "${lineageRoot}/frameworks/base/libs/WindowManager/Shell/src"]
+            res.srcDirs = [generatedRes]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches Android.bp kotlincflags: ["-Xjvm-default=all"].
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+// The shared res references private framework colors (@androidprv:...), which
+// AAPT2 cannot resolve from an application link. Rewrite them to the
+// launcher-provided gradle_androidprv_* aliases (launcher/gradle-res), the
+// same transformation the launcher used to apply when copying this res dir.
+def prepareGradleWmShellRes = tasks.register('prepareGradleWmShellRes', Sync) {
+    from(wmShellRes)
+    into(generatedRes)
+    filesMatching('**/*.xml') {
+        filter { line ->
+            def transformed = line
+            transformed = transformed.replaceAll(/@androidprv:(color)\/([A-Za-z0-9_]+)/) {
+                all, type, name -> "@${type}/gradle_androidprv_${name}"
+            }
+            transformed = transformed.replaceAll(/\s+xmlns:androidprv="[^"]*"/, '')
+            transformed
+        }
+    }
+}
+
+tasks.named('preBuild').configure {
+    dependsOn(prepareGradleWmShellRes)
+}
+
+dependencies {
+    // Full framework (hidden com.android.internal.R, InteractionJankMonitor,
+    // DesktopExperienceFlags/DesktopModeFlags) — the root build.gradle puts it
+    // first on the compile classpath; the platform provides it at runtime.
+    compileOnly files(rootProject.ext.frameworkJar)
+    // aconfig-generated flags: com.android.wm.shell.Flags and
+    // com.android.window.flags.Flags (same vendored jars the launcher uses).
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/libs/WindowManager/Shell/aconfig/com_android_wm_shell_flags_lib/android_common/javac/com_android_wm_shell_flags_lib.jar'))
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/com.android.window.flags.window-aconfig-java/android_common/javac/com.android.window.flags.window-aconfig-java.jar'))
+    implementation 'androidx.core:core-animation:1.0.0'
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.1.0-alpha04'
+    // jsr330 (static_libs in the bp).
+    implementation 'javax.inject:javax.inject:1'
+    // kotlin-parcelize-runtime (kotlin_plugins: kotlin-parcelize-compiler-plugin).
+    implementation 'org.jetbrains.kotlin:kotlin-parcelize-runtime:2.2.10'
+}

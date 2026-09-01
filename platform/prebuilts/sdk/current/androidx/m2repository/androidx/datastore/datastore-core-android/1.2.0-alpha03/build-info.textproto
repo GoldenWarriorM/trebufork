@@ -1,0 +1,229 @@
+version: "1.2.0-alpha03"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-android"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-iosarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-iossimulatorarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-iosx64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-jvm"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-linuxarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-linuxx64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-macosarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-macosx64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-tvosarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-tvossimulatorarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-tvosx64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-wasm-js"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-watchosarm32"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-watchosarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-watchosdevicearm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-watchossimulatorarm64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-watchosx64"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.datastore"
+artifact_id: "datastore-core"
+path: "/datastore/datastore-core"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.datastore-datastore-core-all-1.2.0-alpha03.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core-okio"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-guava"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences-core"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences-external-protobuf"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences-proto"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences-rxjava2"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences-rxjava3"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-rxjava2"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-rxjava3"
+    version: "1.2.0-alpha03"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "android"
+kmp_children: "jvm"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "wasm-js"
+test_module_names: ":datastore:datastore-core:jvmTest"
+test_module_names: ":datastore:datastore-core:macosX64Test"
+test_module_names: ":datastore:datastore-core:macosArm64Test"
+test_module_names: ":datastore:datastore-core:linuxX64Test"
+test_module_names: ":datastore:datastore-core:iosX64Test"
+test_module_names: ":datastore:datastore-core:iosSimulatorArm64Test"
+test_module_names: ":datastore:datastore-core:watchosX64Test"
+test_module_names: ":datastore:datastore-core:watchosSimulatorArm64Test"
+test_module_names: ":datastore:datastore-core:tvosX64Test"
+test_module_names: ":datastore:datastore-core:tvosSimulatorArm64Test"
+test_module_names: ":datastore:datastore-core:wasmJsBrowserTest"
+test_module_names: "datastore-datastore-coreandroidInstrumentedTest.xml"
+test_module_names: ":datastore:datastore-core:testAndroidHostTest"

@@ -1,0 +1,32 @@
+version: "1.6.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.7.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.camera.featurecombinationquery"
+artifact_id: "featurecombinationquery"
+path: "/camera/featurecombinationquery/featurecombinationquery"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.camera.featurecombinationquery-featurecombinationquery-all-1.6.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.camera.featurecombinationquery"
+    artifact_id: "featurecombinationquery-play-services"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "camera-featurecombinationquery-featurecombinationqueryreleaseAndroidTest.xml"
+test_module_names: ":camera:featurecombinationquery:featurecombinationquery:testReleaseUnitTest"

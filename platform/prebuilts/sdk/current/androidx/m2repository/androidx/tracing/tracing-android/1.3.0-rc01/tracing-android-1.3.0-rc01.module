@@ -1,0 +1,148 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../tracing/1.3.0-rc01/tracing-1.3.0-rc01.module",
+    "group": "androidx.tracing",
+    "module": "tracing",
+    "version": "1.3.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-ktx",
+          "version": {
+            "requires": "1.3.0-rc01"
+          },
+          "reason": "tracing is in atomic group androidx.tracing"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tracing.aar",
+          "url": "tracing-android-1.3.0-rc01.aar",
+          "size": 13739,
+          "sha512": "9ac0d9acdfd85206f58eeb5b5457b991ea006cdcb5ea424ecb4c83fc9b33d8470cabd5f5094236117b24444653acef2fb4934e535eed090293a74ae465cd9deb",
+          "sha256": "81b04c90822e823262affcc194edc5ef35a0ca432dc1f260d4c0da7c79e75617",
+          "sha1": "6d789db97ca525f7d6b993ce80476f83622a3389",
+          "md5": "4e4e1c996b8dc70311acac55ab2885b6"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-ktx",
+          "version": {
+            "requires": "1.3.0-rc01"
+          },
+          "reason": "tracing is in atomic group androidx.tracing"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tracing.aar",
+          "url": "tracing-android-1.3.0-rc01.aar",
+          "size": 13739,
+          "sha512": "9ac0d9acdfd85206f58eeb5b5457b991ea006cdcb5ea424ecb4c83fc9b33d8470cabd5f5094236117b24444653acef2fb4934e535eed090293a74ae465cd9deb",
+          "sha256": "81b04c90822e823262affcc194edc5ef35a0ca432dc1f260d4c0da7c79e75617",
+          "sha1": "6d789db97ca525f7d6b993ce80476f83622a3389",
+          "md5": "4e4e1c996b8dc70311acac55ab2885b6"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-ktx",
+          "version": {
+            "requires": "1.3.0-rc01"
+          },
+          "reason": "tracing is in atomic group androidx.tracing"
+        }
+      ],
+      "files": [
+        {
+          "name": "tracing-android-1.3.0-rc01-sources.jar",
+          "url": "tracing-android-1.3.0-rc01-sources.jar",
+          "size": 11465,
+          "sha512": "b856e9384480fe4981abc4868520cf81dcdd80f731de8b73500dcaa258ce9f7686cc3073f091dc0cded2f36fff17303a3a0e2aaccb9c12b836c8015f639f3ac9",
+          "sha256": "c294266f78954522204b87c76b8ea765bd6dd98615675b20950787f77d5910ee",
+          "sha1": "dae0bf85e1d12c5cd59845846fc624729e3506dd",
+          "md5": "ec3f9a887567fa764c98c70ec4d76027"
+        }
+      ]
+    }
+  ]
+}

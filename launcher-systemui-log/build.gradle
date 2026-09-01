@@ -1,0 +1,67 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// SystemUI logging chain — migrated from:
+//  - SystemUILogLib + SystemUILogCoreLib (frameworks/base/packages/SystemUI/log/src)
+//    com.android.systemui.log.*, com.android.systemui.Dumpable
+//  - com.android.systemui.log.table-api (pods/src/.../log/table)
+//  - the two small pods util deps the table/log code pulls in:
+//    RingBuffer (common/src/.../common/buffer) and pairwiseBy/SystemClock
+//    (pods/src/.../util/kotlin + util/time).
+// The launcher's SystemUISharedLib code calls LogcatOnlyMessageBuffer,
+// TableLogBuffer, LogMessageImpl etc. at runtime.
+def lineageRoot = rootProject.ext.lineageRoot
+def su = "${lineageRoot}/frameworks/base/packages/SystemUI"
+def srcDirs = [
+    "${su}/log/src",
+    "${su}/common/src/com/android/systemui/common/buffer",
+    "${su}/pods/src/com/android/systemui/util/kotlin",
+    "${su}/pods/src/com/android/systemui/util/time",
+    "${su}/pods/src/com/android/systemui/log/table",
+]
+
+android {
+    namespace 'com.android.systemui.log'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = srcDirs
+            kotlin.srcDirs = srcDirs
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches Android.bp kotlincflags: ["-Xjvm-default=all"].
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+dependencies {
+    // Full framework (hidden Trace.instantForTrack/TRACE_TAG_APP) — the root
+    // build.gradle puts it first on the compile classpath.
+    compileOnly files(rootProject.ext.frameworkJar)
+    // launchTraced (com.android.app.tracing.coroutines).
+    implementation project(':launcher-tracing')
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
+    implementation 'androidx.annotation:annotation:1.9.1'
+    // @CompileTimeConstant (error_prone_annotations, as in the bp).
+    implementation 'com.google.errorprone:error_prone_annotations:2.18.0'
+    // TimeModule.kt (pods util/time/impl) is a dagger module.
+    implementation 'com.google.dagger:dagger:2.60.1'
+    implementation 'javax.inject:javax.inject:1'
+}

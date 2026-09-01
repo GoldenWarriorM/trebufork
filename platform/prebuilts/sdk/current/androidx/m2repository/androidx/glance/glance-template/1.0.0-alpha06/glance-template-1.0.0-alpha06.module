@@ -1,0 +1,262 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.glance",
+    "module": "glance-template",
+    "version": "1.0.0-alpha06",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14",
+      "buildId:": "13740253"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "glance-template-1.0.0-alpha06-sources.jar",
+          "url": "glance-template-1.0.0-alpha06-sources.jar",
+          "size": 24078,
+          "sha512": "c5ae1395e151f90910a85108b406f11e755a196a5daf720314c9975f1cae3e12b257a70f67601202b169c6117b23cb8bbb7c49b16425aec5ec73f1c092263c59",
+          "sha256": "fe46e5e29fac1cd605df9a4d2389565ba863a8693d89723dc1d9ba656cd8494f",
+          "sha1": "ee046b5f9f1b5c7a6c8fc94c33bcf817ce8725c1",
+          "md5": "502674c56adec460783c0cd244d12851"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-unit",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-template-1.0.0-alpha06.aar",
+          "url": "glance-template-1.0.0-alpha06.aar",
+          "size": 148761,
+          "sha512": "63232c060496962b9dde4eb758abfe0e40ff202c53527868b3522b81244e2c0b9606b91542a4e8263a3e59f9209b52a6f41ef08601140f8a5887057a626887fd",
+          "sha256": "9542a51e927a8f52dcddf2d8d8e8677df46b13d136d19a885fe20e8fb2e10b9d",
+          "sha1": "6e52d3b0b601277d8d7db398e3cc73b2f1c281c6",
+          "md5": "d211e7a9d33333c32a4d20aeae8e3de1"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation-experimental",
+          "version": {
+            "requires": "1.4.1"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-unit",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.work",
+          "module": "work-runtime",
+          "version": {
+            "requires": "2.7.1"
+          }
+        },
+        {
+          "group": "androidx.work",
+          "module": "work-runtime-ktx",
+          "version": {
+            "requires": "2.7.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-template-1.0.0-alpha06.aar",
+          "url": "glance-template-1.0.0-alpha06.aar",
+          "size": 148761,
+          "sha512": "63232c060496962b9dde4eb758abfe0e40ff202c53527868b3522b81244e2c0b9606b91542a4e8263a3e59f9209b52a6f41ef08601140f8a5887057a626887fd",
+          "sha256": "9542a51e927a8f52dcddf2d8d8e8677df46b13d136d19a885fe20e8fb2e10b9d",
+          "sha1": "6e52d3b0b601277d8d7db398e3cc73b2f1c281c6",
+          "md5": "d211e7a9d33333c32a4d20aeae8e3de1"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "glance-template-1.0.0-alpha06-versionMetadata.json",
+          "url": "glance-template-1.0.0-alpha06-versionMetadata.json",
+          "size": 12393,
+          "sha512": "67d6d3f7230106864bb0d24f6fe797635ad24747cc9105157620163dcf1981430ffadfe1ba6749865d862830489713b31e562fbb52214e8c7d2f085a8557f39a",
+          "sha256": "a06abd7e769f6e730766979d566b06a911e7e91dfd5ccf5f8b80ee519c17078c",
+          "sha1": "81e5da4c28c7049129b586ffd8ecd57dac6f6c9d",
+          "md5": "cd129d2577ce6560fe8684fb8efcbc93"
+        }
+      ]
+    }
+  ]
+}

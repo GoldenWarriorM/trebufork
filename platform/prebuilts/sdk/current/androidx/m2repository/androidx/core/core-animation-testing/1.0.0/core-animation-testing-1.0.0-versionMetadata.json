@@ -1,0 +1,1 @@
+[{"class":"androidx.core.animation.AnimatorTestRule","addedIn":"1.0.0","methods":[{"method":"AnimatorTestRule()","addedIn":"1.0.0"},{"method":"advanceTimeBy(long)","addedIn":"1.0.0"},{"method":"apply(org.junit.runners.model.Statement,org.junit.runner.Description)","addedIn":"1.0.0"},{"method":"getCurrentTime()","addedIn":"1.0.0"}],"fields":[]}]

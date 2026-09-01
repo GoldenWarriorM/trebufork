@@ -1,0 +1,129 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.tvprovider",
+    "module": "tvprovider",
+    "version": "1.1.0-alpha02",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "tvprovider-1.1.0-alpha02-sources.jar",
+          "url": "tvprovider-1.1.0-alpha02-sources.jar",
+          "size": 66292,
+          "sha512": "543d8ef208ffef49183be33d257e8cfee406d1a5b6d0550e35ef0886530a635f73cc6b5bfe4c66f4cb745f56017b9d4ed2dbf7d9d3d65af99e132b19cb00a0b0",
+          "sha256": "3a331a3768e3a3a0c14d6229c0fbfcffdcbba6d4c392f59c315a59c7cd8a19ac",
+          "sha1": "80ff0c3d66570e5e02c5030669ec2ad3fa405f25",
+          "md5": "a9a89e83ab5e01e636c49bd501912126"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tvprovider-1.1.0-alpha02.aar",
+          "url": "tvprovider-1.1.0-alpha02.aar",
+          "size": 75833,
+          "sha512": "e8bccae524791e8da2a1781136823399d2d6731028ca774e47ac10a4f77be10cdb4d5fe7a1a847c89eae3ec33c9227cfe0dfc894c9e00c597ff73ecdbd188a4c",
+          "sha256": "a60a429e5979c97d864b24de35a87f4dcc8d32e6270f7dbb1f616231c7c8a568",
+          "sha1": "dae447e92f03497d68f8a1d3399b8f74617db487",
+          "md5": "0f61743a106362df3f8ffef616ca6360"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tvprovider-1.1.0-alpha02.aar",
+          "url": "tvprovider-1.1.0-alpha02.aar",
+          "size": 75833,
+          "sha512": "e8bccae524791e8da2a1781136823399d2d6731028ca774e47ac10a4f77be10cdb4d5fe7a1a847c89eae3ec33c9227cfe0dfc894c9e00c597ff73ecdbd188a4c",
+          "sha256": "a60a429e5979c97d864b24de35a87f4dcc8d32e6270f7dbb1f616231c7c8a568",
+          "sha1": "dae447e92f03497d68f8a1d3399b8f74617db487",
+          "md5": "0f61743a106362df3f8ffef616ca6360"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "tvprovider-1.1.0-alpha02-versionMetadata.json",
+          "url": "tvprovider-1.1.0-alpha02-versionMetadata.json",
+          "size": 50667,
+          "sha512": "13182ea26caee4cb28c56b61c064a2c3197c76f512b869894d717ff632dde3735ca2bc011908675f3128033a16dc614f31e88555c1007fad2eb60784eaafca46",
+          "sha256": "ef8b56d8a6c8fba7bf74eb6062a0d23724851c5fa620ddef50d63680e2732e7b",
+          "sha1": "0c0c88eb409b3450136ec2b89b13cf53fff39c71",
+          "md5": "60238b18f084b4f996b9386aec335bb3"
+        }
+      ]
+    }
+  ]
+}

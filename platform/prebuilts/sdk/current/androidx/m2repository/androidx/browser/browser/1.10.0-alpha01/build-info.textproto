@@ -1,0 +1,62 @@
+version: "1.10.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.activity"
+    artifact_id: "activity"
+    version: "1.9.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-experimental"
+    version: "1.4.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection"
+    version: "1.4.2"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.concurrent"
+    artifact_id: "concurrent-futures"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.10.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.interpolator"
+    artifact_id: "interpolator"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.browser"
+artifact_id: "browser"
+path: "/browser/browser"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.browser-browser-all-1.10.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "browser-browserreleaseAndroidTest.xml"
+test_module_names: ":browser:browser:testReleaseUnitTest"

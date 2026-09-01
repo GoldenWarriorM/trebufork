@@ -1,0 +1,150 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.vectordrawable",
+    "module": "vectordrawable-animated",
+    "version": "1.2.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "vectordrawable-animated-1.2.0-sources.jar",
+          "url": "vectordrawable-animated-1.2.0-sources.jar",
+          "size": 28256,
+          "sha512": "c50363be71afcad2dd508e3b96f0c58ece3505180b0659ea14702c358b923178a2e892ba5ff680e61d7f648873fd7255fc829ccf49935c8dd0dfb37105aea30c",
+          "sha256": "ba02e568def7fc2b25fbce3da1f30149019aae4796e70abff94415a7657ecb89",
+          "sha1": "6053e5f5a6e0d6b31335cb11571b267c9526c008",
+          "md5": "4746a47f78551566c42f75781596a5bb"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.vectordrawable",
+          "module": "vectordrawable",
+          "version": {
+            "requires": "1.2.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "vectordrawable-animated-1.2.0.aar",
+          "url": "vectordrawable-animated-1.2.0.aar",
+          "size": 38592,
+          "sha512": "42d134a3f018face146febc7858578d3a67fdc808c62a058c1f5bf6fc20ecd0d418f355f6a50e6851115ab4827f45eb61a0758ca83b398896af334f4a30ea0dc",
+          "sha256": "8fc0ca57a3cdf876493bc0cb2938e5986da147db945a9fdaea11ac306518c875",
+          "sha1": "b5b931c2adcb6edd55d62049c71d536385231f96",
+          "md5": "560eb1bac990c2159313055481eadac7"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.12.0"
+          }
+        },
+        {
+          "group": "androidx.interpolator",
+          "module": "interpolator",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.vectordrawable",
+          "module": "vectordrawable",
+          "version": {
+            "requires": "1.2.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "vectordrawable-animated-1.2.0.aar",
+          "url": "vectordrawable-animated-1.2.0.aar",
+          "size": 38592,
+          "sha512": "42d134a3f018face146febc7858578d3a67fdc808c62a058c1f5bf6fc20ecd0d418f355f6a50e6851115ab4827f45eb61a0758ca83b398896af334f4a30ea0dc",
+          "sha256": "8fc0ca57a3cdf876493bc0cb2938e5986da147db945a9fdaea11ac306518c875",
+          "sha1": "b5b931c2adcb6edd55d62049c71d536385231f96",
+          "md5": "560eb1bac990c2159313055481eadac7"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "vectordrawable-animated-1.2.0-versionMetadata.json",
+          "url": "vectordrawable-animated-1.2.0-versionMetadata.json",
+          "size": 2379,
+          "sha512": "df8a79f9b2837301a24dab262b2d4f5a8ba61b8022ede5b44a237f03aa3c79aa60ba5d8c719efabfa1ddd6fb514377d643b064dd67be60fe36621b76695c9ff3",
+          "sha256": "7daa5866007c304ccf89b4b06c154d2e1d1ab6356c7b7d53d5ba6c53634a2ae8",
+          "sha1": "c606b463f55d2da130d1b9a3ece07d8b650764f2",
+          "md5": "96630d3f640ad3de1bc6e3ffb91e22f7"
+        }
+      ]
+    }
+  ]
+}

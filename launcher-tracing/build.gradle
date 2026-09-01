@@ -1,0 +1,61 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// tracinglib-platform (com.android.app.tracing.*) — migrated from
+// frameworks/libs/systemui/tracinglib/Android.bp (java_library
+// "tracinglib-platform", srcs = :tracinglib-core-srcs). The launcher calls
+// traceSection/FlowTracing at runtime, so the classes are packaged into the APK
+// (previously a compileOnly Soong jar).
+def lineageRoot = rootProject.ext.lineageRoot
+
+android {
+    namespace 'com.android.app.tracing'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 31
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            kotlin.srcDirs = [
+                "${lineageRoot}/frameworks/libs/systemui/tracinglib/core/src",
+                'src/main/kotlin',
+            ]
+            java.srcDirs = ['src/main/java']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches Android.bp kotlincflags: ["-Xjvm-default=all", "-Xexplicit-api=strict"].
+        freeCompilerArgs += ['-Xjvm-default=all', '-Xexplicit-api=strict']
+    }
+}
+
+dependencies {
+    // Full framework (hidden APIs: Trace.instantForTrack, TraceNameSupplier) —
+    // the root build.gradle puts it first on the compile classpath; the
+    // platform provides it at runtime.
+    compileOnly files(rootProject.ext.frameworkJar)
+    // android.os.Flags.perfettoSdkTracingV2() — aconfig-generated framework
+    // flags class (provided by the platform at runtime; same vendored jar the
+    // launcher uses, so no stub is needed here).
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/android.os.flags-aconfig-java/android_common/javac/android.os.flags-aconfig-java.jar'))
+    // com.android.systemui.Flags.coroutineTracing() — aconfig-generated
+    // SystemUI flags class. compileOnly here (the launcher packages the real
+    // class from the same vendored jar; the earlier hand-written stub is gone).
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/packages/SystemUI/aconfig/com_android_systemui_flags_lib/android_common/javac/com_android_systemui_flags_lib.jar'))
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
+}

@@ -1,0 +1,249 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.wear.watchface",
+    "module": "watchface-complications-data-source-ktx",
+    "version": "1.3.0-alpha07",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data-source",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        }
+      ],
+      "files": [
+        {
+          "name": "watchface-complications-data-source-ktx-1.3.0-alpha07-sources.jar",
+          "url": "watchface-complications-data-source-ktx-1.3.0-alpha07-sources.jar",
+          "size": 6574,
+          "sha512": "300362760080500113b3f54427cf6151635cd148c0704660c2216bd6b319351ac2296ee90c7971b582b2295310027e2c7b6c9197e1056b8590607ca1fc283b14",
+          "sha256": "f01eac83a3a93bb97b83fcc0d80ff80db04973d4761e567182ed09ebcd594b50",
+          "sha1": "43887f443eea87dc8bd370197be50a02e55bfc14",
+          "md5": "77ffa25f34656945626c40bec505cbdd"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data-source",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data-source",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "watchface-complications-data-source-ktx-1.3.0-alpha07.aar",
+          "url": "watchface-complications-data-source-ktx-1.3.0-alpha07.aar",
+          "size": 12930,
+          "sha512": "9fbefe0e0945c6d9f5d4fbd1ecf0d6878024cd4341a44eec9102e51c42f02d7be7173a624c09b8eb4299c4dc79e43310e3032ca20e74d27b308d13552ddd6040",
+          "sha256": "3d9ddaea36124e9aab22118a05f4f2c7d0e2fe51b4ba96800bebd759d4846620",
+          "sha1": "33c47d55cec36b8f8dcb252e822170adf8dd9f16",
+          "md5": "b2605744a7aa9c32e5e8c91d8d399bcb"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data-source",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data-source",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "watchface-complications-data-source-ktx-1.3.0-alpha07.aar",
+          "url": "watchface-complications-data-source-ktx-1.3.0-alpha07.aar",
+          "size": 12930,
+          "sha512": "9fbefe0e0945c6d9f5d4fbd1ecf0d6878024cd4341a44eec9102e51c42f02d7be7173a624c09b8eb4299c4dc79e43310e3032ca20e74d27b308d13552ddd6040",
+          "sha256": "3d9ddaea36124e9aab22118a05f4f2c7d0e2fe51b4ba96800bebd759d4846620",
+          "sha1": "33c47d55cec36b8f8dcb252e822170adf8dd9f16",
+          "md5": "b2605744a7aa9c32e5e8c91d8d399bcb"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        },
+        {
+          "group": "androidx.wear.watchface",
+          "module": "watchface-complications-data-source",
+          "version": {
+            "requires": "1.3.0-alpha07"
+          },
+          "reason": "watchface-complications-data-source-ktx is in atomic group androidx.wear.watchface"
+        }
+      ],
+      "files": [
+        {
+          "name": "watchface-complications-data-source-ktx-1.3.0-alpha07-versionMetadata.json",
+          "url": "watchface-complications-data-source-ktx-1.3.0-alpha07-versionMetadata.json",
+          "size": 1369,
+          "sha512": "2d45d8d6c3d9f7ad0c78608f539215fa4f8c484a723f2a53b35fa1f3b45bcd78cd4ee60139939955a6c5bed1869433e889eac5a417d635441720953aa107fdc1",
+          "sha256": "8b8006acbc6a7f586be98010c8d45e56234b60e6be62ada29c401b6627c58100",
+          "sha1": "85cd6503f3adfd6ff09102a04fd1f44f042fcf72",
+          "md5": "f2aeeff83bf3f2f4fffe4dae14f0a4de"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+version: "2.10.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-runtime"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.navigation"
+artifact_id: "navigation-runtime-ktx"
+path: "/navigation/navigation-runtime-ktx"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.navigation-navigation-runtime-ktx-all-2.10.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-common"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-common-ktx"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-compose"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-dynamic-features-fragment"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-dynamic-features-runtime"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-fragment"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-fragment-compose"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-fragment-ktx"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-runtime"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-safe-args-generator"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-safe-args-gradle-plugin"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-testing"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-ui"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-ui-ktx"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "navigation-navigation-runtime-ktxreleaseAndroidTest.xml"
+test_module_names: ":navigation:navigation-runtime-ktx:testReleaseUnitTest"

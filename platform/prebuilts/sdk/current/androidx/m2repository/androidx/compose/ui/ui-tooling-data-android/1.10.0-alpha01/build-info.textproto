@@ -1,0 +1,161 @@
+version: "1.10.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-tooling-data-android"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-tooling-data-jvmstubs"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "13737533"
+group_id: "androidx.compose.ui"
+artifact_id: "ui-tooling-data"
+path: "/compose/ui/ui-tooling-data"
+sha: "84c18801ee8982f06562f6c17cf5b4ee81e28c80"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.compose.ui-ui-tooling-data-all-13737533-1.10.0-alpha01.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-geometry"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-graphics"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-graphics-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-test"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-test-accessibility"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-test-junit4"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-test-junit4-accessibility"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-test-manifest"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-test-manifest-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-text"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-text-google-fonts"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-text-lint"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-tooling"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-tooling-preview"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-unit"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-util"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-viewbinding"
+    version: "1.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx"
+kmp_children: "android"
+kmp_children: "jvmstubs"
+test_module_names: ":compose:ui:ui-tooling-data:jvmStubsTest"
+test_module_names: "compose-ui-ui-tooling-dataandroidInstrumentedTest.xml"
+test_module_names: ":compose:ui:ui-tooling-data:testAndroidHostTest"

@@ -1,0 +1,590 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../ui-geometry/1.10.0-alpha01/ui-geometry-1.10.0-alpha01.module",
+    "group": "androidx.compose.ui",
+    "module": "ui-geometry",
+    "version": "1.10.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14",
+      "buildId:": "13737533"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-accessibility",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-junit4-accessibility",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-junit4",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-manifest",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-manifest-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text-google-fonts",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-data",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-preview",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-unit",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-util",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-viewbinding",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        }
+      ],
+      "files": [
+        {
+          "name": "ui-geometry.aar",
+          "url": "ui-geometry-android-1.10.0-alpha01.aar",
+          "size": 59159,
+          "sha512": "cc0e55193a45b47ef927092df06d045d6d61a560f0b885317d6944c6590ef90cec3647df0332152a058f21b716e35afbf0fb2178e971098376e5658266e6f942",
+          "sha256": "ae0b5f76a2d746f84adde0e60368b62b6bc63c1371be4c8bc506dcc4c4e32a8f",
+          "sha1": "b97abe657c02a87fd3aba6b8d8fe0df0738662b4",
+          "md5": "267a573180a85fbb3dd996b512b00c50"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-util",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-accessibility",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-junit4-accessibility",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-junit4",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-manifest",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-manifest-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text-google-fonts",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-data",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-preview",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-unit",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-util",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-viewbinding",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ui-geometry.aar",
+          "url": "ui-geometry-android-1.10.0-alpha01.aar",
+          "size": 59159,
+          "sha512": "cc0e55193a45b47ef927092df06d045d6d61a560f0b885317d6944c6590ef90cec3647df0332152a058f21b716e35afbf0fb2178e971098376e5658266e6f942",
+          "sha256": "ae0b5f76a2d746f84adde0e60368b62b6bc63c1371be4c8bc506dcc4c4e32a8f",
+          "sha1": "b97abe657c02a87fd3aba6b8d8fe0df0738662b4",
+          "md5": "267a573180a85fbb3dd996b512b00c50"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-accessibility",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-junit4-accessibility",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-junit4",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-manifest",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-test-manifest-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text-google-fonts",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-data",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-preview",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-unit",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-util",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-viewbinding",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "ui-geometry is in atomic group androidx.compose.ui"
+        }
+      ],
+      "files": [
+        {
+          "name": "ui-geometry-android-1.10.0-alpha01-sources.jar",
+          "url": "ui-geometry-android-1.10.0-alpha01-sources.jar",
+          "size": 25602,
+          "sha512": "f8f865e8ce61af09662b0ac41482193ca7e9b899beff0e62415a3b2a48650781528bfcfb445e1d624bb12e7952e6790360e20bc11d3640a947272a94e2318360",
+          "sha256": "8b4ab7f4776d1e1d78fbdde46637bfe51f01e365d13d5253b905bf3f0361b0e0",
+          "sha1": "6b4cf4eb24212c0a73050aec643c6f27c9ced661",
+          "md5": "8d97af06c9761d7981c6643e6bfa70f1"
+        }
+      ]
+    }
+  ]
+}

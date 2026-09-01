@@ -1,0 +1,122 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.versionedparcelable",
+    "module": "versionedparcelable",
+    "version": "1.2.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "versionedparcelable-1.2.0-rc01-sources.jar",
+          "url": "versionedparcelable-1.2.0-rc01-sources.jar",
+          "size": 25868,
+          "sha512": "0224ba0c2353384db088ab6a662c8299d32def6f295f89e691121e0339ec29142f28fe1f6228cc07e4d35d939bd417d7edd06d6991e91cb0ac6cdc16216defaf",
+          "sha256": "58f8f0db60d843cca43363a7ce0c754182d434c13a933cdf2972ec14e7cd94a5",
+          "sha1": "4ea902c84ee61526c34ee82d5adfde9e1017beed",
+          "md5": "1194431ed1e818f90d8daf2b65231af1"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.2.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "versionedparcelable-1.2.0-rc01.aar",
+          "url": "versionedparcelable-1.2.0-rc01.aar",
+          "size": 38868,
+          "sha512": "4993b9a0b3418672f0010692b841dc3c4723a1b652eb4daf8a208b87bfc2c3f4eccaa4f4ef8b2cab51e0f5bfb1f045869b68796a60e964f61de1a6afd476554d",
+          "sha256": "4f904d5674bc5eadb667b906ed8472236743dac8e21375b761891679cee9664a",
+          "sha1": "b0a97536d2c665d0a686defe78725066b86054e8",
+          "md5": "6b346d3b16b33683869f478e1d30f0a8"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "versionedparcelable-1.2.0-rc01.aar",
+          "url": "versionedparcelable-1.2.0-rc01.aar",
+          "size": 38868,
+          "sha512": "4993b9a0b3418672f0010692b841dc3c4723a1b652eb4daf8a208b87bfc2c3f4eccaa4f4ef8b2cab51e0f5bfb1f045869b68796a60e964f61de1a6afd476554d",
+          "sha256": "4f904d5674bc5eadb667b906ed8472236743dac8e21375b761891679cee9664a",
+          "sha1": "b0a97536d2c665d0a686defe78725066b86054e8",
+          "md5": "6b346d3b16b33683869f478e1d30f0a8"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "versionedparcelable-1.2.0-rc01-versionMetadata.json",
+          "url": "versionedparcelable-1.2.0-rc01-versionMetadata.json",
+          "size": 812,
+          "sha512": "22a9ed98f02c6fb3b74dd973ccf21bfdb6da82bed4d53f7ef8efdd3c405934e4684f990a2a2c17f55e9c1745ba524a76ece3ed2985d49c635d8d36478c4a55b3",
+          "sha256": "e77cb446474ed330703e863d18f15890bc986718b0fb4cbcd90ef1c48b100daa",
+          "sha1": "28adf44ff82497f0f7ac082d5dd8f7590dcbb67c",
+          "md5": "50ff87e7093a2dc159727e91a0b270bb"
+        }
+      ]
+    }
+  ]
+}

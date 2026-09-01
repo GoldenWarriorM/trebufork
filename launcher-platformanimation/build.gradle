@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// PlatformAnimationLib (com.android.systemui.animation.*) + SystemUIShaderLib
+// (com.android.systemui.surfaceeffects.*) — migrated from
+// frameworks/base/packages/SystemUI/animation/Android.bp. The launcher uses
+// ActivityTransitionAnimator, LaunchableView, ViewRootSync,
+// back.FlingOnBackAnimationCallback, RemoteAnimationDelegate etc. at runtime,
+// so the classes are packaged into the APK (previously two compileOnly Soong
+// jars). The bp builds the surfaceeffects subdir as a separate SystemUIShaderLib
+// static lib and the rest as PlatformAnimationLib; compiling them together in
+// one module is equivalent for the launcher. The com.android.systemui.util.*
+// helpers (dpToPx, registerAnimationOnBackInvoked, ...) live in this source
+// set too.
+def lineageRoot = rootProject.ext.lineageRoot
+def animSrc = "${lineageRoot}/frameworks/base/packages/SystemUI/animation/src"
+def animRes = "${lineageRoot}/frameworks/base/packages/SystemUI/animation/res"
+
+android {
+    namespace 'com.android.systemui.animation'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [animSrc]
+            kotlin.srcDirs = [animSrc]
+            res.srcDirs = [animRes]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches Android.bp kotlincflags: ["-Xjvm-default=all"].
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+dependencies {
+    // Full framework (hidden com.android.internal.dynamicanimation,
+    // InteractionJankMonitor, ScreenDecorationsUtils, RemoteTransitionStub,
+    // SurfaceSyncGroup) — the root build.gradle puts it first on the compile
+    // classpath; the platform provides it at runtime.
+    compileOnly files(rootProject.ext.frameworkJar)
+    // com.android.systemui.Flags / com.android.window.flags.Flags aconfig
+    // classes (compileOnly; the launcher packages the SystemUI flags class,
+    // the window flags class comes from the device framework bootclasspath).
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/packages/SystemUI/aconfig/com_android_systemui_flags_lib/android_common/javac/com_android_systemui_flags_lib.jar'))
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/com.android.window.flags.window-aconfig-java/android_common/javac/com.android.window.flags.window-aconfig-java.jar'))
+    // WindowManager-Shell-shared (CounterRotator, IShellTransitions,
+    // ShellTransitions, TransitionUtil) and animationlib (Interpolators).
+    implementation project(':launcher-wmshell')
+    implementation project(':launcher-animationlib')
+    implementation 'androidx.core:core-animation:1.0.0'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.annotation:annotation:1.9.1'
+}

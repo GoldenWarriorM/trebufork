@@ -1,0 +1,104 @@
+version: "1.5.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.benchmark"
+    artifact_id: "benchmark-common"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.9.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.profileinstaller"
+    artifact_id: "profileinstaller"
+    version: "1.4.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.tracing"
+    artifact_id: "tracing-ktx"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.tracing"
+    artifact_id: "tracing-perfetto"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.tracing"
+    artifact_id: "tracing-perfetto-binary"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.tracing"
+    artifact_id: "tracing-perfetto-handshake"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.benchmark"
+artifact_id: "benchmark-macro"
+path: "/benchmark/benchmark-macro"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.benchmark-benchmark-macro-all-1.5.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.benchmark"
+    artifact_id: "benchmark-baseline-profile-gradle-plugin"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.benchmark"
+    artifact_id: "benchmark-common"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.benchmark"
+    artifact_id: "benchmark-gradle-plugin"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.benchmark"
+    artifact_id: "benchmark-junit4"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.benchmark"
+    artifact_id: "benchmark-macro-junit4"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.benchmark"
+    artifact_id: "benchmark-traceprocessor"
+    version: "1.5.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "benchmark-benchmark-macroreleaseAndroidTest.xml"
+test_module_names: ":benchmark:benchmark-macro:testReleaseUnitTest"

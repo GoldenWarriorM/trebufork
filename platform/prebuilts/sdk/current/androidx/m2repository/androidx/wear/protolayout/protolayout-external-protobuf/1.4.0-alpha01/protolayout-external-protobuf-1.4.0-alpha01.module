@@ -1,0 +1,396 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.wear.protolayout",
+    "module": "protolayout-external-protobuf",
+    "version": "1.4.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression-pipeline",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material-core",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material3",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-proto",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-renderer",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-testing",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        }
+      ],
+      "files": [
+        {
+          "name": "protolayout-external-protobuf-1.4.0-alpha01.jar",
+          "url": "protolayout-external-protobuf-1.4.0-alpha01.jar",
+          "size": 1042301,
+          "sha512": "9a81356f9fe64a9d76816fd4fabaa370e4e3b2368042136806350443fc51470bb5a70be6c6331de14dcc69a3d0765fb322bb0ee8ed557f97d490d8e39d68bf71",
+          "sha256": "06a49093bfb0b236d9bbdeea4c227f642370d9ebf173a84a6636900c7b152e3a",
+          "sha1": "059efd04f7bad47b40abf0518be3b55e9778ef55",
+          "md5": "cd7cfdd9bd6482d94a42592cf15760a2"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression-pipeline",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material-core",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material3",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-proto",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-renderer",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-testing",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        }
+      ],
+      "files": [
+        {
+          "name": "protolayout-external-protobuf-1.4.0-alpha01.jar",
+          "url": "protolayout-external-protobuf-1.4.0-alpha01.jar",
+          "size": 1042301,
+          "sha512": "9a81356f9fe64a9d76816fd4fabaa370e4e3b2368042136806350443fc51470bb5a70be6c6331de14dcc69a3d0765fb322bb0ee8ed557f97d490d8e39d68bf71",
+          "sha256": "06a49093bfb0b236d9bbdeea4c227f642370d9ebf173a84a6636900c7b152e3a",
+          "sha1": "059efd04f7bad47b40abf0518be3b55e9778ef55",
+          "md5": "cd7cfdd9bd6482d94a42592cf15760a2"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression-pipeline",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material-core",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material3",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-proto",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-renderer",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-testing",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        }
+      ],
+      "files": [
+        {
+          "name": "protolayout-external-protobuf-1.4.0-alpha01-sources.jar",
+          "url": "protolayout-external-protobuf-1.4.0-alpha01-sources.jar",
+          "size": 1823,
+          "sha512": "12235d25259dc766461990653afb7252a82cd52525529176187ec6f2c056ca26902f37dc9be6548cbd1f08dc17edd90293db015b4d782049ac754d9e5a2b92a2",
+          "sha256": "a06796f0172cb0faa16d558c67c17c5c04ab3ac9282303f4e3013f39ec46942f",
+          "sha1": "c8617959ac7c27b6f875152627b6e4356190e992",
+          "md5": "8389e3e8f5a8340e0cc0d1f152cfe0ab"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-expression-pipeline",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material-core",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-material3",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-proto",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-renderer",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        },
+        {
+          "group": "androidx.wear.protolayout",
+          "module": "protolayout-testing",
+          "version": {
+            "requires": "1.4.0-alpha01"
+          },
+          "reason": "protolayout-external-protobuf is in atomic group androidx.wear.protolayout"
+        }
+      ],
+      "files": [
+        {
+          "name": "protolayout-external-protobuf-1.4.0-alpha01-versionMetadata.json",
+          "url": "protolayout-external-protobuf-1.4.0-alpha01-versionMetadata.json",
+          "size": 2,
+          "sha512": "b25b294cb4deb69ea00a4c3cf3113904801b6015e5956bd019a8570b1fe1d6040e944ef3cdee16d0a46503ca6e659a25f21cf9ceddc13f352a3c98138c15d6af",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "sha1": "97d170e1550eee4afc0af065b78cda302a97674c",
+          "md5": "d751713988987e9331980363e24189ce"
+        }
+      ]
+    }
+  ]
+}

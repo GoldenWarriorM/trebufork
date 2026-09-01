@@ -1,0 +1,301 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.emoji2",
+    "module": "emoji2",
+    "version": "1.6.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-emojipicker",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-bundled",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views-helper",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji2-1.6.0-sources.jar",
+          "url": "emoji2-1.6.0-sources.jar",
+          "size": 61240,
+          "sha512": "d7ac436eeabb9cdc89b8fe6e8827bf7a58f057f7d3835153ccf7c4b943cd3143eccfaf005fec422fd751609a5636ef694052da7db15dbff4f0fbe1700de52cab",
+          "sha256": "6e38c8e4cc1829e0733fc9083493a7427f95b88338ec81b87bdee702e3a87868",
+          "sha1": "04e894b477f82094ed772893553d2a7203716491",
+          "md5": "62cbcad788a4054d62811356c438610e"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "androidx.startup",
+          "module": "startup-runtime",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-emojipicker",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-bundled",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views-helper",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji2-1.6.0.aar",
+          "url": "emoji2-1.6.0.aar",
+          "size": 153458,
+          "sha512": "d4bafb68b2fdcd324a955e14a25a4bbbd7e341bd40fdce4d480b35ad8460d791ad53b278724a64078bf56cd7aa258d080616a649ccb4c13cac0f6e9c44f94bd5",
+          "sha256": "b137765770ef7e16095eac5d752804079c8446583172cd13f43bcc42421f16c4",
+          "sha1": "897cb7c2a51d0abd6cfb947fdc33e5ca7fce9ee1",
+          "md5": "0d132ff50e90861a765c1317b713976c"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.4.2"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-process",
+          "version": {
+            "requires": "2.4.1"
+          }
+        },
+        {
+          "group": "androidx.startup",
+          "module": "startup-runtime",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-emojipicker",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-bundled",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views-helper",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji2-1.6.0.aar",
+          "url": "emoji2-1.6.0.aar",
+          "size": 153458,
+          "sha512": "d4bafb68b2fdcd324a955e14a25a4bbbd7e341bd40fdce4d480b35ad8460d791ad53b278724a64078bf56cd7aa258d080616a649ccb4c13cac0f6e9c44f94bd5",
+          "sha256": "b137765770ef7e16095eac5d752804079c8446583172cd13f43bcc42421f16c4",
+          "sha1": "897cb7c2a51d0abd6cfb947fdc33e5ca7fce9ee1",
+          "md5": "0d132ff50e90861a765c1317b713976c"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-emojipicker",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-bundled",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        },
+        {
+          "group": "androidx.emoji2",
+          "module": "emoji2-views-helper",
+          "version": {
+            "requires": "1.6.0"
+          },
+          "reason": "emoji2 is in atomic group androidx.emoji2"
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji2-1.6.0-versionMetadata.json",
+          "url": "emoji2-1.6.0-versionMetadata.json",
+          "size": 7290,
+          "sha512": "efdf1d5ec911523d6042581ad177f0cc8f42416045177fec7f23ab650495e6ec955edd1addfed19b5d94403d8ac792035a090bb9d502651fe31dabb789dd95a7",
+          "sha256": "aedde8454d404bbaa689d243a6849eddb152fb45c9dafea91eab78d06fea8a23",
+          "sha1": "177875d7785732b986a3700f2ab399622ddd1728",
+          "md5": "d70ac4eb97a398d0fb12678f83516adc"
+        }
+      ]
+    }
+  ]
+}

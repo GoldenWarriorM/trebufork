@@ -1,0 +1,128 @@
+version: "1.6.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-core"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera.viewfinder"
+    artifact_id: "viewfinder-compose"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera.viewfinder"
+    artifact_id: "viewfinder-core"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.foundation"
+    artifact_id: "foundation-layout"
+    version: "1.6.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.7.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui"
+    version: "1.7.8"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core-ktx"
+    version: "1.12.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.camera"
+artifact_id: "camera-compose"
+path: "/camera/camera-compose"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.camera-camera-compose-all-1.6.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-camera2"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-camera2-pipe"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-camera2-pipe-integration"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-camera2-pipe-testing"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-core"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-effects"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-extensions"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-lifecycle"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-mlkit-vision"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-video"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-view"
+    version: "1.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "camera-camera-composereleaseAndroidTest.xml"
+test_module_names: ":camera:camera-compose:testReleaseUnitTest"

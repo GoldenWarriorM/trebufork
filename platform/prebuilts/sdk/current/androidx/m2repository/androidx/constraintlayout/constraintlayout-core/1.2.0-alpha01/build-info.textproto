@@ -1,0 +1,25 @@
+version: "1.2.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "13737533"
+group_id: "androidx.constraintlayout"
+artifact_id: "constraintlayout-core"
+path: "/constraintlayout/constraintlayout-core"
+sha: "84c18801ee8982f06562f6c17cf5b4ee81e28c80"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.constraintlayout-constraintlayout-core-all-13737533-1.2.0-alpha01.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: ":constraintlayout:constraintlayout-core:test"

@@ -1,0 +1,155 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../collection/1.5.0/collection-1.5.0.module",
+    "group": "androidx.collection",
+    "module": "collection",
+    "version": "1.5.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14",
+      "buildId:": "13737533"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.9.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.collection",
+          "module": "collection-ktx",
+          "version": {
+            "requires": "1.5.0"
+          },
+          "reason": "collection is in atomic group androidx.collection"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "collection-jvm-1.5.0.jar",
+          "url": "collection-jvm-1.5.0.jar",
+          "size": 870387,
+          "sha512": "25e6f7b113ff1b12ac0f327246ba4fceb36b1db14972f2ebdd84271233c7f2b47c75556e301ce236dba201619a1358f48953a298489df57957f9aeaeaa6dea9e",
+          "sha256": "34859fa9c36c23938d7c7ea0a6da50d3e0ad93138e4dd01ce9c629bb9bf81fa5",
+          "sha1": "691cd5fcbc0e18f9e140b6cf9cbd1bae3281ebfd",
+          "md5": "f8214d9f999b7f841dd8f0eaac2152d6"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.9.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.collection",
+          "module": "collection-ktx",
+          "version": {
+            "requires": "1.5.0"
+          },
+          "reason": "collection is in atomic group androidx.collection"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "collection-jvm-1.5.0.jar",
+          "url": "collection-jvm-1.5.0.jar",
+          "size": 870387,
+          "sha512": "25e6f7b113ff1b12ac0f327246ba4fceb36b1db14972f2ebdd84271233c7f2b47c75556e301ce236dba201619a1358f48953a298489df57957f9aeaeaa6dea9e",
+          "sha256": "34859fa9c36c23938d7c7ea0a6da50d3e0ad93138e4dd01ce9c629bb9bf81fa5",
+          "sha1": "691cd5fcbc0e18f9e140b6cf9cbd1bae3281ebfd",
+          "md5": "f8214d9f999b7f841dd8f0eaac2152d6"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.collection",
+          "module": "collection-ktx",
+          "version": {
+            "requires": "1.5.0"
+          },
+          "reason": "collection is in atomic group androidx.collection"
+        }
+      ],
+      "files": [
+        {
+          "name": "collection-jvm-1.5.0-sources.jar",
+          "url": "collection-jvm-1.5.0-sources.jar",
+          "size": 288567,
+          "sha512": "63456683eed57b51d3ba1be12e93ecca74d5743766a53eafaa7a1c2a427cb82a155671c9106df75626f4deaf801876be57787d04751581ad6307d6a5b89eb2ba",
+          "sha256": "6eb899be6adc290e299b7adf2ceaf0f638ff87666a675f988ecaf4245221df7e",
+          "sha1": "c6cd7c977440a11848883082d6330b76f8c2daad",
+          "md5": "c954b1295356624328aa12a3aec4bfc7"
+        }
+      ]
+    }
+  ]
+}

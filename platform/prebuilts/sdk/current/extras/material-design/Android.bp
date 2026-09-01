@@ -1,0 +1,66 @@
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "prebuilts_sdk_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-Apache-2.0
+    default_applicable_licenses: ["prebuilts_sdk_license"],
+}
+
+android_library_import {
+    name: "android-support-design-nodeps",
+    aars: ["design/com/android/support/design/28.0.0/design-28.0.0.aar"],
+    sdk_version: "current",
+    min_sdk_version: "19",
+    static_libs: [
+        "android-support-annotations",
+        "android-support-compat",
+        "android-support-core-ui",
+        "android-support-core-utils",
+        "android-support-fragment",
+        "android-support-transition",
+        "android-support-v7-appcompat",
+        "android-support-v7-cardview",
+        "android-support-v7-recyclerview",
+    ],
+}
+
+android_library {
+    name: "android-support-design",
+    sdk_version: "current",
+    min_sdk_version: "19",
+    manifest: "manifests/android-support-design/AndroidManifest.xml",
+    static_libs: [
+        "android-support-design-nodeps",
+        "android-support-annotations",
+        "android-support-compat",
+        "android-support-core-ui",
+        "android-support-core-utils",
+        "android-support-fragment",
+        "android-support-transition",
+        "android-support-v7-appcompat",
+        "android-support-v7-cardview",
+        "android-support-v7-recyclerview",
+    ],
+    java_version: "1.7",
+}
+
+android_library_import {
+    name: "flexbox-nodeps",
+    aars: ["repository/com/google/android/flexbox/0.3.2/flexbox-0.3.2.aar"],
+    sdk_version: "current",
+    static_libs: [
+    ],
+    jetifier: true,
+}
+
+android_library {
+    name: "flexbox",
+    sdk_version: "current",
+    manifest: "manifests/flexbox/AndroidManifest.xml",
+    static_libs: [
+        "flexbox-nodeps",
+    ],
+    java_version: "1.7",
+}
+

@@ -1,0 +1,130 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.core",
+    "module": "core-animation-testing",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "core-animation-testing-1.0.0-sources.jar",
+          "url": "core-animation-testing-1.0.0-sources.jar",
+          "size": 6618,
+          "sha512": "26973d71a3bf0de6bb097d6b2534dc3a43b3eaa730ef05acfaded9ff27784fca0c4de8fc207e9ab9b166b9422d66eff105b9b10b87d37fc789bdc8eaede32728",
+          "sha256": "8ca585cba094f3353e75bea2c85615883e193d790f894509413937fb91667eef",
+          "sha1": "c2d00d8b18b8d8ac999ce7923db21c968aec1ba0",
+          "md5": "8ef09fcb4a5a8bf17e642fd4109ab105"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "core-animation-testing-1.0.0.aar",
+          "url": "core-animation-testing-1.0.0.aar",
+          "size": 8534,
+          "sha512": "d04dfed56fb14af062e72ea85fe0dc0ba622b440ef870b0a3adde1e3678a27bff600fac47302ffaad2b10d3dea7a91413f2774c1d8b65ac18f474219fd067d95",
+          "sha256": "4ffbe058ccb586ad6893e1eb047cd01b410a1fdf4c101a6b9235ae42d5319b26",
+          "sha1": "1c779b1ba319e66eacf642141e83bc14389a4fd1",
+          "md5": "5e433ac38ac9cb82f541a55b58f36573"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-animation",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "junit",
+          "module": "junit",
+          "version": {
+            "requires": "4.13.2"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "core-animation-testing-1.0.0.aar",
+          "url": "core-animation-testing-1.0.0.aar",
+          "size": 8534,
+          "sha512": "d04dfed56fb14af062e72ea85fe0dc0ba622b440ef870b0a3adde1e3678a27bff600fac47302ffaad2b10d3dea7a91413f2774c1d8b65ac18f474219fd067d95",
+          "sha256": "4ffbe058ccb586ad6893e1eb047cd01b410a1fdf4c101a6b9235ae42d5319b26",
+          "sha1": "1c779b1ba319e66eacf642141e83bc14389a4fd1",
+          "md5": "5e433ac38ac9cb82f541a55b58f36573"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "core-animation-testing-1.0.0-versionMetadata.json",
+          "url": "core-animation-testing-1.0.0-versionMetadata.json",
+          "size": 346,
+          "sha512": "f6d79b7347ac7474ca0afdba71c730e9d66995d442865aebd1cc480d4f77c6e084eef8baf78067bab1087a6009efdc55a052710fc5718bcb979beba5db0e3b33",
+          "sha256": "0ffee50f9c8484cbda0b38e8ab285ac43c3e9aca3e64e91a2f914af97d5f10d7",
+          "sha1": "03b614b7119779b1ec6a457091e09b2843476484",
+          "md5": "6176c04e51c44c8f280a199aba3fca18"
+        }
+      ]
+    }
+  ]
+}

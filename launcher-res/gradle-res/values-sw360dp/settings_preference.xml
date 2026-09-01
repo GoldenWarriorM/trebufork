@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AndroidX Preference defaults this to true at sw360dp, but Launcher
+         settings intentionally have no preference icon column. -->
+    <bool name="config_materialPreferenceIconSpaceReserved">false</bool>
+</resources>

@@ -1,0 +1,272 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.privacysandbox.tools",
+    "module": "tools-core-external-protobuf",
+    "version": "1.0.0-alpha13",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apicompiler",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apigenerator",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apipackager",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-core",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        }
+      ],
+      "files": [
+        {
+          "name": "tools-core-external-protobuf-1.0.0-alpha13.jar",
+          "url": "tools-core-external-protobuf-1.0.0-alpha13.jar",
+          "size": 1053741,
+          "sha512": "a02d25cff4169ef1f9259f8398cb48a6a0330fcd78c9eb87cd31cbb0e83c052e463e23948245fb241ab4a793e48a2d7cc13b071abdade3256d75d49e47612dca",
+          "sha256": "5fda39bf550a21ce5a5e9b5ebb88fd97aec6de53755dae5f71429f6647debc25",
+          "sha1": "decdbed1a2ecba26b77d4b3aa87c0ed93aa04c3b",
+          "md5": "412d693578a7c2d3d84fdb0804098a23"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apicompiler",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apigenerator",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apipackager",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-core",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        }
+      ],
+      "files": [
+        {
+          "name": "tools-core-external-protobuf-1.0.0-alpha13.jar",
+          "url": "tools-core-external-protobuf-1.0.0-alpha13.jar",
+          "size": 1053741,
+          "sha512": "a02d25cff4169ef1f9259f8398cb48a6a0330fcd78c9eb87cd31cbb0e83c052e463e23948245fb241ab4a793e48a2d7cc13b071abdade3256d75d49e47612dca",
+          "sha256": "5fda39bf550a21ce5a5e9b5ebb88fd97aec6de53755dae5f71429f6647debc25",
+          "sha1": "decdbed1a2ecba26b77d4b3aa87c0ed93aa04c3b",
+          "md5": "412d693578a7c2d3d84fdb0804098a23"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apicompiler",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apigenerator",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apipackager",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-core",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        }
+      ],
+      "files": [
+        {
+          "name": "tools-core-external-protobuf-1.0.0-alpha13-sources.jar",
+          "url": "tools-core-external-protobuf-1.0.0-alpha13-sources.jar",
+          "size": 1863,
+          "sha512": "b5ba944591aac83dd02db82d69106f01476facf821bfa94491798415389bf14d56ce035ea5780b5ed4883130eb665f2b90d8631da4b4c44479f9643eb5779fc4",
+          "sha256": "04146af6c5073a5c724baf80c6a68dec8edcbd870f067f019711c7cf40f277b9",
+          "sha1": "d8088a5da390763cf8ac31b51255605c4cf52503",
+          "md5": "c6420f3c3721f5ab6efaac72f5818247"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apicompiler",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apigenerator",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-apipackager",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        },
+        {
+          "group": "androidx.privacysandbox.tools",
+          "module": "tools-core",
+          "version": {
+            "requires": "1.0.0-alpha13"
+          },
+          "reason": "tools-core-external-protobuf is in atomic group androidx.privacysandbox.tools"
+        }
+      ],
+      "files": [
+        {
+          "name": "tools-core-external-protobuf-1.0.0-alpha13-versionMetadata.json",
+          "url": "tools-core-external-protobuf-1.0.0-alpha13-versionMetadata.json",
+          "size": 2,
+          "sha512": "b25b294cb4deb69ea00a4c3cf3113904801b6015e5956bd019a8570b1fe1d6040e944ef3cdee16d0a46503ca6e659a25f21cf9ceddc13f352a3c98138c15d6af",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "sha1": "97d170e1550eee4afc0af065b78cda302a97674c",
+          "md5": "d751713988987e9331980363e24189ce"
+        }
+      ]
+    }
+  ]
+}

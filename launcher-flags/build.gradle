@@ -1,0 +1,43 @@
+plugins {
+    id 'com.android.library'
+}
+
+// aconfig-generated flag classes the launcher evaluates at runtime and that
+// the Soong build packages into the APK:
+//   com.android.wm.shell.Flags          (com_android_wm_shell_flags_lib)
+//   com.android.systemui.shared.Flags   (com_android_systemui_shared_flags_lib)
+//   com.android.systemui.Flags          (com_android_systemui_flags_lib)
+//   com.android.launcher3.Flags         (com_android_launcher3_flags_lib)
+//
+// The sources in src/main/java are the exact output of Soong's aconfig
+// code generator (aconfig create-java-lib), refreshed by sync-prebuilts.sh
+// from the Lineage tree's generated srcjars. Packaged into the APK, so the
+// module is an `implementation` dependency of the launcher.
+//
+// Framework-provided flag packages (com.android.window.flags,
+// android.companion.virtualdevice.flags, android.hardware.devicestate.feature.flags)
+// live in launcher-flags-framework and stay compileOnly.
+android {
+    namespace 'com.android.launcher3.flags.generated'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+}
+
+dependencies {
+    // Hidden framework APIs used by the generated FeatureFlagsImpl
+    // (android.os.flagging.PlatformAconfigPackageInternal).
+    compileOnly files(rootProject.ext.frameworkJar)
+    // @AconfigFlagAccessor / @AssumeTrueForR8 annotations on the generated
+    // accessors. compileOnly — pure annotations, never packaged.
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/libs/modules-utils/java/aconfig-annotations-lib/linux_glibc_common/javac/aconfig-annotations-lib.jar'))
+}

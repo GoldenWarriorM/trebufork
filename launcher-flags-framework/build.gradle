@@ -1,0 +1,35 @@
+plugins {
+    id 'com.android.library'
+}
+
+// aconfig-generated flag classes that the DEVICE FRAMEWORK provides on the
+// bootclasspath — the Soong launcher APK does NOT package them, so consumers
+// depend on this module with `compileOnly`:
+//   com.android.window.flags.Flags              (window-aconfig-java)
+//   android.companion.virtualdevice.flags.Flags (virtualdevice-aconfig-java)
+//   android.hardware.devicestate.feature.flags.Flags (devicestate-aconfig-java)
+//
+// Sources are the exact output of Soong's aconfig generator, refreshed by
+// sync-prebuilts.sh from the Lineage tree's generated srcjars. Never
+// packaged into the APK.
+android {
+    namespace 'com.android.window.flags.generated'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+}
+
+dependencies {
+    // Hidden framework APIs used by the generated FeatureFlagsImpl.
+    compileOnly files(rootProject.ext.frameworkJar)
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/libs/modules-utils/java/aconfig-annotations-lib/linux_glibc_common/javac/aconfig-annotations-lib.jar'))
+}

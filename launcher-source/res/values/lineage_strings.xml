@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2018-2019 The LineageOS Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <!-- Application name -->
+    <string name="lineageos_app_name" translatable="false">Trebufork</string>
+
+    <!-- Settings -->
+
+    <!-- Edit workspace -->
+    <string name="settings_lock_layout_title">Lock layout</string>
+    <string name="settings_lock_layout_summary_on">Icons and widgets can\'t be added, removed and moved on the homescreen</string>
+    <string name="settings_lock_layout_summary_off">Icons and widgets can be added, removed and moved on the homescreen</string>
+    <string name="settings_edit_widgets_error">It\'s not possible to add widgets to the home screen</string>
+
+    <!-- Settings title to show Google Now at -1 screen on launcher. [CHAR LIMIT=50] -->
+    <string name="title_show_google_app">Show Google app</string>
+    <!-- Settings message explaining when the -1 screen is available on an LTR device. [CHAR LIMIT=100] -->
+    <string name="msg_minus_one_on_left">When you swipe right from main home screen</string>
+    <!-- Settings message explaining when the -1 screen is available on an RTL device. [CHAR LIMIT=100] -->
+    <string name="msg_minus_one_on_right">When you swipe left from main home screen</string>
+
+    <!-- Folder titles -->
+    <string name="google_folder_title" translatable="false">Google</string>
+
+    <!-- All apps themed icons -->
+    <string name="pref_themed_icons_title">Use themed icons in drawer</string>
+    <string name="pref_themed_icons_summary">Follow themed icons used on home screen</string>
+
+    <!-- Hide labels -->
+    <string name="desktop_show_labels">Show icon labels on desktop</string>
+    <string name="drawer_show_labels">Show icon labels in drawer</string>
+
+    <!-- Open keyboard -->
+    <string name="drawer_open_keyboard_title">Swipe to start search</string>
+    <string name="drawer_open_keyboard_summary">Open keyboard whenever app drawer becomes visible</string>
+
+    <!-- Sleep gesture -->
+    <string name="pref_sleep_gesture_title">Double tap to sleep</string>
+    <string name="pref_sleep_gesture_summary">Double tap empty space on home screen to turn off the screen</string>
+
+    <!-- Scrollable home -->
+    <string name="pref_scrollable_home_title">Scrollable home</string>
+    <string name="pref_scrollable_home_summary">Show the home screen as a single column of apps</string>
+    <string name="pref_scrollable_hide_labels_title">Hide app names</string>
+    <string name="pref_scrollable_hide_labels_summary">Hide app labels and fill icons with a pastel color for privacy</string>
+    <string name="pref_scrollable_desktop_search_title">Search bar on home screen</string>
+    <string name="pref_scrollable_desktop_search_summary">Show the app search bar at the bottom of the desktop</string>
+
+    <!-- Scrollable home: long-press add-to-home placeholder -->
+    <string name="trebufork_add_to_home_stub">Add to home screen is not available yet</string>
+
+    <!-- Scrollable home: desktop -->
+    <string name="scrollable_desktop_remove">Remove</string>
+    <string name="scrollable_desktop_reorder">Reorder</string>
+    <string name="scrollable_desktop_done">Done</string>
+    <string name="trebufork_add_to_desktop">Add to home screen</string>
+    <string name="scrollable_customize_inset">Customize top inset</string>
+    <string name="scrollable_inset_reset">Reset</string>
+
+    <!-- Scrollable home: desktop folders -->
+    <string name="scrollable_new_folder">New folder</string>
+    <string name="scrollable_add_to_folder">Add to folder</string>
+    <string name="scrollable_add_to_container">Add to folder or group</string>
+    <string name="scrollable_folder_label_prefix">Folder: %1$s</string>
+    <string name="scrollable_folder_rename">Rename folder</string>
+    <string name="scrollable_folder_remove">Remove folder</string>
+    <string name="scrollable_folder_close">Close folder</string>
+    <string name="scrollable_folder_toggle_layout">Switch folder layout</string>
+    <string name="scrollable_folder_empty">Folder is empty</string>
+    <string name="scrollable_folder_default_title">Folder</string>
+
+    <!-- Scrollable home: inline groups -->
+    <string name="scrollable_new_group">New group</string>
+    <string name="scrollable_add_to_group">Add to group</string>
+    <string name="scrollable_group_remove">Remove group</string>
+    <string name="scrollable_group_remove_app">Remove from group</string>
+    <string name="scrollable_group_default_title">Group</string>
+    <string name="scrollable_group_label_prefix">Group: %1$s</string>
+    <string name="scrollable_group_full">Group is full</string>
+    <string name="scrollable_group_rename">Rename group</string>
+    <string name="scrollable_group_align_start">Align left</string>
+    <string name="scrollable_group_align_center">Align center</string>
+    <string name="scrollable_group_align_end">Align right</string>
+    <string name="scrollable_m3_cancel">Cancel</string>
+    <string name="scrollable_m3_rename">Rename</string>
+    <string name="scrollable_m3_done">Done</string>
+    <string name="scrollable_group_configure">Configure</string>
+    <string name="scrollable_group_configure_name">Name</string>
+    <string name="scrollable_group_configure_align">Alignment</string>
+    <string name="scrollable_group_configure_order">Order</string>
+
+    <!-- Scrollable home: remove container (folder/group) contents choice -->
+    <string name="scrollable_remove_container_message">Keep the items on the home screen, or remove them too?</string>
+    <string name="scrollable_remove_keep">Keep on home screen</string>
+    <string name="scrollable_remove_delete">Remove items</string>
+
+    <!-- Scrollable home: apps-list search -->
+    <string name="scrollable_search_hint">Search apps</string>
+    <string name="scrollable_search_clear">Clear search</string>
+    <string name="scrollable_search_no_results">No results</string>
+
+    <!-- Trust apps -->
+    <string name="trust_apps_manager_name">Hidden &amp; Protected apps</string>
+    <string name="trust_apps_auth_manager">Unlock to manage the hidden and protected apps</string>
+    <string name="trust_apps_auth_open_app">Authenticate to open %1$s</string>
+    <string name="trust_apps_loading">Loading\u2026</string>
+    <string name="trust_apps_no_lock_error">Please set up a secure lock screen to restrict app access</string>
+    <string name="trust_apps_help">Help</string>
+    <string name="trust_apps_info_hidden">Hidden apps and their widgets are hidden from the drawer</string>
+    <string name="trust_apps_info_protected">Protected apps require authentication to be opened from the launcher</string>
+
+    <!-- App suggestions -->
+    <string name="pref_suggestions_title">Suggestions</string>
+    <string name="pref_suggestions_summary">For app drawer &amp; home screen suggestions</string>
+
+    <!-- Additional shape options in customization picker -->
+    <string name="pebble_shape_title">Pebble</string>
+    <string name="vessel_shape_title">Vessel</string>
+    <string name="pure_square_shape_title">Pure square</string>
+    <string name="squircle_shape_title">Squircle</string>
+    <string name="tapered_rect_shape_title">Tapered rect</string>
+    <string name="teardrop_shape_title">Teardrop</string>
+    <string name="rounded_rect_shape_title">Rounded rect</string>
+
+    <!-- trebufork: launcher animation speed (0.5x..2x; 100 = 1x default) -->
+    <string name="pref_animation_speed_title">Animation speed</string>
+    <string name="pref_animation_speed_summary_off">Controlled by Developer options</string>
+    <string name="pref_animation_speed_summary_on">Main launcher animations run at %1$s speed. Disabled when you change Animation scale in Developer options.</string>
+    <string-array name="pref_animation_speed_entries">
+        <item>0.5x</item>
+        <item>0.75x</item>
+        <item>1x</item>
+        <item>1.25x</item>
+        <item>1.5x</item>
+        <item>2x</item>
+    </string-array>
+    <string-array name="pref_animation_speed_entry_values">
+        <item>50</item>
+        <item>75</item>
+        <item>100</item>
+        <item>125</item>
+        <item>150</item>
+        <item>200</item>
+    </string-array>
+</resources>
