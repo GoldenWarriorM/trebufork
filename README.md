@@ -12,13 +12,12 @@ Trebufork fixes some bugs from aosp launcher and adds custom scrollable design i
 ### Scrollable home
 
 - **One scrollable column** instead of separate paged pages and an app drawer:
-  the desktop (icons, widgets, hotseat) and the app list are a single
+  the desktop (icons and widgets) and the app list are a single
   continuously scrolling surface.
 - **Alphabet sidebar** on the right edge — jump straight to any letter of the
   app list. Position, size and edge insets are tunable (see below).
 - **Search bar on the home screen** (optional) — search apps right from the
   desktop, not just from the list.
-- **Hide app names** — icon-only scrollable home for a cleaner look.
 - **Folders as scrolling lists** — folder contents render as a one-column list
   instead of the classic 2×3 grid (toggle per folder).
 
@@ -32,13 +31,6 @@ Trebufork fixes some bugs from aosp launcher and adds custom scrollable design i
 - **Animation speed setting** — a master launcher animation speed from 0.5× to
   2× (Settings → Animation speed). Automatically disabled when the system
   animation scale is overridden in Developer options.
-
-### Recents
-
-- **Always-fresh thumbnails** — recents cards show the current task snapshot;
-  stale previews from previous recents sessions are replaced within a frame or
-  two, without the white flash of the stock reload path.
-
 
 ### Hidden tuning (via adb)
 
