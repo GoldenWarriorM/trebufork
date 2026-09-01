@@ -1,0 +1,241 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.arch.core",
+    "module": "core-testing",
+    "version": "2.3.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-common",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-testing-2.3.0-alpha01-sources.jar",
+          "url": "core-testing-2.3.0-alpha01-sources.jar",
+          "size": 11138,
+          "sha512": "57e9e8a09f75cab1e91bdabc8967936a38ad21d4e8a3a3d21da47df5c5bf33a7a965b3853c854cf4fad016c5e5ff213851bd5250919fe8d70ea16485b2524fd7",
+          "sha256": "583171871ea5de713a53ca76318d485446e1dfb7df8fce0a75952d5124b795b0",
+          "sha1": "2ec3aeb6054fa5a53bfe70da81c279c6e270b068",
+          "md5": "04aac7a511bdb3003133d6e3492e6612"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          }
+        },
+        {
+          "group": "junit",
+          "module": "junit",
+          "version": {
+            "requires": "4.13.2"
+          }
+        },
+        {
+          "group": "org.mockito",
+          "module": "mockito-core",
+          "version": {
+            "requires": "2.25.0"
+          },
+          "excludes": [
+            {
+              "group": "net.bytebuddy",
+              "module": "*"
+            }
+          ]
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-common",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-testing-2.3.0-alpha01.aar",
+          "url": "core-testing-2.3.0-alpha01.aar",
+          "size": 15412,
+          "sha512": "1fa8cda8077e39095c53daf4a2b5c1e9db4c5c169026d8fe2d6b5eddb63f19a33f658e07941420c4d9fb895ba061fc1e80ba4cd5be4a00c4ea1955a88daafdbd",
+          "sha256": "0bda22c19f4e1602f53a2d343bf97d89537b9637969ae6eac5b2109105a766a6",
+          "sha1": "05d368fb5652af634f3caf2ec3eb38250efa869a",
+          "md5": "bcec368be02058f80ed09cc1b40b4bcf"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          }
+        },
+        {
+          "group": "junit",
+          "module": "junit",
+          "version": {
+            "requires": "4.13.2"
+          }
+        },
+        {
+          "group": "org.mockito",
+          "module": "mockito-core",
+          "version": {
+            "requires": "2.25.0"
+          },
+          "excludes": [
+            {
+              "group": "net.bytebuddy",
+              "module": "*"
+            }
+          ]
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-common",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-testing-2.3.0-alpha01.aar",
+          "url": "core-testing-2.3.0-alpha01.aar",
+          "size": 15412,
+          "sha512": "1fa8cda8077e39095c53daf4a2b5c1e9db4c5c169026d8fe2d6b5eddb63f19a33f658e07941420c4d9fb895ba061fc1e80ba4cd5be4a00c4ea1955a88daafdbd",
+          "sha256": "0bda22c19f4e1602f53a2d343bf97d89537b9637969ae6eac5b2109105a766a6",
+          "sha1": "05d368fb5652af634f3caf2ec3eb38250efa869a",
+          "md5": "bcec368be02058f80ed09cc1b40b4bcf"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-common",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-testing is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-testing-2.3.0-alpha01-versionMetadata.json",
+          "url": "core-testing-2.3.0-alpha01-versionMetadata.json",
+          "size": 502,
+          "sha512": "f675558922d8cfbde6d5433b683d16ad2128935598fbd283fe66c767bbb9356b226a1e395fc8ecd16dcf48cbd7f67a106c95c1d4ff79778a619e857a1161d3fe",
+          "sha256": "f9ab89cabe5d58c8457b0d6d74a4c924a0e2d74ac1fef70e1515255b9b181d8f",
+          "sha1": "d62c38ebfc111e9863ac2adb10c4aaf0da1e9a74",
+          "md5": "b723a2718db7e712ee01b1feb0dcf2e3"
+        }
+      ]
+    }
+  ]
+}

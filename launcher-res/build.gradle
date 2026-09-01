@@ -1,0 +1,32 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'com.android.launcher3'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 31
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            res.srcDirs = ['../launcher-source/res', 'gradle-res']
+            manifest.srcFile '../launcher-source/AndroidManifest-common.xml'
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.9.1'
+    // Keep the resource library on the same AOSP Jetpack/Material graph as
+    // the application; Soong merges these static libraries as one graph.
+    implementation 'androidx.core:core-ktx:1.19.0-alpha01'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.3.0-alpha02'
+    implementation 'androidx.fragment:fragment:1.9.0-alpha01'
+    implementation 'androidx.recyclerview:recyclerview:1.5.0-alpha01'
+    implementation 'androidx.preference:preference:1.3.0-alpha01'
+    implementation 'com.google.android.material:material:1.14.0-alpha02'
+}

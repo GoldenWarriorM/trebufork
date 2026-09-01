@@ -1,0 +1,1 @@
+[{"class":"androidx.glance.material3.Material3ThemesKt","addedIn":"1.0.0","methods":[{"method":"ColorProviders(androidx.compose.material3.ColorScheme)","addedIn":"1.0.0"},{"method":"ColorProviders(androidx.compose.material3.ColorScheme,androidx.compose.material3.ColorScheme)","addedIn":"1.0.0"}],"fields":[]}]

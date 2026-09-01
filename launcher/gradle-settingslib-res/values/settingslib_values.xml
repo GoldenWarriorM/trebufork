@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Minimal SettingsLibSettingsTheme resources vendored for the standalone
+    Gradle build.
+
+    The Soong build links SettingsLibSettingsTheme as a static lib and merges
+    its full res set into the launcher package. The Gradle build packages the
+    prebuilt SettingsLibSettingsTheme.jar instead, so the resources its runtime
+    classes resolve (SettingsBasePreferenceFragment / SettingsPreferenceGroupAdapter
+    / SettingsThemeHelper and friends, used by SettingsActivity) must be defined
+    here, in the launcher package. The com.android.settingslib.widget.theme.R
+    stub in gradle-src aliases these into the launcher's own R so the resource
+    IDs match at runtime.
+
+    Values mirror frameworks/base/packages/SettingsLib/SettingsTheme/res.
+-->
+<resources>
+    <!-- SettingsTheme/res/values/attrs_expressive.xml: state value for
+         StateListDrawable, set when a preference has an icon or has its icon
+         space reserved. -->
+    <attr name="state_has_icon_space" format="boolean" />
+
+    <!-- SettingsTheme/res/values/dimens_expressive.xml (space tokens). -->
+    <dimen name="settingslib_expressive_space_extrasmall1">2dp</dimen>
+    <dimen name="settingslib_expressive_space_extrasmall4">8dp</dimen>
+    <dimen name="settingslib_expressive_space_small1">16dp</dimen>
+
+    <!-- SettingsTheme/res/values/dimens_expressive.xml (radius token). -->
+    <dimen name="settingslib_expressive_radius_extralarge1">28dp</dimen>
+
+    <!-- SettingsTheme/res/values-v36/dimens.xml. -->
+    <dimen name="settingslib_preference_corner_radius">20dp</dimen>
+
+    <!-- SettingsTheme/res/values/colors.xml (used by the round-background
+         ripples in drawable-v36). -->
+    <color name="settingslib_materialColorSurfaceBright">#F9FAF8</color>
+    <color name="settingslib_materialColorSurfaceContainer">#EEEEEE</color>
+</resources>

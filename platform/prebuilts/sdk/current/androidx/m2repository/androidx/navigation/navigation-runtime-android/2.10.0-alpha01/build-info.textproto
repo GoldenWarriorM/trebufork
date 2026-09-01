@@ -1,0 +1,151 @@
+version: "2.10.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-common"
+    version: "2.8.7"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-runtime"
+    version: "2.8.7"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel"
+    version: "2.8.7"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-common"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-runtime-android"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-runtime-jvmstubs"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-runtime-linuxx64stubs"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.navigation"
+artifact_id: "navigation-runtime"
+path: "/navigation/navigation-runtime"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.navigation-navigation-runtime-all-2.10.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-common"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-common-ktx"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-compose"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-dynamic-features-fragment"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-dynamic-features-runtime"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-fragment"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-fragment-compose"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-fragment-ktx"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-runtime-ktx"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-safe-args-generator"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-safe-args-gradle-plugin"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-testing"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-ui"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigation"
+    artifact_id: "navigation-ui-ktx"
+    version: "2.10.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx"
+kmp_children: "android"
+kmp_children: "jvmstubs"
+kmp_children: "linuxx64stubs"
+test_module_names: ":navigation:navigation-runtime:jvmStubsTest"
+test_module_names: ":navigation:navigation-runtime:linuxx64StubsTest"
+test_module_names: "navigation-navigation-runtimeandroidInstrumentedTest.xml"
+test_module_names: ":navigation:navigation-runtime:testAndroidHostTest"

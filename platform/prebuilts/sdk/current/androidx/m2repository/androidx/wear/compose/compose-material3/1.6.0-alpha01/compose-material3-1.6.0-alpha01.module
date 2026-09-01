@@ -1,0 +1,419 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.wear.compose",
+    "module": "compose-material3",
+    "version": "1.6.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14043712"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-foundation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material-core",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-navigation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-ui-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        }
+      ],
+      "files": [
+        {
+          "name": "compose-material3-1.6.0-alpha01-sources.jar",
+          "url": "compose-material3-1.6.0-alpha01-sources.jar",
+          "size": 370374,
+          "sha512": "be34aa3e797a738a22a0a79a83af726297cbfd50ef566b9ed7a0c72c3aaaee59dea331eb80a8408eb6a7fdd0edcc0d796e6aa2f40f1dab16ab9f32950d7541fd",
+          "sha256": "2c472a2379aa820d53834d69b424a6a406c14ca6b368826228c45a9af42b785c",
+          "sha1": "14787a8ff704aedb3533529aa3e2f8644bdde2c7",
+          "md5": "6ff22ffad19b5749c0b79183f2fcd01a"
+        },
+        {
+          "name": "compose-material3-1.6.0-alpha01-samples-sources.jar",
+          "url": "compose-material3-1.6.0-alpha01-samples-sources.jar",
+          "size": 62239,
+          "sha512": "ffab7cffdc8e04c6d1346df6bbe48d999759f9116e7a430d7874c0ec9afa894055a6a4938bc278c30663c4d9022786281159975acb385480405e426d27883e82",
+          "sha256": "a307d1b837f074d313b8d701a37b73355f6531c3354b2fa8c5a69c376ab436f7",
+          "sha1": "ae80823dd9e1b7e810c2dd2270c452fce55aff13",
+          "md5": "a6b5cea0485219ebae2a957cce4f66fb"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-foundation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-foundation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material-core",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-navigation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-ui-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        }
+      ],
+      "files": [
+        {
+          "name": "compose-material3-1.6.0-alpha01.aar",
+          "url": "compose-material3-1.6.0-alpha01.aar",
+          "size": 1847585,
+          "sha512": "f1bb603fbd5e94afe63a8899e8b82262e4611c8b94c4704a7a898afc33ed0899d6237c7d004e7489e663ced1c4b8bc2bee6a7122c63a760aa3425efb62bb059e",
+          "sha256": "4b123b90e5fff1f550c725697f59f72c44c8e3cc78980e078d82b1169f24f76e",
+          "sha1": "4b17c6917ec743e7db06be4404df56415bd46cc5",
+          "md5": "2f3187e8233115692bf3ea0f932b2131"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose.animation",
+          "module": "animation",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.animation",
+          "module": "animation-graphics",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.material",
+          "module": "material-icons-core",
+          "version": {
+            "requires": "1.7.8"
+          }
+        },
+        {
+          "group": "androidx.compose.material",
+          "module": "material-ripple",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-text",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-util",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.15.0"
+          }
+        },
+        {
+          "group": "androidx.graphics",
+          "module": "graphics-shapes",
+          "version": {
+            "requires": "1.0.1"
+          }
+        },
+        {
+          "group": "androidx.profileinstaller",
+          "module": "profileinstaller",
+          "version": {
+            "requires": "1.4.0"
+          }
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-foundation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          }
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material-core",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-foundation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material-core",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-navigation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-ui-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        }
+      ],
+      "files": [
+        {
+          "name": "compose-material3-1.6.0-alpha01.aar",
+          "url": "compose-material3-1.6.0-alpha01.aar",
+          "size": 1847585,
+          "sha512": "f1bb603fbd5e94afe63a8899e8b82262e4611c8b94c4704a7a898afc33ed0899d6237c7d004e7489e663ced1c4b8bc2bee6a7122c63a760aa3425efb62bb059e",
+          "sha256": "4b123b90e5fff1f550c725697f59f72c44c8e3cc78980e078d82b1169f24f76e",
+          "sha1": "4b17c6917ec743e7db06be4404df56415bd46cc5",
+          "md5": "2f3187e8233115692bf3ea0f932b2131"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-foundation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-material-core",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-navigation",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        },
+        {
+          "group": "androidx.wear.compose",
+          "module": "compose-ui-tooling",
+          "version": {
+            "requires": "1.6.0-alpha01"
+          },
+          "reason": "compose-material3 is in atomic group androidx.wear.compose"
+        }
+      ],
+      "files": [
+        {
+          "name": "compose-material3-1.6.0-alpha01-versionMetadata.json",
+          "url": "compose-material3-1.6.0-alpha01-versionMetadata.json",
+          "size": 271367,
+          "sha512": "5121eebdbc62fdf6604f55667a7d03798f92a12c11d3e97184b4ecf5dd1364a014187f53831040e5dcbed3354a2b6b4f870a65bad610140470c35e28778f4367",
+          "sha256": "067c7ecd60ba650859eef46e13e28648ef1655f958dfe9fa7b77fc8ac7f58004",
+          "sha1": "349235281cbf07ff03d7b4fdaf61b878c1621f2a",
+          "md5": "875ffa7223e7607258d121dea83c523e"
+        }
+      ]
+    }
+  ]
+}

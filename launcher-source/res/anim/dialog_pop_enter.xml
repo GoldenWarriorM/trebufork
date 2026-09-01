@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- trebufork: pop-in animation for the group Configure dialog — fade in with a
+     subtle scale from 0.9 to 1.0, matching the M3 dialog feel. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="false">
+
+    <alpha
+        android:duration="150"
+        android:fromAlpha="0"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:toAlpha="1" />
+
+    <scale
+        android:duration="220"
+        android:fromXScale="0.9"
+        android:fromYScale="0.9"
+        android:interpolator="@interpolator/decelerate_quart"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1.0"
+        android:toYScale="1.0" />
+</set>

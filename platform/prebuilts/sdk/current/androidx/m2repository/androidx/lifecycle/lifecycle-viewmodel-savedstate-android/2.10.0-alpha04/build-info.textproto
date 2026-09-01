@@ -1,0 +1,317 @@
+version: "2.10.0-alpha04"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-common"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-android"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-desktop"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-iosarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-iossimulatorarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-iosx64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-js"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-linuxarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-linuxx64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-macosarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-macosx64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-mingwx64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-tvosarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-tvossimulatorarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-tvosx64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-wasm-js"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-watchosarm32"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-watchosarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-watchosdevicearm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-watchossimulatorarm64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-savedstate-watchosx64"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.savedstate"
+    artifact_id: "savedstate"
+    version: "1.4.0-alpha03"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.lifecycle"
+artifact_id: "lifecycle-viewmodel-savedstate"
+path: "/lifecycle/lifecycle-viewmodel-savedstate"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.lifecycle-lifecycle-viewmodel-savedstate-all-2.10.0-alpha04.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-common"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-common-java8"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-compiler"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-livedata"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-livedata-core"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-livedata-core-ktx"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-livedata-ktx"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-process"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-reactivestreams"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-reactivestreams-ktx"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-runtime"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-runtime-compose"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-runtime-ktx"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-runtime-testing"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-service"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-compose"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-ktx"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-navigation3"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-testing"
+    version: "2.10.0-alpha04"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "android"
+kmp_children: "desktop"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "mingwx64"
+kmp_children: "js"
+kmp_children: "wasm-js"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:desktopTest"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:macosX64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:macosArm64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:linuxX64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:iosX64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:iosSimulatorArm64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:watchosX64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:watchosSimulatorArm64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:tvosX64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:tvosSimulatorArm64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:mingwX64Test"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:jsBrowserTest"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:wasmJsBrowserTest"
+test_module_names: "lifecycle-lifecycle-viewmodel-savedstateandroidInstrumentedTest.xml"
+test_module_names: ":lifecycle:lifecycle-viewmodel-savedstate:testAndroidHostTest"

@@ -1,0 +1,86 @@
+plugins {
+    id 'com.android.application' apply false
+    id 'com.android.library' apply false
+    id 'org.jetbrains.kotlin.android' apply false
+    id 'org.jetbrains.kotlin.kapt' apply false
+    id 'org.jetbrains.kotlin.plugin.compose' apply false
+}
+
+// Platform tree root. Defaults to the vendored platform/ subset committed in
+// this repo (sources + local Maven repos), so the build is fully standalone.
+// -PlineageRoot=/path/to/tree overrides it for development against a live
+// Lineage checkout.
+ext.lineageRoot = providers.gradleProperty('lineageRoot')
+        .orElse(rootProject.file('platform').absolutePath)
+        .get()
+ext.lineageJar = { String relativePath ->
+    file("${rootProject.ext.lineageRoot}/${relativePath}")
+}
+// Resolve a Soong intermediate jar: prefer the vendored copy under
+// prebuilts/soong (written by sync-prebuilts.sh), falling back to the live
+// out/soong tree during development. Once sync-prebuilts.sh has run, the
+// build does not read out/soong at all.
+ext.platformJar = { String relativePath ->
+    def vendored = file("${rootProject.projectDir}/prebuilts/soong/${relativePath}")
+    vendored.isFile() ? vendored : rootProject.ext.lineageJar(relativePath)
+}
+
+ext.frameworkJar = rootProject.file('prebuilts/framework.jar')
+
+allprojects {
+    configurations.configureEach {
+        // Lineage's prebuilts include the full Guava jar; AndroidX also pulls
+        // the tiny compatibility artifact containing the same class.
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
+    repositories {
+        // Use the same locally-built AOSP Jetpack/Material artifacts as Soong.
+        // Mixing release Maven versions with Lineage's alpha preference stack
+        // changes the PreferenceTheme resource graph and leaves runtime styles
+        // falling back to the default palette.
+        maven { url = uri("${rootProject.ext.lineageRoot}/prebuilts/sdk/current/androidx/m2repository") }
+        maven { url = uri("${rootProject.ext.lineageRoot}/prebuilts/sdk/current/extras/material-design-x") }
+        google()
+        mavenCentral()
+        maven { url = uri('https://jitpack.io') }
+    }
+}
+
+// The launcher and the migrated platform-lib modules compile against the full
+// merged prebuilts/framework.jar (hidden APIs, @SystemApi members). AGP prepends
+// the public SDK android.jar to every compile classpath, and javac/Kotlin resolve
+// a class from the FIRST jar that declares it — so android.jar's stubs would
+// shadow framework.jar and make every hidden member invisible. sync-prebuilts.sh
+// merges sdk_system_current + android.jar into the vendored framework.jar, so
+// framework.jar is a superset of the public API: prepend it and drop android.jar.
+// AGP populates these classpaths lazily at execution time, so the reorder runs in
+// doFirst (captured as a plain File for configuration-cache serializability).
+// Modules that do not compile against framework.jar are left untouched.
+def frameworkJarFile = rootProject.file('prebuilts/framework.jar')
+
+allprojects {
+    tasks.matching { it.name.endsWith('Kotlin') || it.name.endsWith('Kapt') || it.name.contains('JavaWithJavac') }
+            .configureEach { t ->
+        def reorder = {
+            Collection<File> files ->
+            def fw = files.find { it == frameworkJarFile }
+            if (fw == null) return files
+            [fw] + files.findAll { it != fw && it.name != 'android.jar' }
+        }
+        if (t.hasProperty('classpath')) {
+            t.doFirst {
+                // Resolve the task's final classpath only when execution begins,
+                // then replace the configurable collection from a detached list.
+                // This avoids both Task.project access and self-referencing
+                // FileCollections under the configuration cache.
+                if (t.classpath != null) {
+                    t.classpath.setFrom(reorder(t.classpath.files.toList()))
+                }
+            }
+        } else if (t.hasProperty('libraries') && t.libraries != null) {
+            t.doFirst {
+                t.libraries.setFrom(reorder(t.libraries.files.toList()))
+            }
+        }
+    }
+}

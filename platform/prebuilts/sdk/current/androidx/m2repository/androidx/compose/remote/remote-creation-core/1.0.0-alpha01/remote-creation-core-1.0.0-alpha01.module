@@ -1,0 +1,350 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.compose.remote",
+    "module": "remote-creation-core",
+    "version": "1.0.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14074696"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-core",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-core",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-creation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-view",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-compose",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-frontend",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-foundation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        }
+      ],
+      "files": [
+        {
+          "name": "remote-creation-core-1.0.0-alpha01.jar",
+          "url": "remote-creation-core-1.0.0-alpha01.jar",
+          "size": 120932,
+          "sha512": "f35b29eff85589cf77e9c048233852aa192df3b7d11dadf12f873634933e504fb92edd8ba5dcdf70b02234713b2d71aef24ed4ab4ffb187f5506db2fabe41cd5",
+          "sha256": "d41bf17731f364440a819253287d21ce06bdd88274b4b1f078af4351add4df38",
+          "sha1": "179284ff1e5363805e6131ece341a0c4f624cfab",
+          "md5": "7e740c0b3746591d70b040d31e53a51f"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-core",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-core",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-creation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-view",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-compose",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-frontend",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-foundation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        }
+      ],
+      "files": [
+        {
+          "name": "remote-creation-core-1.0.0-alpha01.jar",
+          "url": "remote-creation-core-1.0.0-alpha01.jar",
+          "size": 120932,
+          "sha512": "f35b29eff85589cf77e9c048233852aa192df3b7d11dadf12f873634933e504fb92edd8ba5dcdf70b02234713b2d71aef24ed4ab4ffb187f5506db2fabe41cd5",
+          "sha256": "d41bf17731f364440a819253287d21ce06bdd88274b4b1f078af4351add4df38",
+          "sha1": "179284ff1e5363805e6131ece341a0c4f624cfab",
+          "md5": "7e740c0b3746591d70b040d31e53a51f"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-core",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-creation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-view",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-compose",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-frontend",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-foundation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        }
+      ],
+      "files": [
+        {
+          "name": "remote-creation-core-1.0.0-alpha01-sources.jar",
+          "url": "remote-creation-core-1.0.0-alpha01-sources.jar",
+          "size": 79995,
+          "sha512": "2c3abb80f532ba1bb0b3edc6715dcaf6efd36be07edbbc3a03a43a6e46b62ce9358b40f6687e797e67290cf2a4818791df14278dd04b19f9f9b982915d058e0c",
+          "sha256": "5ac684720ec2c12b8266599c0066e0b8c4f184b41f43096fb128ed1a4646f152",
+          "sha1": "86d4e3c27c76d038d185d4b3d7c0890799ad2bb3",
+          "md5": "08987c52481829139109dd61e669531f"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-core",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-creation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-view",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-player-compose",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-frontend",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        },
+        {
+          "group": "androidx.compose.remote",
+          "module": "remote-foundation",
+          "version": {
+            "requires": "1.0.0-alpha01"
+          },
+          "reason": "remote-creation-core is in atomic group androidx.compose.remote"
+        }
+      ],
+      "files": [
+        {
+          "name": "remote-creation-core-1.0.0-alpha01-versionMetadata.json",
+          "url": "remote-creation-core-1.0.0-alpha01-versionMetadata.json",
+          "size": 2,
+          "sha512": "b25b294cb4deb69ea00a4c3cf3113904801b6015e5956bd019a8570b1fe1d6040e944ef3cdee16d0a46503ca6e659a25f21cf9ceddc13f352a3c98138c15d6af",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "sha1": "97d170e1550eee4afc0af065b78cda302a97674c",
+          "md5": "d751713988987e9331980363e24189ce"
+        }
+      ]
+    }
+  ]
+}

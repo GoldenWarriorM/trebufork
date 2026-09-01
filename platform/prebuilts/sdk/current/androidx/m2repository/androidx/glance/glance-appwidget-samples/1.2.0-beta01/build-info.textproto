@@ -1,0 +1,116 @@
+version: "1.2.0-beta01"
+dependency_list {
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.5.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime"
+    version: "2.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime-ktx"
+    version: "2.8.1"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.glance"
+artifact_id: "glance-appwidget-samples"
+path: "/glance/glance-appwidget/samples"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.glance-glance-appwidget-samples-all-1.2.0-beta01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-external-protobuf"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-multiprocess"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-preview"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-proto"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-testing"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-material"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-material3"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-preview"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-testing"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: false
+is_kmp: false
+target: "androidx"
+test_module_names: "glance-glance-appwidget-glance-appwidget-samplesreleaseAndroidTest.xml"
+test_module_names: ":glance:glance-appwidget:glance-appwidget-samples:testReleaseUnitTest"

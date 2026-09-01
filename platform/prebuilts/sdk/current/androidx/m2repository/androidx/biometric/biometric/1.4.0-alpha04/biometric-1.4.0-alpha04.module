@@ -1,0 +1,249 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.biometric",
+    "module": "biometric",
+    "version": "1.4.0-alpha04",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric-compose",
+          "version": {
+            "requires": "1.4.0-alpha04"
+          },
+          "reason": "biometric is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-1.4.0-alpha04-sources.jar",
+          "url": "biometric-1.4.0-alpha04-sources.jar",
+          "size": 100458,
+          "sha512": "e3f16d79ae31059161635813417919e6ac740ac703fda92181ae4f6529c947e7d05ecba7dd9504582bd7aad0fd8a097bb8f2957b015ad590df9675ad3ff6691e",
+          "sha256": "20833053c40aed327d16d9f0b19766fc61afe1b023a67f994749e6b372bdaf99",
+          "sha1": "678970e88f21c847e816deca77424187c5a05759",
+          "md5": "bdc03c708df37c7a4e6b010692aa469c"
+        },
+        {
+          "name": "biometric-1.4.0-alpha04-samples-sources.jar",
+          "url": "biometric-1.4.0-alpha04-samples-sources.jar",
+          "size": 8002,
+          "sha512": "7a1b644fe4f4ca35e652d465f81c41a3cb03f7c319dd9087f2b0f65044700ecab31fbcde46880dfec175e9c27ab953dfc342b9b4cede0cd5b56fea8ce0b3376c",
+          "sha256": "5664ffae98a8f1f130b39833fac4e76bccf5f0a6abb9ab2760b323983a7a02e3",
+          "sha1": "d5ad19736333920292b7220f74c25d0e99e72836",
+          "md5": "141a5083eacf0a1a2e7d722497a84279"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.3.2"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment",
+          "version": {
+            "requires": "1.6.2"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric-compose",
+          "version": {
+            "requires": "1.4.0-alpha04"
+          },
+          "reason": "biometric is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-1.4.0-alpha04.aar",
+          "url": "biometric-1.4.0-alpha04.aar",
+          "size": 329440,
+          "sha512": "1f7d1f6da7956ef739d718dd323004e59bd0763cc373b3f1a14084312a908ff1da20de5766e5549fc563e26ecfc319c60e0d98b5de1060ca2b9ea5841c42bea4",
+          "sha256": "43f94b09b0ec7116b8e8ff7436fe10c8ef61daf3a6ca685e30f45030af86d16d",
+          "sha1": "3112bb9c1ccaa65da67792817288293503ba4f21",
+          "md5": "8aac0b4379818ebefe18f7bc6a9f346f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.activity",
+          "module": "activity",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.3.2"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment",
+          "version": {
+            "requires": "1.6.2"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-common-java8",
+          "version": {
+            "requires": "2.2.0"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-livedata-core",
+          "version": {
+            "requires": "2.2.0"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-process",
+          "version": {
+            "requires": "2.8.7"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-viewmodel",
+          "version": {
+            "requires": "2.2.0"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric-compose",
+          "version": {
+            "requires": "1.4.0-alpha04"
+          },
+          "reason": "biometric is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-1.4.0-alpha04.aar",
+          "url": "biometric-1.4.0-alpha04.aar",
+          "size": 329440,
+          "sha512": "1f7d1f6da7956ef739d718dd323004e59bd0763cc373b3f1a14084312a908ff1da20de5766e5549fc563e26ecfc319c60e0d98b5de1060ca2b9ea5841c42bea4",
+          "sha256": "43f94b09b0ec7116b8e8ff7436fe10c8ef61daf3a6ca685e30f45030af86d16d",
+          "sha1": "3112bb9c1ccaa65da67792817288293503ba4f21",
+          "md5": "8aac0b4379818ebefe18f7bc6a9f346f"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.biometric",
+          "module": "biometric-compose",
+          "version": {
+            "requires": "1.4.0-alpha04"
+          },
+          "reason": "biometric is in atomic group androidx.biometric"
+        }
+      ],
+      "files": [
+        {
+          "name": "biometric-1.4.0-alpha04-versionMetadata.json",
+          "url": "biometric-1.4.0-alpha04-versionMetadata.json",
+          "size": 16048,
+          "sha512": "0f76b1cd6ff3e9720bf0ed7137ae87d437103f5bc38a10cc80eea7652cb173ae72c3feae5af03a165569eed5750cf46c784852fce5a83681b9f16951bb6ce4d4",
+          "sha256": "359c306238f2bbb9c6ca6b5db8433005e413d73c87f050963899be3dd1229b47",
+          "sha1": "4a41820cd0808beab95dd2a1358283afe3af9bc0",
+          "md5": "d31421aaa6166a1c66df057633b6b90d"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+version: "2.6.0-rc01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-android"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-iosarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-iossimulatorarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-iosx64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-jvm"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-linuxarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-linuxx64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-macosarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-macosx64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-tvosarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-tvossimulatorarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-tvosx64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-watchosarm32"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-watchosarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-watchosdevicearm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-watchossimulatorarm64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-watchosx64"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.sqlite"
+artifact_id: "sqlite"
+path: "/sqlite/sqlite"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.sqlite-sqlite-all-2.6.0-rc01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-bundled"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-framework"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-ktx"
+    version: "2.6.0-rc01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "android"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "jvm"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+test_module_names: ":sqlite:sqlite:iosX64Test"
+test_module_names: ":sqlite:sqlite:iosSimulatorArm64Test"
+test_module_names: ":sqlite:sqlite:jvmTest"
+test_module_names: ":sqlite:sqlite:linuxX64Test"
+test_module_names: ":sqlite:sqlite:macosX64Test"
+test_module_names: ":sqlite:sqlite:macosArm64Test"
+test_module_names: ":sqlite:sqlite:tvosX64Test"
+test_module_names: ":sqlite:sqlite:tvosSimulatorArm64Test"
+test_module_names: ":sqlite:sqlite:watchosX64Test"
+test_module_names: ":sqlite:sqlite:watchosSimulatorArm64Test"
+test_module_names: "sqlite-sqliteandroidInstrumentedTest.xml"
+test_module_names: ":sqlite:sqlite:testAndroidHostTest"

@@ -1,0 +1,43 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// PluginAnnotationLib (com.android.systemui.plugins.annotations.*) — migrated
+// from frameworks/base/packages/SystemUI/plugin_core/Android.bp (srcs:
+// src/**/annotations/*). The annotations are read reflectively by the plugin
+// framework at runtime (Dependencies, DependsOn, ProvidesInterface, ...).
+def lineageRoot = rootProject.ext.lineageRoot
+def annSrc = "${lineageRoot}/frameworks/base/packages/SystemUI/plugin_core/src/com/android/systemui/plugins/annotations"
+
+android {
+    namespace 'com.android.systemui.plugins.annotations'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [annSrc]
+            kotlin.srcDirs = [annSrc]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.9.1'
+}

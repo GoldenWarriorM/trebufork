@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<com.android.launcher3.LauncherRootView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/launcher"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <!-- trebufork: self-contained wallpaper background. Renders the wallpaper
+         bitmap directly, bypassing WM's wallpaper surface entirely. -->
+    <com.android.launcher3.views.WallpaperBackgroundView
+        android:id="@+id/wallpaper_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        launcher:layout_ignoreInsets="true" />
+
+    <com.android.launcher3.dragndrop.DragLayer
+        android:id="@+id/drag_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:importantForAccessibility="no">
+
+        <com.android.launcher3.views.AccessibilityActionsView
+            android:id="@+id/accessibility_action_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/home_screen"
+            />
+
+        <!-- The workspace contains 5 screens of cells -->
+        <!-- DO NOT CHANGE THE ID -->
+        <com.android.launcher3.Workspace
+            android:id="@+id/workspace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:theme="@style/HomeScreenElementTheme"
+            launcher:pageIndicator="@+id/page_indicator" />
+
+        <!-- DO NOT CHANGE THE ID -->
+        <include
+            android:id="@+id/hotseat"
+            layout="@layout/hotseat" />
+
+        <!-- Keep these behind the workspace so that they are not visible when
+         we go into AllApps -->
+        <LinearLayout
+            android:id="@+id/page_indicator_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/workspace_page_indicator_height"
+            android:layout_gravity="bottom|center_horizontal"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.android.launcher3.pageindicators.PaginationArrow
+                android:id="@+id/left_indicator_arrow"
+                android:layout_width="@dimen/folder_arrow_touchbox_length"
+                android:layout_height="@dimen/folder_arrow_touchbox_length"
+                android:contentDescription="@string/paginate_left"
+                android:elevation="1dp"
+                android:foreground="@drawable/ic_chevron_left_rounded_700"
+                android:foregroundGravity="center"
+                android:visibility="gone" />
+
+            <com.android.launcher3.pageindicators.PageIndicatorDots
+                android:id="@+id/page_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/HomeScreenElementTheme" />
+
+            <com.android.launcher3.pageindicators.PaginationArrow
+                android:id="@+id/right_indicator_arrow"
+                android:layout_width="@dimen/folder_arrow_touchbox_length"
+                android:layout_height="@dimen/folder_arrow_touchbox_length"
+                android:contentDescription="@string/paginate_right"
+                android:elevation="1dp"
+                android:foreground="@drawable/ic_chevron_left_rounded_700"
+                android:foregroundGravity="center"
+                android:rotation="180"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/drop_target_bar"
+            layout="@layout/drop_target_bar" />
+
+        <!-- trebufork: vertical scrolling single-column home (visible only when the
+             "Scrollable home" setting is enabled; the paged workspace above is left
+             untouched and simply hidden). Placed BEFORE the scrim view so that the
+             overview/all-apps scrim can dim it, matching the paged workspace. -->
+        <com.android.launcher3.ScrollableAppsView
+            android:id="@+id/scrollable_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="24dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            launcher:layout_ignoreInsets="true"
+            android:visibility="gone" />
+
+        <!-- trebufork: top darkening gradient over the scrollable home (desktop + apps list) so
+             the status bar doesn't blend with the content scrolling beneath it. Non-touch; its
+             visibility follows the scrollable home setting (Launcher.applyScrollableHomeMode). -->
+        <View
+            android:id="@+id/scrollable_top_scrim"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scrollable_top_scrim_height"
+            android:background="@drawable/scrollable_top_scrim"
+            android:clickable="false"
+            android:focusable="false"
+            android:importantForAccessibility="no"
+            launcher:layout_ignoreInsets="true"
+            android:visibility="gone" />
+
+        <!-- trebufork: A-Z ('#' for digits/hieroglyphs) index shown on the right edge of the
+             scrollable home. Tapping a letter jumps to the first app starting with it. -->
+        <com.android.launcher3.ScrollableAppsSidebar
+            android:id="@+id/scrollable_sidebar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:visibility="gone" />
+
+        <com.android.launcher3.views.ScrimView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrim_view"
+            android:background="@android:color/transparent" />
+
+        <!-- trebufork: floating Done button shown while reorder mode is active. Placed after the
+             sidebar and the scrim so it draws above the list, the alphabet and the scrim;
+             visibility and click are managed by ScrollableAppsView. -->
+        <TextView
+            android:id="@+id/scroll_desktop_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/scrollable_done_background"
+            android:elevation="8dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/scrollable_desktop_done"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- trebufork: bottom search field for the scrollable apps list (shown only while the
+             apps list is active). It filters the list, highlights the first match and opens it
+             on Enter. It sits at the bottom and pans up with the keyboard (windowSoftInputMode
+             is adjustPan). -->
+        <include
+            android:id="@+id/scrollable_search_bar"
+            layout="@layout/scrollable_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginStart="64dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="12dp"
+            android:elevation="8dp"
+            android:visibility="gone" />
+
+        <!-- trebufork: shown when the apps-list search has no matches. -->
+        <TextView
+            android:id="@+id/scrollable_search_no_results"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-160dp"
+            android:text="@string/scrollable_search_no_results"
+            android:textColor="?attr/workspaceTextColor"
+            android:textSize="16sp"
+            android:shadowColor="#66000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/overview_panel"
+            layout="@layout/overview_panel" />
+
+        <include
+            android:id="@+id/apps_view"
+            layout="@layout/all_apps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.android.launcher3.dragndrop.DragLayer>
+
+</com.android.launcher3.LauncherRootView>

@@ -1,0 +1,116 @@
+version: "3.4.0-alpha04"
+dependency_list {
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core-ktx"
+    version: "1.7.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-livedata-ktx"
+    version: "2.8.3"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-runtime-ktx"
+    version: "2.8.3"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel-ktx"
+    version: "2.8.3"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-common"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-common-ktx"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.recyclerview"
+    artifact_id: "recyclerview"
+    version: "1.2.1"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.paging"
+artifact_id: "paging-runtime"
+path: "/paging/paging-runtime"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.paging-paging-runtime-all-3.4.0-alpha04.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-common"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-common-ktx"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-guava"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-runtime-ktx"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-rxjava2"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-rxjava2-ktx"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-rxjava3"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-testing"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "paging-paging-runtimereleaseAndroidTest.xml"
+test_module_names: ":paging:paging-runtime:testReleaseUnitTest"

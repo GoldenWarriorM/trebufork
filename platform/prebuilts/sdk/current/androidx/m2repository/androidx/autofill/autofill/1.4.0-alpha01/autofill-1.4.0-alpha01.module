@@ -1,0 +1,136 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.autofill",
+    "module": "autofill",
+    "version": "1.4.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "autofill-1.4.0-alpha01-sources.jar",
+          "url": "autofill-1.4.0-alpha01-sources.jar",
+          "size": 33777,
+          "sha512": "81407a3d73b2ef4d10356414fc090d7f7e0ecfe3481262699074c51822d42c50014a9733a268ba1122448d61e0fadf5923969165612bb60c744c07e6b83dc05b",
+          "sha256": "fd5388ae356291c212385e13fc54133abb0cd4770d2f8cbd032e1ec9beac3a8c",
+          "sha1": "29ab6cc69b18f0c7a267ec73af85eba4eee1db59",
+          "md5": "6baba5b0a06712f639c969a3f187a83d"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "autofill-1.4.0-alpha01.aar",
+          "url": "autofill-1.4.0-alpha01.aar",
+          "size": 49509,
+          "sha512": "99643220517bd0da81281e43c5187d3fc00b24638092c6edf66eff1bb4496ed070cee30e8a80a2eee5692532b13a6bec42dff58f04e89e57ae7e1c7dd0f446ea",
+          "sha256": "874d45abe00938438b0a9ba86914c09bb3a6dea91241c202bcebb17ccbf920e9",
+          "sha1": "60ffe0cc3bea6dc2ab39e38af9f403a6a24bca62",
+          "md5": "e0c1503888b34cb9bebb123ced843167"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "autofill-1.4.0-alpha01.aar",
+          "url": "autofill-1.4.0-alpha01.aar",
+          "size": 49509,
+          "sha512": "99643220517bd0da81281e43c5187d3fc00b24638092c6edf66eff1bb4496ed070cee30e8a80a2eee5692532b13a6bec42dff58f04e89e57ae7e1c7dd0f446ea",
+          "sha256": "874d45abe00938438b0a9ba86914c09bb3a6dea91241c202bcebb17ccbf920e9",
+          "sha1": "60ffe0cc3bea6dc2ab39e38af9f403a6a24bca62",
+          "md5": "e0c1503888b34cb9bebb123ced843167"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "autofill-1.4.0-alpha01-versionMetadata.json",
+          "url": "autofill-1.4.0-alpha01-versionMetadata.json",
+          "size": 9677,
+          "sha512": "c9f744e27ec0dd2b7770cf0b5a9be659dfc8abe8277007475396b6823fd1337c1a17c396e4196ef683c05aaf2d1413e820ac8c94815e98b31272feea4125640f",
+          "sha256": "f3cd30de25c853036b7f8f889f24b4c0cd76b470bfecfb28c524d7f4af3cdc7f",
+          "sha1": "253f932d53622c337cbd8f2393b72e28d77ba6a1",
+          "md5": "f0d9086cdc3cc66ab5e8f39c3c1fe7b9"
+        }
+      ]
+    }
+  ]
+}

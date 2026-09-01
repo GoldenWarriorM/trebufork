@@ -1,0 +1,194 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.hilt",
+    "module": "hilt-navigation-compose",
+    "version": "1.3.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "hilt-navigation-compose-1.3.0-rc01-sources.jar",
+          "url": "hilt-navigation-compose-1.3.0-rc01-sources.jar",
+          "size": 6266,
+          "sha512": "9ed7b4422c658d0f7978eeeab21ee9e8da6b34dfbbad833bb90dfa6965fc32564cf53fafd44337251abea0058631eb5b493cdd5c73e36f91b6fd5c227f098027",
+          "sha256": "dc31f429b3be0508aae0493770ffb216ad99c9506f457d5904ce110793757403",
+          "sha1": "7e5b888341f66ab6db9fc46df6e91a54c5f5bcd9",
+          "md5": "7ff697ae81e9a133dd9b70f65c528bf7"
+        },
+        {
+          "name": "hilt-navigation-compose-1.3.0-rc01-samples-sources.jar",
+          "url": "hilt-navigation-compose-1.3.0-rc01-samples-sources.jar",
+          "size": 6129,
+          "sha512": "04cfda5edfb46efa8085e46a4df0eef0dcb689f877bb5be310645f5afa30f5bdaf864870965d9e8779cd48ac39eba5f33f4494ba3da981eb617690f923c69047",
+          "sha256": "095f4f3e2101483c5cb195df180cdf1909bd029d814e9cb053034f3e9c951538",
+          "sha1": "0fef43778446f39962a23eda145f8b249c51e14e",
+          "md5": "5bcd2482124ab846f73b7102dcf89616"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.8.2"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui",
+          "version": {
+            "requires": "1.8.2"
+          }
+        },
+        {
+          "group": "androidx.hilt",
+          "module": "hilt-lifecycle-viewmodel-compose",
+          "version": {
+            "requires": "1.3.0-rc01"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-viewmodel-compose",
+          "version": {
+            "requires": "2.9.1"
+          }
+        },
+        {
+          "group": "androidx.navigation",
+          "module": "navigation-compose",
+          "version": {
+            "requires": "2.9.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "hilt-navigation-compose-1.3.0-rc01.aar",
+          "url": "hilt-navigation-compose-1.3.0-rc01.aar",
+          "size": 10148,
+          "sha512": "8f840829017aa3df15ad6c95393db74cfc793740a878d599113159d8446a2e9c9fd76f58807d0ad60cc1bbe2e36d284c0b4b110b85e8226b8552705c61f14af5",
+          "sha256": "e3251f079e4379a9d0d380ab2ccb67c259376b7dd4b097d1ac9883a4d2970a62",
+          "sha1": "72706b80e3d4b850fa91dfec145b039a052f7b6f",
+          "md5": "12910a26a708dee310631e25fd408974"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.8.2"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui",
+          "version": {
+            "requires": "1.8.2"
+          }
+        },
+        {
+          "group": "androidx.hilt",
+          "module": "hilt-lifecycle-viewmodel-compose",
+          "version": {
+            "requires": "1.3.0-rc01"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-viewmodel-compose",
+          "version": {
+            "requires": "2.9.1"
+          }
+        },
+        {
+          "group": "androidx.navigation",
+          "module": "navigation-compose",
+          "version": {
+            "requires": "2.9.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "hilt-navigation-compose-1.3.0-rc01.aar",
+          "url": "hilt-navigation-compose-1.3.0-rc01.aar",
+          "size": 10148,
+          "sha512": "8f840829017aa3df15ad6c95393db74cfc793740a878d599113159d8446a2e9c9fd76f58807d0ad60cc1bbe2e36d284c0b4b110b85e8226b8552705c61f14af5",
+          "sha256": "e3251f079e4379a9d0d380ab2ccb67c259376b7dd4b097d1ac9883a4d2970a62",
+          "sha1": "72706b80e3d4b850fa91dfec145b039a052f7b6f",
+          "md5": "12910a26a708dee310631e25fd408974"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "hilt-navigation-compose-1.3.0-rc01-versionMetadata.json",
+          "url": "hilt-navigation-compose-1.3.0-rc01-versionMetadata.json",
+          "size": 874,
+          "sha512": "573b04411ea63696d6133d1359e41d5e9e2445aaf0fb317b5b5a4a9c68b832ce41df1a3bfab3a927225ce7dc328beadd539caf637bdc51b573f1c14b6f9f2f0d",
+          "sha256": "0dc542841602bd948735f54bb9becac63228dc2e1524c8f23bd59978cb250251",
+          "sha1": "903a76a61588afe341560069710f9aa6bdf2c6cb",
+          "md5": "084dd17653dd5745d062a7ec2b916899"
+        }
+      ]
+    }
+  ]
+}

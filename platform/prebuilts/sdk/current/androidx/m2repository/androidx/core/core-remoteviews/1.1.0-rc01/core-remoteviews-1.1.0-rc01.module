@@ -1,0 +1,149 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.core",
+    "module": "core-remoteviews",
+    "version": "1.1.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "core-remoteviews-1.1.0-rc01-sources.jar",
+          "url": "core-remoteviews-1.1.0-rc01-sources.jar",
+          "size": 24513,
+          "sha512": "d3ffb85600600f7add2e5e94ae187e94009e6f145fb152ee83448142b577fce22ea5a74e2e86b1f30dacb290d3fd09fcef4ef2c8de01df733740990ddab107c1",
+          "sha256": "065d20f32c9c28bb893cc00c9991837080fc1bfca62d6075fc5fc868e3e3046b",
+          "sha1": "2d204a7e011a45a5c043f0af83801243f369f0c1",
+          "md5": "824c8d8ed7f9f31e9dd7f633b6f4d669"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "core-remoteviews-1.1.0-rc01.aar",
+          "url": "core-remoteviews-1.1.0-rc01.aar",
+          "size": 58930,
+          "sha512": "0a0df307e8a67430a71d476dda92b60487539bf7e155deaa2cb0627e68476dc8f5b2ef6e0b20b86b5438ef4f45220775794f39e79a91de6784e128abf2135b86",
+          "sha256": "774300e4bb5f88207347e1e9efd6e61f9df7706ddb55296aeca3760468b4736b",
+          "sha1": "188cf3b9303ff117ff04eaf917ef935ebd071f44",
+          "md5": "70f57d07a4641e74e1611cf773c6e1a2"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.8.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "core-remoteviews-1.1.0-rc01.aar",
+          "url": "core-remoteviews-1.1.0-rc01.aar",
+          "size": 58930,
+          "sha512": "0a0df307e8a67430a71d476dda92b60487539bf7e155deaa2cb0627e68476dc8f5b2ef6e0b20b86b5438ef4f45220775794f39e79a91de6784e128abf2135b86",
+          "sha256": "774300e4bb5f88207347e1e9efd6e61f9df7706ddb55296aeca3760468b4736b",
+          "sha1": "188cf3b9303ff117ff04eaf917ef935ebd071f44",
+          "md5": "70f57d07a4641e74e1611cf773c6e1a2"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "core-remoteviews-1.1.0-rc01-versionMetadata.json",
+          "url": "core-remoteviews-1.1.0-rc01-versionMetadata.json",
+          "size": 28056,
+          "sha512": "9b092827411d9fafbfbc3d94f9bd1dca072020e864a3ac4ce4fdead940855b1ac89982e5608c57a36a572bb5836d249bfd86825157b7bc4c4045b91dd634a724",
+          "sha256": "6ba6adbde6464a58490cc2f1df6ece11798573f89d536345341005f68b2b5166",
+          "sha1": "9ae7a7705091e4f61a72c99629cc78aa2d766116",
+          "md5": "5923dfefd546170b086918d9bd6c8d1f"
+        }
+      ]
+    }
+  ]
+}

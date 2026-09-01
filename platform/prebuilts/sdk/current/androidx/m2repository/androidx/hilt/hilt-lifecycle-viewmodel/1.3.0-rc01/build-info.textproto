@@ -1,0 +1,20 @@
+version: "1.3.0-rc01"
+dependency_list {
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.hilt"
+artifact_id: "hilt-lifecycle-viewmodel"
+path: "/hilt/hilt-lifecycle-viewmodel"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.hilt-hilt-lifecycle-viewmodel-all-1.3.0-rc01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "hilt-hilt-lifecycle-viewmodelreleaseAndroidTest.xml"
+test_module_names: ":hilt:hilt-lifecycle-viewmodel:testReleaseUnitTest"

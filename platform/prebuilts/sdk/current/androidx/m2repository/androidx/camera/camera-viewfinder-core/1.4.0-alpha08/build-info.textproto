@@ -1,0 +1,59 @@
+version: "1.4.0-alpha08"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-experimental"
+    version: "1.4.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.appcompat"
+    artifact_id: "appcompat"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.concurrent"
+    artifact_id: "concurrent-futures"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.concurrent"
+    artifact_id: "concurrent-futures-ktx"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.7.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "androidx.camera"
+group_id: "androidx.camera"
+artifact_id: "camera-viewfinder-core"
+path: "/camera/camera-viewfinder-core"
+sha: "d3d9ab3bace349227f12e907dccb240d59e18937"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.camera-camera-viewfinder-core-all-12158610-1.4.0-alpha08.zip"
+kotlin_version: "1.9.24"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.camera"
+    artifact_id: "camera-viewfinder"
+    version: "1.4.0-alpha08"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false

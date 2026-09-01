@@ -1,0 +1,80 @@
+version: "1.8.0-alpha02"
+dependency_list {
+  dependency {
+    group_id: "androidx.activity"
+    artifact_id: "activity"
+    version: "1.2.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-experimental"
+    version: "1.4.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.7.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-common-java8"
+    version: "2.2.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.lifecycle"
+    artifact_id: "lifecycle-viewmodel"
+    version: "2.2.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.media"
+    artifact_id: "media"
+    version: "1.6.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.car.app"
+artifact_id: "app"
+path: "/car/app/app"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.car.app-app-all-1.8.0-alpha02.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.car.app"
+    artifact_id: "app-automotive"
+    version: "1.8.0-alpha02"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.car.app"
+    artifact_id: "app-projected"
+    version: "1.8.0-alpha02"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.car.app"
+    artifact_id: "app-testing"
+    version: "1.8.0-alpha02"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "car-app-appreleaseAndroidTest.xml"
+test_module_names: ":car:app:app:testReleaseUnitTest"

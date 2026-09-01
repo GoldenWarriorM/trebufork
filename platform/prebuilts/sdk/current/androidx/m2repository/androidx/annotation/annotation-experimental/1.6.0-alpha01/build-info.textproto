@@ -1,0 +1,20 @@
+version: "1.6.0-alpha01"
+dependency_list {
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.annotation"
+artifact_id: "annotation-experimental"
+path: "/annotation/annotation-experimental"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.annotation-annotation-experimental-all-1.6.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "annotation-annotation-experimentalreleaseAndroidTest.xml"
+test_module_names: ":annotation:annotation-experimental:testReleaseUnitTest"

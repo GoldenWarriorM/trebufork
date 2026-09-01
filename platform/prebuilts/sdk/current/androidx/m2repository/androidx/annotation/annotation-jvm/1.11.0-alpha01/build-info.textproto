@@ -1,0 +1,192 @@
+version: "1.11.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-androidnativearm32"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-androidnativearm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-androidnativex64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-androidnativex86"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-iosarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-iossimulatorarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-iosx64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-js"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-jvm"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-linuxarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-linuxx64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-macosarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-macosx64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-mingwx64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-tvosarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-tvossimulatorarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-tvosx64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-wasm-js"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-watchosarm32"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-watchosarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-watchosdevicearm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-watchossimulatorarm64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-watchosx64"
+    version: "1.11.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.annotation"
+artifact_id: "annotation"
+path: "/annotation/annotation"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.annotation-annotation-all-1.11.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "androidnativex86"
+kmp_children: "androidnativex64"
+kmp_children: "androidnativearm64"
+kmp_children: "androidnativearm32"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "js"
+kmp_children: "jvm"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "mingwx64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "wasm-js"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+test_module_names: ":annotation:annotation:iosX64Test"
+test_module_names: ":annotation:annotation:iosSimulatorArm64Test"
+test_module_names: ":annotation:annotation:jsBrowserTest"
+test_module_names: ":annotation:annotation:jvmTest"
+test_module_names: ":annotation:annotation:linuxX64Test"
+test_module_names: ":annotation:annotation:macosX64Test"
+test_module_names: ":annotation:annotation:macosArm64Test"
+test_module_names: ":annotation:annotation:mingwX64Test"
+test_module_names: ":annotation:annotation:tvosX64Test"
+test_module_names: ":annotation:annotation:tvosSimulatorArm64Test"
+test_module_names: ":annotation:annotation:wasmJsBrowserTest"
+test_module_names: ":annotation:annotation:watchosX64Test"
+test_module_names: ":annotation:annotation:watchosSimulatorArm64Test"

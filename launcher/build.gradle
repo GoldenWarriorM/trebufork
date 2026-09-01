@@ -1,0 +1,432 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.protobuf'
+}
+
+def lineageRoot = rootProject.ext.lineageRoot
+// Vendored platform artifacts (see sync-prebuilts.sh) — the build no longer
+// reads out/soong/.intermediates for these. sync-prebuilts.sh writes them to
+// <repo-root>/prebuilts, so resolve relative to the root project, not this module.
+def platformPrebuilts = rootProject.file('prebuilts')
+def sourceRoot = file('../launcher-source')
+// Platform jar stubs that cannot be rebuilt from launcher sources. Vendored via
+// sync-prebuilts.sh; provided by the platform at runtime, hence compileOnly.
+def platformCompileOnlyJars = [
+    // Full framework jar (hidden API/@SystemApi). The public SDK android.jar does not
+    // expose RemoteAnimationTarget, DesktopModeFlags, com.android.internal.* and the
+    // rest of the platform API the launcher needs. This replicates what Android.bp's
+    // platform_apis:true (LOCAL_PRIVATE_PLATFORM_APIS) passes as the boot classpath.
+    'framework.jar',
+    'android_module_lib_stubs_current.jar',
+    'android-non-updatable.stubs.test.from-text.jar',
+    'framework-statsd.stubs.module_lib.jar',
+]
+// AOSP libraries that still ship as Soong prebuilts while their sources are
+// being migrated into standalone Gradle modules (tracinglib/displaylib,
+// wm-shell-shared, unfold, iconloader, plugin-core, animation libs, settings
+// theme, systemui-shared, aconfig flags, statsd). Removed one by one as each
+// module lands.
+def soongCompileOnlyJars = [
+    // SystemUI Dagger qualifiers: LauncherConcurrencyModule etc. use
+    // com.android.systemui.dagger.qualifiers.Background from SystemUI's pods.
+    'out/soong/.intermediates/frameworks/base/packages/SystemUI/pods/src/com/android/systemui/dagger/com.android.systemui.dagger-api/android_common/javac/com.android.systemui.dagger-api.jar',
+    // SystemUI log lib: PluginManagerImpl (from SystemUISharedLib) implements
+    // com.android.systemui.Dumpable which lives here.
+    'out/soong/.intermediates/frameworks/base/packages/SystemUI/log/SystemUILogLib/android_common/javac/SystemUILogLib.jar',
+]
+def frameworkRes = file("${platformPrebuilts}/framework-res.apk")
+def systemUiRes = file("${platformPrebuilts}/SystemUI-package-res.apk")
+def generatedQuickstepRes = file("${buildDir}/generated/gradleQuickstepRes")
+def generatedQuickstepManifest = file("${buildDir}/generated/gradleQuickstepManifest/AndroidManifest.xml")
+def generatedKotlinWorkarounds = file("${buildDir}/generated/gradleKotlinWorkarounds")
+def generatedLauncherProtos = file("${buildDir}/generated/gradleLauncherProtos")
+def sourceFileCount = fileTree(sourceRoot).matching {
+    include '**/*.java', '**/*.kt'
+}.files.size()
+
+android {
+    namespace 'com.android.launcher3'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.android.launcher3'
+        minSdk 31
+        targetSdk 36
+        // Matches the stock LineageOS launcher's versionCode (Android 16 = API 36) so the
+        // platform-signed release APK can replace the preloaded system launcher without being
+        // rejected as a version downgrade.
+        versionCode 36
+        versionName 'trebufork-gradle-migration'
+        buildConfigField 'String', 'VERSION_DISPLAY_NAME', '"trebufork-gradle-migration"'
+        buildConfigField 'boolean', 'IS_STUDIO_BUILD', 'false'
+        buildConfigField 'boolean', 'QSB_ON_FIRST_SCREEN', 'false'
+        buildConfigField 'boolean', 'IS_DEBUG_DEVICE', 'false'
+        buildConfigField 'boolean', 'WIDGETS_ENABLED', 'true'
+        buildConfigField 'boolean', 'NOTIFICATION_DOTS_ENABLED', 'true'
+    }
+
+    buildFeatures {
+        aidl true
+        buildConfig true
+        resValues true
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [
+                "${sourceRoot}/src",
+                "${sourceRoot}/quickstep/src",
+                // protolog-generated proxies (ActiveGestureLog, GestureEvent, ...)
+                // compiled as plain Java, as in Soong's launcher-quickstep-...-protolog.
+                "${sourceRoot}/quickstep/src_protolog",
+                "${sourceRoot}/quickstep/dagger",
+                "${sourceRoot}/src_plugins",
+                // launcher-testing-shared (TestProtocol, ResourceUtils, ...) is a
+                // static_libs of Launcher3ResLib in Android.bp, so it is packaged
+                // into the APK together with the launcher sources.
+                "${sourceRoot}/shared/src",
+                // Compose is disabled in the Gradle build (launcher-widgetpicker
+                // is a separate module); the launcher_compose_defaults and
+                // quickstep_compose_defaults conditions_default srcs are the
+                // facade/core + facade/disabled directories.
+                "${sourceRoot}/compose/facade/core",
+                "${sourceRoot}/compose/facade/disabled",
+                "${sourceRoot}/quickstep/compose/facade/core",
+                "${sourceRoot}/quickstep/compose/facade/disabled",
+                'gradle-src',
+            ]
+            kotlin.srcDirs = [
+                "${sourceRoot}/src",
+                "${sourceRoot}/quickstep/src",
+                "${sourceRoot}/quickstep/dagger",
+                "${sourceRoot}/src_plugins",
+                "${sourceRoot}/shared/src",
+                "${sourceRoot}/compose/facade/core",
+                "${sourceRoot}/compose/facade/disabled",
+                "${sourceRoot}/quickstep/compose/facade/core",
+                "${sourceRoot}/quickstep/compose/facade/disabled",
+                generatedKotlinWorkarounds,
+            ]
+            proto.srcDirs = [generatedLauncherProtos]
+            kotlin.exclude '**/PhoneAppPairLaunchTimings.kt'
+            res.srcDirs = [generatedQuickstepRes, file('gradle-res')]
+            manifest.srcFile generatedQuickstepManifest
+            aidl.srcDirs = ["${sourceRoot}/src", "${sourceRoot}/quickstep/src", "${sourceRoot}/quickstep/dagger"]
+            assets.srcDirs = ["${sourceRoot}/assets", "${sourceRoot}/quickstep/assets"]
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            debuggable true
+        }
+        release { minifyEnabled false }
+    }
+
+    lint {
+        // The fork's quickstep res is ahead of the Lineage base values (dimens
+        // declared only in sw600dp/sw720dp/land, en-rXC translations), which
+        // vital lint reports as errors. Harmless for this migration build.
+        abortOnError false
+    }
+
+    compileOptions {
+        // Soong builds the Kotlin libs (tracinglib, mechanics, displaylib) with
+        // jvmTarget 21; their inline functions get inlined into the launcher, so
+        // the launcher bytecode must be at least 21 too.
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+    }
+
+    androidResources {
+        def extraResourcePackages = [frameworkRes, systemUiRes].findAll { it.isFile() }
+        additionalParameters += extraResourcePackages.collectMany { ['-I', it.absolutePath] }
+    }
+
+    if (platformPrebuilts.isDirectory()) {
+        dependencies {
+            // Vendored platform stubs (sync-prebuilts.sh). compileOnly: provided
+            // by the platform at runtime, never packaged into the APK.
+            compileOnly platformCompileOnlyJars.collect { files("${platformPrebuilts}/${it}") }
+        }
+    }
+}
+
+kapt {
+    // KAPT must see the same platform/Lineage compile-only jars as javac;
+    // otherwise missing hidden API types are emitted as error.NonExistentClass.
+    includeCompileClasspath = true
+    correctErrorTypes = true
+}
+
+// Note: the framework.jar-first classpath reorder (hidden API shadowing) is
+// defined once in the root build.gradle and applies to every module that
+// declares prebuilts/framework.jar as a compileOnly dependency.
+
+
+
+def prepareGradleQuickstepResources = tasks.register('prepareGradleQuickstepResources', Sync) {
+    from("${sourceRoot}/quickstep/res")
+    into(generatedQuickstepRes)
+    filesMatching('**/*.xml') {
+        filter { line ->
+            def transformed = line
+            transformed = transformed.replaceAll(/@androidprv:(color)\/([A-Za-z0-9_]+)/) {
+                all, type, name -> "@${type}/gradle_androidprv_${name}"
+            }
+            transformed = transformed.replaceAll(/\?androidprv:attr\/([A-Za-z0-9_]+)/) {
+                all, name -> "?android:${name == 'colorAccentPrimary' || name == 'colorAccentPrimaryVariant' ? 'attr/colorAccent' : name == 'colorSurface' ? 'attr/colorBackground' : name == 'textColorOnAccent' ? 'attr/textColorPrimaryInverse' : 'attr/' + name}"
+            }
+            transformed = transformed.replaceAll(/@\*android:(color|dimen|string)\/([A-Za-z0-9_]+)/) {
+                all, type, name ->
+                    // surface_effect_* are framework selectors, not plain colors.
+                    // Route them through the same selector resources used for
+                    // @androidprv references so alpha/lStar and dynamic colors
+                    // survive the standalone resource link.
+                    type == 'color' && name.startsWith('surface_effect_')
+                            ? "@color/gradle_androidprv_${name}"
+                            : "@${type}/gradle_android_${name}"
+            }
+            transformed = transformed.replaceAll(/\s+xmlns:androidprv="[^"]*"/, '')
+            transformed
+        }
+    }
+}
+
+def commonManifestFile = file("${sourceRoot}/AndroidManifest-common.xml")
+def launcherManifestFile = file("${sourceRoot}/quickstep/AndroidManifest-launcher.xml")
+def prepareGradleQuickstepManifest = tasks.register('prepareGradleQuickstepManifest', Sync) {
+    // These files are consumed in doLast rather than by Sync.from(), so declare
+    // them as inputs; otherwise Gradle keeps an old manifest that is missing
+    // QuickstepLauncher after the first successful migration build.
+    inputs.files(
+            file("${sourceRoot}/quickstep/AndroidManifest.xml"),
+            commonManifestFile,
+            launcherManifestFile)
+    outputs.file(generatedQuickstepManifest)
+    // The manifest is assembled by a custom merge below, not by Sync's normal
+    // source mapping. Always reevaluate the merge when AGP asks for this task.
+    outputs.upToDateWhen { false }
+
+    // Soong merges AndroidManifest-common.xml, quickstep/AndroidManifest.xml,
+    // and quickstep/AndroidManifest-launcher.xml. A standalone AGP manifest
+    // source cannot express that three-way merge, so assemble the same small
+    // merge here before the Android plugin consumes it.
+    from("${sourceRoot}/quickstep/AndroidManifest.xml")
+    into(generatedQuickstepManifest.parentFile)
+    filesMatching('AndroidManifest.xml') {
+        filter { line ->
+            // ACONFIG featureFlag metadata is understood by Soong's manifest
+            // pipeline but not by a standalone Gradle/AAPT invocation.
+            line.replaceAll(/\s+android:featureFlag="[^"]*"/, '')
+        }
+    }
+    doLast {
+        def output = generatedQuickstepManifest
+        def quickstepText = output.getText('UTF-8')
+        def commonText = commonManifestFile.getText('UTF-8')
+        def launcherText = launcherManifestFile.getText('UTF-8')
+
+        def applicationBody = { String text ->
+            int start = text.indexOf('<application')
+            int bodyStart = text.indexOf('>', start) + 1
+            int bodyEnd = text.lastIndexOf('</application>')
+            text.substring(bodyStart, bodyEnd).trim()
+        }
+        def rootEntries = (commonText =~ /(?ms)^\s*<(?:uses-permission|permission)\b.*?\/>/)
+                .findAll()
+                .collect { it.trim() }
+                .findAll { entry ->
+                    def name = (entry =~ /android:name="([^"]+)"/)
+                    !name.find() || !quickstepText.contains('android:name="' + name.group(1) + '"')
+                }
+                .join('\n    ')
+
+        // Add common permissions/components and the QuickstepLauncher HOME
+        // activity while retaining the quickstep services and Recents activity.
+        // Use Groovy's closure replacement so '$' in manifest placeholders
+        // (for example ${applicationId}) is emitted literally.
+        quickstepText = quickstepText.replaceFirst(/(?s)(?=<application\b)/) {
+            "${rootEntries}\n\n    "
+        }
+        quickstepText = quickstepText.replaceFirst(
+                /<application\b/,
+                '<application android:name="com.android.launcher3.LauncherApplication"')
+        // The replacement above preserves the original application attributes;
+        // insert the common and launcher children immediately before its close.
+        def commonChildren = applicationBody(commonText)
+        def launcherChildren = applicationBody(launcherText)
+        quickstepText = quickstepText.replace('</application>',
+                "\n\n        ${commonChildren}\n\n        ${launcherChildren}\n    </application>")
+        output.write(quickstepText.replaceAll(/\s+android:featureFlag="[^"]*"/, ''), 'UTF-8')
+    }
+}
+
+def prepareGradleKotlinWorkarounds = tasks.register('prepareGradleKotlinWorkarounds', Sync) {
+    from("${sourceRoot}/quickstep/src/com/android/launcher3/taskbar/bubbles/stashing/BubbleStashController.kt") {
+        into('com/android/launcher3/taskbar/bubbles/stashing')
+        // Keep a different file name so the `**/BubbleStashController.kt` exclude below
+        // only matches the original (which uses the hidden InsetsController constant that
+        // the public android.jar does not expose) and not this generated replacement.
+        rename { 'BubbleStashController.gradle.kt' }
+        filter { line -> line.replace('InsetsController.ANIMATION_DURATION_RESIZE.toLong()', '300L') }
+    }
+    into(generatedKotlinWorkarounds)
+}
+
+def prepareGradleLauncherProtos = tasks.register('prepareGradleLauncherProtos', Sync) {
+    from("${sourceRoot}/protos")
+    from("${sourceRoot}/protos_overrides") {
+        exclude 'launcher_atom_extension.proto'
+    }
+    from("${sourceRoot}/quickstep/protos_overrides") {
+        include 'launcher_atom_extension.proto'
+    }
+    into(generatedLauncherProtos)
+}
+
+tasks.named('preBuild').configure {
+    dependsOn(prepareGradleQuickstepResources, prepareGradleQuickstepManifest,
+            prepareGradleKotlinWorkarounds, prepareGradleLauncherProtos)
+}
+
+protobuf {
+    protoc { artifact = 'com.google.protobuf:protoc:4.31.1' }
+    generateProtoTasks {
+        all().configureEach { task ->
+            task.dependsOn(prepareGradleLauncherProtos)
+            task.builtins {
+                java { option 'lite' }
+            }
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    // Exclude the source counterpart explicitly; sourceSets.kotlin.exclude is
+    // not honored by the Android/Kotlin mixed-source wiring in AGP 8.9.
+    exclude('**/PhoneAppPairLaunchTimings.kt')
+    exclude('**/TabletAppPairLaunchTimings.kt')
+    exclude('**/BubbleStashController.kt')
+    // TaskbarInsetsController relies on unit conversions on arbitrary
+    // expressions, gated behind an experimental flag in Kotlin 1.9.
+    // -Xjvm-default=all matches Android.bp's kotlincflags: without it Kotlin
+    // interface default methods are seen as abstract by javac ("does not
+    // override abstract method bindExtraContainerItems/...").
+    kotlinOptions.freeCompilerArgs += [
+        '-XXLanguage:+UnitConversionsOnArbitraryExpressions',
+        '-Xjvm-default=all',
+    ]
+}
+
+
+dependencies {
+    implementation 'com.google.protobuf:protobuf-javalite:4.31.1'
+    // platformJar prefers the vendored prebuilts/soong copies (sync-prebuilts.sh)
+    // and only falls back to the live Lineage out/soong tree during development.
+    compileOnly files(soongCompileOnlyJars.collect { rootProject.ext.platformJar(it) }.findAll { it.isFile() })
+    // OverlayCallbackImpl implements com.google.android.libraries.gsa.launcherclient.*
+    // from the bundled libGoogleFeed.jar (the Lineage launcher ships the Google
+    // LauncherClient helper classes in libs/). Soong links it as a static lib,
+    // so the classes must be packaged in the APK.
+    implementation files("${sourceRoot}/libs/libGoogleFeed.jar")
+    implementation project(':launcher-res')
+    implementation project(':launcher-dagger-qualifiers')
+    implementation project(':launcher-concurrent')
+    implementation project(':launcher-widgetpicker')
+    // Runtime-migrated platform libs: classes the launcher calls at runtime,
+    // packaged into the APK (previously compileOnly Soong jars, absent from APK).
+    implementation project(':launcher-msdl')
+    implementation project(':launcher-tracing')
+    implementation project(':launcher-mechanics')
+    implementation project(':launcher-animationlib')
+    // aconfig-generated flag classes that launcher code evaluates at runtime
+    // and that the Soong build packages into the APK — now compiled from the
+    // generated sources in launcher-flags and launcher-flags-framework. The
+    // Soong launcher references the hidden_from_bootclasspath variants that the
+    // device framework defines; our Gradle build packages the plain-named
+    // classes instead (they read the same aconfig runtime values via
+    // PlatformAconfigPackageInternal), which is how wm.shell/systemui flags
+    // already work.
+    implementation project(':launcher-flags')
+    implementation project(':launcher-flags-framework')
+    // displaylib + view_capture: launcher code calls DisplayDecorationListener,
+    // ViewCaptureFactory etc. at runtime. Migrated to source modules
+    // (launcher-displaylib, launcher-viewcapture) — packaged into the APK
+    // like the other migrated platform libs.
+    implementation project(':launcher-settingslib')
+    implementation project(':launcher-displaylib')
+    implementation project(':launcher-viewcapture')
+    implementation project(':launcher-contextualeducation')
+    implementation project(':launcher-rotation')
+    implementation project(':launcher-wmshell')
+    implementation project(':launcher-platformanimation')
+    implementation project(':launcher-iconloader')
+    implementation project(':launcher-systemui-shared')
+    // The SystemUISharedLib chain modules provide classes the launcher itself
+    // references (implementation deps of launcher-systemui-shared are not
+    // transitive): plugin interfaces for the launcher's src_plugins tree,
+    // the unfold transition providers in quickstep/src.
+    implementation project(':launcher-pluginlib')
+    implementation project(':launcher-plugin-core')
+    implementation project(':launcher-plugin-annotations')
+    implementation project(':launcher-unfold')
+    // SysUiStatsLog: generated stats-log facade the launcher calls at runtime
+    // (ItemInfo, AppEventProducer, StatsLogCompatManager...). The jar contains
+    // exactly this one class; the Soong APK packages it too.
+    implementation files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/packages/SystemUI/shared/SystemUI-statsd/android_common/javac/SystemUI-statsd.jar'))
+    // Lineage SDK: the launcher calls lineageos.providers.LineageSettings at
+    // runtime (TaskbarManagerImpl, ...) and the Soong build links
+    // org.lineageos.platform as a static lib (packaged). The device framework
+    // does NOT provide it on the bootclasspath, so it must be packaged here.
+    implementation files("${platformPrebuilts}/org.lineageos.platform.jar")
+    // Guava (LooperExecutor extends AbstractListeningExecutorService,
+    // ListeningExecutorService/MoreExecutors, @VisibleForTesting). Packaged
+    // because it participates in class hierarchies.
+    implementation 'com.google.guava:guava:32.1.2-jre'
+    // javax.annotation.concurrent.ThreadSafe (LauncherInteractor/TaskbarInteractor).
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.google.dagger:dagger:2.60.1'
+    kapt 'com.google.dagger:dagger-compiler:2.60.1'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'jakarta.inject:jakarta.inject-api:2.0.1'
+    implementation 'androidx.annotation:annotation:1.9.1'
+    // Match the Jetpack artifacts used by Launcher3ResLib in the Lineage
+    // Soong build; these are resolved from the local AOSP Maven snapshot.
+    implementation 'androidx.core:core-ktx:1.19.0-alpha01'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.3.0-alpha02'
+    implementation 'androidx.fragment:fragment:1.9.0-alpha01'
+    implementation 'androidx.recyclerview:recyclerview:1.5.0-alpha01'
+    implementation 'androidx.preference:preference:1.3.0-alpha01'
+    // androidx.core.animation.* (Animator, ValueAnimator, ... compat layer used
+    // by the taskbar bubbles code) is a separate artifact from androidx.core.
+    implementation 'androidx.core:core-animation:1.0.0'
+    // androidx.slice.SliceItem (StatsLogCompatManager) and androidx.compose.runtime
+    // (TaskAppTimerViewModel) — same AOSP m2repository versions as launcher-widgetpicker.
+    implementation 'androidx.slice:slice-core:1.1.0-alpha02'
+    implementation 'androidx.compose.runtime:runtime-android:1.10.0-alpha01'
+    // androidx.graphics.shapes.* (RoundedPolygon, Morph, SvgPathParser) used by
+    // ShapeDelegate for adaptive-icon shaped drawing.
+    implementation 'androidx.graphics:graphics-shapes-android:1.1.0-rc01'
+    // androidx.window.embedding.RuleController (split-screen config in Launcher.java).
+    implementation 'androidx.window:window:1.5.0-rc01'
+    implementation 'com.google.android.material:material:1.14.0-alpha02'
+    implementation 'com.airbnb.android:lottie:6.6.7'
+}
+
+tasks.register('printMigrationInputs') {
+    doLast {
+        println "lineageRoot=${lineageRoot}"
+        println "sourceDir=${sourceRoot}"
+        println "sourceFiles=${sourceFileCount}"
+    }
+}

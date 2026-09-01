@@ -1,0 +1,547 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.datastore",
+    "module": "datastore-guava",
+    "version": "1.2.0-alpha03",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-external-protobuf",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-guava-1.2.0-alpha03-sources.jar",
+          "url": "datastore-guava-1.2.0-alpha03-sources.jar",
+          "size": 7873,
+          "sha512": "8c7af287a19e42c53644e759db8bb33cd0eac57e1e089248e46d998b94253acf5f3f93311e61f05633e695f25dac85291f214dd870a3c981b5b0c37d949ec3a5",
+          "sha256": "fbdb69eff9002f31d6851fc8e46bb3177797a951c0423758538b7033d8df6751",
+          "sha1": "4803e06bda8701a609033d383a1868ba9e61a926",
+          "md5": "65608e370555f48d482cdb281f0039fe"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.concurrent",
+          "module": "concurrent-futures",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-external-protobuf",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-guava-1.2.0-alpha03.aar",
+          "url": "datastore-guava-1.2.0-alpha03.aar",
+          "size": 21929,
+          "sha512": "ab07d3de8d8e1e0c991b435b90e1eb8fd8d52ccdc2ad6d3e8f317f4254a282c65f80939e160f63e4b989f80f08c47bb6cd1bc56a4e56414bdf9db54488cc57e4",
+          "sha256": "2cbd5f877da05f32a9c05cfed28ece9629dc0f598341bb135cf645bb5ec3fa2b",
+          "sha1": "00d25b72bbfe36afd90051f87cd6d0cb7c9b5dff",
+          "md5": "35e5558507ae1aa838cd5813aad30b24"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.concurrent",
+          "module": "concurrent-futures",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.concurrent",
+          "module": "concurrent-futures-ktx",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-external-protobuf",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-guava-1.2.0-alpha03.aar",
+          "url": "datastore-guava-1.2.0-alpha03.aar",
+          "size": 21929,
+          "sha512": "ab07d3de8d8e1e0c991b435b90e1eb8fd8d52ccdc2ad6d3e8f317f4254a282c65f80939e160f63e4b989f80f08c47bb6cd1bc56a4e56414bdf9db54488cc57e4",
+          "sha256": "2cbd5f877da05f32a9c05cfed28ece9629dc0f598341bb135cf645bb5ec3fa2b",
+          "sha1": "00d25b72bbfe36afd90051f87cd6d0cb7c9b5dff",
+          "md5": "35e5558507ae1aa838cd5813aad30b24"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-external-protobuf",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-guava is in atomic group androidx.datastore"
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-guava-1.2.0-alpha03-versionMetadata.json",
+          "url": "datastore-guava-1.2.0-alpha03-versionMetadata.json",
+          "size": 1713,
+          "sha512": "b50f065021680ad38aaa5c1ef4b2c328627b5279af24b0f12c9cdd00aac012fd52933b253a2c92c02aa274a0c425a85bf0823cb79b4a7418cedc6a279d333314",
+          "sha256": "96847351d4a5ac0a348cc5a618482450082cefdfaf60e3b970004e5ebf3de9b6",
+          "sha1": "5b997dadcfd804df54700c835265c139c7374aad",
+          "md5": "e008acd0f97c4b016d2faef65ce6f98c"
+        }
+      ]
+    }
+  ]
+}

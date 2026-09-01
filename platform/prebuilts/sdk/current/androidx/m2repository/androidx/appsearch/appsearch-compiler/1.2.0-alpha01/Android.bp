@@ -1,0 +1,35 @@
+// This is a generated file. Do not modify directly.
+
+// *** THIS PACKAGE HAS SPECIAL LICENSING CONDITIONS.  PLEASE
+//     CONSULT THE OWNERS AND opensource-licensing@google.com BEFORE
+//     DEPENDING ON IT IN YOUR PROJECT. ***
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "prebuilts_sdk_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-Apache-2.0
+    //   SPDX-license-identifier-OFL (by exception only)
+    //   SPDX-license-identifier-Unicode-DFS
+    default_applicable_licenses: ["prebuilts_sdk_license"],
+}
+
+java_import_host {
+    name: "androidx.appsearch_appsearch-compiler",
+    jars: ["appsearch-compiler-1.2.0-alpha01.jar"],
+    static_libs: [
+        "androidx.annotation_annotation",
+        "androidx.room_room-compiler-processing",
+        "auto_service_annotations",
+        "auto_value_annotations",
+        "guava",
+        "javapoet",
+        "javax-annotation-api-prebuilt-host-jar",
+        "jspecify",
+        "kotlin-stdlib",
+        "kotlin_metadata_jvm",
+        "libauto_service_plugin",
+        "libauto_value_plugin",
+        "symbol-processing-api",
+    ],
+}

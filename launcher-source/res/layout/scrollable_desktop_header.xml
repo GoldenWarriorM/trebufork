@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="4dp">
+
+    <!-- trebufork: empty header row — kept only as a long-press target that opens the launcher
+         options (add widgets etc.). The Done button is a floating overlay in launcher.xml,
+         positioned top|end and visible only while reorder mode is active. -->
+
+</FrameLayout>

@@ -1,0 +1,428 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.glance",
+    "module": "glance-appwidget-external-protobuf",
+    "version": "1.2.0-beta01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-multiprocess",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-proto",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material3",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-appwidget-external-protobuf-1.2.0-beta01.jar",
+          "url": "glance-appwidget-external-protobuf-1.2.0-beta01.jar",
+          "size": 1042943,
+          "sha512": "aeb1e15da39cf37b28f36a874afc24a20e429dc29189e1e058a42b476b93ee99a30f2c3718ccda9bdd4dad5b2168ac01e861f3765c8c5f56eabe59981e8dbfca",
+          "sha256": "e97d8811fde1e90d99c607610dfb6ba71e18f56ab22eb94cb3543b9f92bc1de5",
+          "sha1": "80f68af0a4e10040566ce1ea30323121348b32f0",
+          "md5": "9be7a3425dc44806595b5335a86f2854"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-multiprocess",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-proto",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material3",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-appwidget-external-protobuf-1.2.0-beta01.jar",
+          "url": "glance-appwidget-external-protobuf-1.2.0-beta01.jar",
+          "size": 1042943,
+          "sha512": "aeb1e15da39cf37b28f36a874afc24a20e429dc29189e1e058a42b476b93ee99a30f2c3718ccda9bdd4dad5b2168ac01e861f3765c8c5f56eabe59981e8dbfca",
+          "sha256": "e97d8811fde1e90d99c607610dfb6ba71e18f56ab22eb94cb3543b9f92bc1de5",
+          "sha1": "80f68af0a4e10040566ce1ea30323121348b32f0",
+          "md5": "9be7a3425dc44806595b5335a86f2854"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-multiprocess",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-proto",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material3",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-appwidget-external-protobuf-1.2.0-beta01-sources.jar",
+          "url": "glance-appwidget-external-protobuf-1.2.0-beta01-sources.jar",
+          "size": 1659,
+          "sha512": "2283c1f8374a5a1149c2d3e7e0d8b44a3c099d4bc1e7dc1d3eff4667291aa0ff17a06fff74959374d4410611b2c920906479aa332a66de70d27625692d07724f",
+          "sha256": "0fbfec79cd4bbecae2d8fd25092b863785fc995e9a69fb4c2864b6f62a7cf1e2",
+          "sha1": "4f55aaada53a2e3546184832300556388a289851",
+          "md5": "b79089c168a45f750f66ac1cbf4ae46b"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.glance",
+          "module": "glance",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-multiprocess",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-proto",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-appwidget-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-preview",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-material3",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        },
+        {
+          "group": "androidx.glance",
+          "module": "glance-testing",
+          "version": {
+            "requires": "1.2.0-beta01"
+          },
+          "reason": "glance-appwidget-external-protobuf is in atomic group androidx.glance"
+        }
+      ],
+      "files": [
+        {
+          "name": "glance-appwidget-external-protobuf-1.2.0-beta01-versionMetadata.json",
+          "url": "glance-appwidget-external-protobuf-1.2.0-beta01-versionMetadata.json",
+          "size": 2,
+          "sha512": "b25b294cb4deb69ea00a4c3cf3113904801b6015e5956bd019a8570b1fe1d6040e944ef3cdee16d0a46503ca6e659a25f21cf9ceddc13f352a3c98138c15d6af",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "sha1": "97d170e1550eee4afc0af065b78cda302a97674c",
+          "md5": "d751713988987e9331980363e24189ce"
+        }
+      ]
+    }
+  ]
+}

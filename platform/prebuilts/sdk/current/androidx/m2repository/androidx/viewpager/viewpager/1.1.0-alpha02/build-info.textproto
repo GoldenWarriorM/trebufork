@@ -1,0 +1,35 @@
+version: "1.1.0-alpha02"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core"
+    version: "1.7.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.customview"
+    artifact_id: "customview"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "androidx.viewpager"
+group_id: "androidx.viewpager"
+artifact_id: "viewpager"
+path: "/viewpager/viewpager"
+sha: "edd19514b50734044a2a42cd9be3930fdf188b0f"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.viewpager-viewpager-all-12133442-1.1.0-alpha02.zip"
+kotlin_version: "1.9.24"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false

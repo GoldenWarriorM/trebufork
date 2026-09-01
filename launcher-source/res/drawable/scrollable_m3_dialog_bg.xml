@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<!-- trebufork: Material 3 style dialog container — a rounded surface (28dp corners,
+     surface container color) matching the M3 dialog spec. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/materialColorSurfaceContainerHigh" />
+    <corners android:radius="28dp" />
+</shape>

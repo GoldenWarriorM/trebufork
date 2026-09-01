@@ -1,0 +1,174 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.leanback",
+    "module": "leanback-grid",
+    "version": "1.0.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "leanback-grid-1.0.0-rc01-sources.jar",
+          "url": "leanback-grid-1.0.0-rc01-sources.jar",
+          "size": 82210,
+          "sha512": "cbdfea9b6ff7a27f8ba74b1be583494d8e0c08f1a4b757c3dc9af00267032dffef7440375d1c1c94a6adbb0559b7042f99fed7c23324477c7a53ea9b27547a14",
+          "sha256": "ce2d25ed853012254f04c0f6614ee70fd1151b9978afb3906517b173a72424ed",
+          "sha1": "2360dd766cb7802754c021b0ed168d8127ab4330",
+          "md5": "ba8220f223c613885fe5cc5444af598a"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.recyclerview",
+          "module": "recyclerview",
+          "version": {
+            "requires": "1.3.2"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "leanback-grid-1.0.0-rc01.aar",
+          "url": "leanback-grid-1.0.0-rc01.aar",
+          "size": 104113,
+          "sha512": "34285c2eb8041a29cd55b25f0fd2dfbdbb2e57ce63ad21963bfdb5c448e059f0d0c682751322a04f9b9751bfc9f2e1f5b162717f5f471ea3aeb22d7568c9ca69",
+          "sha256": "3c0e57db7dc0c169af609ffc9734d7e283e7544ff7816e208ebcd2344fcacb06",
+          "sha1": "3c3c97de12697d3bb2f1feed736951d5734dcb30",
+          "md5": "ee585e4db3a7ab445e171d62e3dd1e17"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.4.2"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.recyclerview",
+          "module": "recyclerview",
+          "version": {
+            "requires": "1.3.2"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.leanback",
+          "module": "leanback",
+          "version": {
+            "requires": "1.2.0-rc01"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "leanback-grid-1.0.0-rc01.aar",
+          "url": "leanback-grid-1.0.0-rc01.aar",
+          "size": 104113,
+          "sha512": "34285c2eb8041a29cd55b25f0fd2dfbdbb2e57ce63ad21963bfdb5c448e059f0d0c682751322a04f9b9751bfc9f2e1f5b162717f5f471ea3aeb22d7568c9ca69",
+          "sha256": "3c0e57db7dc0c169af609ffc9734d7e283e7544ff7816e208ebcd2344fcacb06",
+          "sha1": "3c3c97de12697d3bb2f1feed736951d5734dcb30",
+          "md5": "ee585e4db3a7ab445e171d62e3dd1e17"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "leanback-grid-1.0.0-rc01-versionMetadata.json",
+          "url": "leanback-grid-1.0.0-rc01-versionMetadata.json",
+          "size": 13261,
+          "sha512": "95c11c5d6d0187e77ef5db14065657023a15b52fc287a0b1f7c90989ac5e7a9f68591f6091748aa1c0ff8f66f634341f617574d8b2991b0a68e95b33174c52e2",
+          "sha256": "ed5ffe5e657f922bedf98f800037cdbd5ab563a45b0bbb3cc5f1e7f70d4d4044",
+          "sha1": "7e8b291768f1ee6640d60d6bbb203e36e5e70fce",
+          "md5": "010dff050a5f6432343229922f0dd34a"
+        }
+      ]
+    }
+  ]
+}

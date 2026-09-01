@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Soong exposes these Launcher3 style attributes from its generated resource set. -->
+<resources>
+    <attr name="disabledIconAlpha" format="float" />
+    <attr name="loadingIconColor" format="color" />
+</resources>

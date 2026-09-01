@@ -1,0 +1,281 @@
+version: "2.8.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection"
+    version: "1.5.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-common"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-android"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-iosarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-iossimulatorarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-iosx64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-jvm"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-linuxarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-linuxx64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-macosarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-macosx64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-tvosarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-tvossimulatorarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-tvosx64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-watchosarm32"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-watchosarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-watchosdevicearm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-watchossimulatorarm64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime-watchosx64"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite"
+    version: "2.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.sqlite"
+    artifact_id: "sqlite-framework"
+    version: "2.6.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "13842168"
+group_id: "androidx.room"
+artifact_id: "room-runtime"
+path: "/room/room-runtime"
+sha: "7ceb138d49622d882b103d960594301ad0a735f6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.room-room-runtime-all-13842168-2.8.0-alpha01.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-common"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-compiler"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-compiler-processing"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-compiler-processing-testing"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-external-antlr"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-gradle-plugin"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-guava"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-ktx"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-migration"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging-guava"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging-rxjava2"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging-rxjava3"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-rxjava2"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-rxjava3"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-sqlite-wrapper"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-testing"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "android"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "jvm"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+test_module_names: ":room:room-runtime:iosX64Test"
+test_module_names: ":room:room-runtime:iosSimulatorArm64Test"
+test_module_names: ":room:room-runtime:jvmTest"
+test_module_names: ":room:room-runtime:linuxX64Test"
+test_module_names: ":room:room-runtime:macosX64Test"
+test_module_names: ":room:room-runtime:macosArm64Test"
+test_module_names: ":room:room-runtime:tvosX64Test"
+test_module_names: ":room:room-runtime:tvosSimulatorArm64Test"
+test_module_names: ":room:room-runtime:watchosX64Test"
+test_module_names: ":room:room-runtime:watchosSimulatorArm64Test"
+test_module_names: "room-room-runtimeandroidInstrumentedTest.xml"
+test_module_names: ":room:room-runtime:testAndroidHostTest"

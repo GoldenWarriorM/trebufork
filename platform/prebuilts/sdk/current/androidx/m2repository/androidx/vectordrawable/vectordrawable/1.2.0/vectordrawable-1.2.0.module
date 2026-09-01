@@ -1,0 +1,136 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.vectordrawable",
+    "module": "vectordrawable",
+    "version": "1.2.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "vectordrawable-1.2.0-sources.jar",
+          "url": "vectordrawable-1.2.0-sources.jar",
+          "size": 23918,
+          "sha512": "42cf6504cefbaf1cc8eaa111436edd6f9ef263d12b05622d9766f2fc8b1c53861e1498961a8eb04c434135d82c685413fe4e35953ed9c049dd902d9d76b11098",
+          "sha256": "9c3a9fbc22860770d88ff0b1c1be1e381bd93776338e7a9362ef19d7628e6060",
+          "sha1": "04c5efe46b4b2314a874655bd0c13a6079d892ce",
+          "md5": "aa75f088df04fc137c75193bd364f9ea"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.13.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "vectordrawable-1.2.0.aar",
+          "url": "vectordrawable-1.2.0.aar",
+          "size": 36854,
+          "sha512": "d9592546a5460e8fa4f73a3fd10f5f7d1fd1007ac7470d40b83297b92193dbe42ba7199749946e62f74e46f46833b2385e910887b841ffcf34b548b8aa460b11",
+          "sha256": "97102b2b569a98e8bf5d08e2006913279181c10f3bd552602e94cc4eccf78fad",
+          "sha1": "19af1a3b88bd4d91c4eacaf96abc3eb917c21a9a",
+          "md5": "7e52054d92d4d76ae649fbe668b9063f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.13.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "vectordrawable-1.2.0.aar",
+          "url": "vectordrawable-1.2.0.aar",
+          "size": 36854,
+          "sha512": "d9592546a5460e8fa4f73a3fd10f5f7d1fd1007ac7470d40b83297b92193dbe42ba7199749946e62f74e46f46833b2385e910887b841ffcf34b548b8aa460b11",
+          "sha256": "97102b2b569a98e8bf5d08e2006913279181c10f3bd552602e94cc4eccf78fad",
+          "sha1": "19af1a3b88bd4d91c4eacaf96abc3eb917c21a9a",
+          "md5": "7e52054d92d4d76ae649fbe668b9063f"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "vectordrawable-1.2.0-versionMetadata.json",
+          "url": "vectordrawable-1.2.0-versionMetadata.json",
+          "size": 709,
+          "sha512": "b26ce7e1ca356bef2d116cd4f339d6781d964e9bd0e5db79b650d92dfbcfcc62d8f9d61d62bab259119853c383970da049ea37507696ef414d221ed5f2140476",
+          "sha256": "f98f54536e2ccf69d6fd8a60f232d9d5dd35826b54350609bb9b88c922e782d4",
+          "sha1": "154f53ecdca7e3c82d343ff41a9b46b2aedbb9bf",
+          "md5": "5b77aa406167c7506ec9f6ecbfa5f8ca"
+        }
+      ]
+    }
+  ]
+}

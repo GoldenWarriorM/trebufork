@@ -1,0 +1,412 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.compose.runtime",
+    "module": "runtime-tracing",
+    "version": "1.10.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14",
+      "buildId:": "13737533"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-annotation",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-livedata",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava2",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava3",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        }
+      ],
+      "files": [
+        {
+          "name": "runtime-tracing-1.10.0-alpha01-sources.jar",
+          "url": "runtime-tracing-1.10.0-alpha01-sources.jar",
+          "size": 6055,
+          "sha512": "023804decd20b9d7f6b12ad8179c029f33c4fb07a7d6b009445f81959d64a97b82cd569835c370bc1401f9d1bf4b25a1a1672007970dc85fc145c2d4e0bc5485",
+          "sha256": "f98bea2b27d0e87656c5f1f49573d9dbdcecf18660410e6eeeed52d45b7b7527",
+          "sha1": "3046601963250bf9c34ad1d0e5dcc3d500f3d819",
+          "md5": "7a4dce8260aef32f7faff8ba3f001654"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-annotation",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-livedata",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava2",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava3",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        }
+      ],
+      "files": [
+        {
+          "name": "runtime-tracing-1.10.0-alpha01.aar",
+          "url": "runtime-tracing-1.10.0-alpha01.aar",
+          "size": 8678,
+          "sha512": "7d28e963f44809be138c3cf37793eb1a3934687637672673c8ceb4258efd487f02afc44ba3c118a2df42e45a52fb31e337622ccba9710a20ef5affabcb6b4fc8",
+          "sha256": "acaad37b252ab5b751958036a48ea2067ba45ab5ff1852e6c68b157852c71470",
+          "sha1": "4b01c53e5f0fdfff55e852a0f79e9f1f7ae7efa7",
+          "md5": "7f4b6427d5da8da592259b02a4ac707f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.3.3"
+          }
+        },
+        {
+          "group": "androidx.startup",
+          "module": "startup-runtime",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "androidx.tracing",
+          "module": "tracing-perfetto",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-annotation",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-livedata",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava2",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava3",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "runtime-tracing-1.10.0-alpha01.aar",
+          "url": "runtime-tracing-1.10.0-alpha01.aar",
+          "size": 8678,
+          "sha512": "7d28e963f44809be138c3cf37793eb1a3934687637672673c8ceb4258efd487f02afc44ba3c118a2df42e45a52fb31e337622ccba9710a20ef5affabcb6b4fc8",
+          "sha256": "acaad37b252ab5b751958036a48ea2067ba45ab5ff1852e6c68b157852c71470",
+          "sha1": "4b01c53e5f0fdfff55e852a0f79e9f1f7ae7efa7",
+          "md5": "7f4b6427d5da8da592259b02a4ac707f"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-annotation",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-livedata",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava2",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-rxjava3",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime-saveable-lint",
+          "version": {
+            "requires": "1.10.0-alpha01"
+          },
+          "reason": "runtime-tracing is in atomic group androidx.compose.runtime"
+        }
+      ],
+      "files": [
+        {
+          "name": "runtime-tracing-1.10.0-alpha01-versionMetadata.json",
+          "url": "runtime-tracing-1.10.0-alpha01-versionMetadata.json",
+          "size": 282,
+          "sha512": "a19a2d1507a2aea2197d8bff88dfd54b7a9861200e466fe1fba2be80a7153f9150c492649b7647f6a9f0d6a576deb200b8f224674ab4320ad61b4068fcf60e4f",
+          "sha256": "1b02562bb867ef510db32b6b4e082547f2fd4a31a196b5f92c8c5acffda7fbee",
+          "sha1": "8de790eb18c697bb965628a81c8a250e0e7d6847",
+          "md5": "48c2869594930d5f14584671c0a2bb0e"
+        }
+      ]
+    }
+  ]
+}

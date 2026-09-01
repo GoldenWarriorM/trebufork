@@ -1,0 +1,185 @@
+version: "1.1.0-rc01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection"
+    version: "1.5.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-android"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-desktop"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-iosarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-iossimulatorarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-iosx64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-js"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-linuxarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-linuxx64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-macosarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-macosx64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-mingwx64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-tvosarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-tvossimulatorarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-tvosx64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-wasm-js"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-watchosarm32"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-watchosarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-watchosdevicearm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-watchossimulatorarm64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.graphics"
+    artifact_id: "graphics-shapes-watchosx64"
+    version: "1.1.0-rc01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.graphics"
+artifact_id: "graphics-shapes"
+path: "/graphics/graphics-shapes"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.graphics-graphics-shapes-all-1.1.0-rc01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "android"
+kmp_children: "desktop"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "mingwx64"
+kmp_children: "js"
+kmp_children: "wasm-js"
+test_module_names: ":graphics:graphics-shapes:desktopTest"
+test_module_names: ":graphics:graphics-shapes:linuxX64Test"
+test_module_names: ":graphics:graphics-shapes:iosX64Test"
+test_module_names: ":graphics:graphics-shapes:iosSimulatorArm64Test"
+test_module_names: ":graphics:graphics-shapes:watchosX64Test"
+test_module_names: ":graphics:graphics-shapes:watchosSimulatorArm64Test"
+test_module_names: ":graphics:graphics-shapes:tvosX64Test"
+test_module_names: ":graphics:graphics-shapes:tvosSimulatorArm64Test"
+test_module_names: ":graphics:graphics-shapes:macosX64Test"
+test_module_names: ":graphics:graphics-shapes:macosArm64Test"
+test_module_names: ":graphics:graphics-shapes:mingwX64Test"
+test_module_names: ":graphics:graphics-shapes:jsBrowserTest"
+test_module_names: ":graphics:graphics-shapes:wasmJsBrowserTest"
+test_module_names: "graphics-graphics-shapesandroidInstrumentedTest.xml"
+test_module_names: ":graphics:graphics-shapes:testAndroidHostTest"

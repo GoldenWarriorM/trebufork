@@ -1,0 +1,67 @@
+version: "1.0.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.remote"
+    artifact_id: "remote-core"
+    version: "1.0.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14074696"
+group_id: "androidx.compose.remote"
+artifact_id: "remote-creation-core"
+path: "/compose/remote/remote-creation-core"
+sha: "edad62d8184f428b5b71a0e065c2d505e1eb5aa7"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.compose.remote-remote-creation-core-all-1.0.0-alpha01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.compose.remote"
+    artifact_id: "remote-core"
+    version: "1.0.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.remote"
+    artifact_id: "remote-creation"
+    version: "1.0.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.remote"
+    artifact_id: "remote-foundation"
+    version: "1.0.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.remote"
+    artifact_id: "remote-frontend"
+    version: "1.0.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.remote"
+    artifact_id: "remote-player-compose"
+    version: "1.0.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.remote"
+    artifact_id: "remote-player-view"
+    version: "1.0.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: ":compose:remote:remote-creation-core:test"

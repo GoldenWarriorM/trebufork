@@ -1,0 +1,176 @@
+version: "1.5.0"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-iosarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-iossimulatorarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-iosx64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-js"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-jvm"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-linuxarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-linuxx64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-macosarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-macosx64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-mingwx64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-tvosarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-tvossimulatorarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-tvosx64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-wasm-js"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-watchosarm32"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-watchosarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-watchosdevicearm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-watchossimulatorarm64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-watchosx64"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "13737533"
+group_id: "androidx.collection"
+artifact_id: "collection"
+path: "/collection/collection"
+sha: "84c18801ee8982f06562f6c17cf5b4ee81e28c80"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.collection-collection-all-13737533-1.5.0.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-ktx"
+    version: "1.5.0"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "js"
+kmp_children: "jvm"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "mingwx64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "wasm-js"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+test_module_names: ":collection:collection:iosX64Test"
+test_module_names: ":collection:collection:iosSimulatorArm64Test"
+test_module_names: ":collection:collection:jsBrowserTest"
+test_module_names: ":collection:collection:jvmTest"
+test_module_names: ":collection:collection:linuxX64Test"
+test_module_names: ":collection:collection:macosX64Test"
+test_module_names: ":collection:collection:macosArm64Test"
+test_module_names: ":collection:collection:mingwX64Test"
+test_module_names: ":collection:collection:tvosX64Test"
+test_module_names: ":collection:collection:tvosSimulatorArm64Test"
+test_module_names: ":collection:collection:wasmJsBrowserTest"
+test_module_names: ":collection:collection:watchosX64Test"
+test_module_names: ":collection:collection:watchosSimulatorArm64Test"

@@ -1,0 +1,144 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.emoji",
+    "module": "emoji-appcompat",
+    "version": "1.2.0-alpha03",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "emoji-appcompat-1.2.0-alpha03-sources.jar",
+          "url": "emoji-appcompat-1.2.0-alpha03-sources.jar",
+          "size": 8503,
+          "sha512": "3f77c782fb9ae4a5c45e27f7fee2481ffb50c48ae42c447062f5f4693012e22d16eeca591a11bc1dd1001ce357054596414c3beb78d3f3ea96b576f2ba5da39c",
+          "sha256": "5850bdb3a342327694602d45d8eb2ea3b6d02e0ff93a9729acf3991fdfd3f17e",
+          "sha1": "a3f80bd13b95c7e99ccffba3d2bc268042303c53",
+          "md5": "1aa7df36a3c633c809e783e69f600667"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.emoji",
+          "module": "emoji",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji-appcompat-1.2.0-alpha03.aar",
+          "url": "emoji-appcompat-1.2.0-alpha03.aar",
+          "size": 9106,
+          "sha512": "94c9f512fd579568b3cc0bd679f3d410e6b5297698350618b2a06431b6e44a1aa2fba938c4a6841cc4dbf7084494eaa05e2816f43dd4f563ddd97d23f41a8a26",
+          "sha256": "b0e9849a447d6e85c884b94c0d3d41b388c10f3383d8005ef4c41b75a51f4571",
+          "sha1": "b7e6674c1efa2ef8cb2af060efdaafdeb6dfa8ed",
+          "md5": "a0eae7368274ffde2770103aa570c968"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.emoji",
+          "module": "emoji",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji-appcompat-1.2.0-alpha03.aar",
+          "url": "emoji-appcompat-1.2.0-alpha03.aar",
+          "size": 9106,
+          "sha512": "94c9f512fd579568b3cc0bd679f3d410e6b5297698350618b2a06431b6e44a1aa2fba938c4a6841cc4dbf7084494eaa05e2816f43dd4f563ddd97d23f41a8a26",
+          "sha256": "b0e9849a447d6e85c884b94c0d3d41b388c10f3383d8005ef4c41b75a51f4571",
+          "sha1": "b7e6674c1efa2ef8cb2af060efdaafdeb6dfa8ed",
+          "md5": "a0eae7368274ffde2770103aa570c968"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "emoji-appcompat-1.2.0-alpha03-versionMetadata.json",
+          "url": "emoji-appcompat-1.2.0-alpha03-versionMetadata.json",
+          "size": 1272,
+          "sha512": "4de5cbf8af40e99710becd317de35831661c89e061d3c40bbce47f498b06a56a129f988071eba5c3144b0be6a0d701852113d7302555beba13a6456c61a83d97",
+          "sha256": "698f351ad9eb108b1c87ad458e7377e460846c3f575cf6f88b5194ffe2de4dbe",
+          "sha1": "1888b11f0758c989484efb71951f18ca7e07b48c",
+          "md5": "077121e11b29cb39fd4b9563ba17758b"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+version: "1.0.0-alpha06"
+dependency_list {
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-geometry-android"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-geometry-jvm"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.ink"
+artifact_id: "ink-geometry"
+path: "/ink/ink-geometry"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.ink-ink-geometry-all-1.0.0-alpha06.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-authoring"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-authoring-compose"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-brush"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-brush-compose"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-geometry-compose"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-nativeloader"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-rendering"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-storage"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.ink"
+    artifact_id: "ink-strokes"
+    version: "1.0.0-alpha06"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx"
+kmp_children: "jvm"
+kmp_children: "android"
+test_module_names: ":ink:ink-geometry:jvmTest"
+test_module_names: "ink-ink-geometryandroidInstrumentedTest.xml"
+test_module_names: ":ink:ink-geometry:testAndroidHostTest"

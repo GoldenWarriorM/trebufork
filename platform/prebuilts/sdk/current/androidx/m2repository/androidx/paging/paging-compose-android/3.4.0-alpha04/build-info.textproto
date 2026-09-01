@@ -1,0 +1,239 @@
+version: "3.4.0-alpha04"
+dependency_list {
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.9.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-common"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-android"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-desktop"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-iosarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-iossimulatorarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-iosx64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-js"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-linuxarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-linuxx64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-macosarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-macosx64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-mingwx64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-tvosarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-tvossimulatorarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-tvosx64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-wasm-js"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-watchosarm32"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-watchosarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-watchosdevicearm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-watchossimulatorarm64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-compose-watchosx64"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.paging"
+artifact_id: "paging-compose"
+path: "/paging/paging-compose"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.paging-paging-compose-all-3.4.0-alpha04.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-common"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-common-ktx"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-guava"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-runtime"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-runtime-ktx"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-rxjava2"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-rxjava2-ktx"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-rxjava3"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.paging"
+    artifact_id: "paging-testing"
+    version: "3.4.0-alpha04"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "js"
+kmp_children: "wasm-js"
+kmp_children: "mingwx64"
+kmp_children: "desktop"
+kmp_children: "android"
+test_module_names: ":paging:paging-compose:macosX64Test"
+test_module_names: ":paging:paging-compose:macosArm64Test"
+test_module_names: ":paging:paging-compose:linuxX64Test"
+test_module_names: ":paging:paging-compose:iosX64Test"
+test_module_names: ":paging:paging-compose:iosSimulatorArm64Test"
+test_module_names: ":paging:paging-compose:watchosX64Test"
+test_module_names: ":paging:paging-compose:watchosSimulatorArm64Test"
+test_module_names: ":paging:paging-compose:tvosX64Test"
+test_module_names: ":paging:paging-compose:tvosSimulatorArm64Test"
+test_module_names: ":paging:paging-compose:jsBrowserTest"
+test_module_names: ":paging:paging-compose:wasmJsBrowserTest"
+test_module_names: ":paging:paging-compose:mingwX64Test"
+test_module_names: ":paging:paging-compose:desktopTest"
+test_module_names: "paging-paging-composeandroidInstrumentedTest.xml"
+test_module_names: ":paging:paging-compose:testAndroidHostTest"

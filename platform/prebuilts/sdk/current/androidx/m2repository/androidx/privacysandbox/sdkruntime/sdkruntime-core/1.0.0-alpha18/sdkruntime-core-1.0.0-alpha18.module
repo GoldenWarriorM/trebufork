@@ -1,0 +1,231 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.privacysandbox.sdkruntime",
+    "module": "sdkruntime-core",
+    "version": "1.0.0-alpha18",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-client",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        },
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-provider",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        }
+      ],
+      "files": [
+        {
+          "name": "sdkruntime-core-1.0.0-alpha18-sources.jar",
+          "url": "sdkruntime-core-1.0.0-alpha18-sources.jar",
+          "size": 27066,
+          "sha512": "79c4522c00e1b4d65ab8ed898e6d03dabc565b1b1323bd5a8d030aedf6862620ab1e03c60e159bb7f7eeed1298815dce624125ac2ed4b676491a447f72c78535",
+          "sha256": "2a3d6d7f721d16fda510cc3d529c9cf38678996d7e9eb1aa33f78551d401dc44",
+          "sha1": "deec93306103eb0c1fa181921eec8be582d637e4",
+          "md5": "456af24245ec939f74907e973d367f2f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-client",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        },
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-provider",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "sdkruntime-core-1.0.0-alpha18.aar",
+          "url": "sdkruntime-core-1.0.0-alpha18.aar",
+          "size": 41118,
+          "sha512": "ce732819f91f315ea583a5b83264ba1e79e5d4e69a81a404277b8dbcd317de32a61ec933131e96996e502c16346ef2fd451c18e19b79e87d857f9daf903b240f",
+          "sha256": "e52ed64b09d539fa951ba0882fbb67ad70c8c2369762b69e2b3d78458f939cd5",
+          "sha1": "b9026b127eb623f9d5fc2a4e06e49a37c2bedd77",
+          "md5": "df549bcd22977e20262d7a4ac809bcde"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.activity",
+          "module": "activity",
+          "version": {
+            "requires": "1.9.3"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.2"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.15.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.15.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-client",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        },
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-provider",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "sdkruntime-core-1.0.0-alpha18.aar",
+          "url": "sdkruntime-core-1.0.0-alpha18.aar",
+          "size": 41118,
+          "sha512": "ce732819f91f315ea583a5b83264ba1e79e5d4e69a81a404277b8dbcd317de32a61ec933131e96996e502c16346ef2fd451c18e19b79e87d857f9daf903b240f",
+          "sha256": "e52ed64b09d539fa951ba0882fbb67ad70c8c2369762b69e2b3d78458f939cd5",
+          "sha1": "b9026b127eb623f9d5fc2a4e06e49a37c2bedd77",
+          "md5": "df549bcd22977e20262d7a4ac809bcde"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-client",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        },
+        {
+          "group": "androidx.privacysandbox.sdkruntime",
+          "module": "sdkruntime-provider",
+          "version": {
+            "requires": "1.0.0-alpha18"
+          },
+          "reason": "sdkruntime-core is in atomic group androidx.privacysandbox.sdkruntime"
+        }
+      ],
+      "files": [
+        {
+          "name": "sdkruntime-core-1.0.0-alpha18-versionMetadata.json",
+          "url": "sdkruntime-core-1.0.0-alpha18-versionMetadata.json",
+          "size": 3113,
+          "sha512": "3f299f4460bdcf6757f86ba79ed12c07ca10a72836ef5b5ba7fe515f14895d6d2a56375c6f5a76cda15579a78bcebf791cd4a4ee95fd56d855fe23967d367a28",
+          "sha256": "ebf68feece1ed36098a3b7e12ec21644603f6e4e1bb818e05a481b394ba58375",
+          "sha1": "1dd5fe7a016348a94e3fbd35c6e1063dd2759587",
+          "md5": "34f72ff746040a8c7e4ee07d6dd2e038"
+        }
+      ]
+    }
+  ]
+}

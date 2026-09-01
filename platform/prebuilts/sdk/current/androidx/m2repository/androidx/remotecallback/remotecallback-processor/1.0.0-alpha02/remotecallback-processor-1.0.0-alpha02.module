@@ -1,0 +1,135 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.remotecallback",
+    "module": "remotecallback-processor",
+    "version": "1.0.0-alpha02",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.remotecallback",
+          "module": "remotecallback",
+          "version": {
+            "requires": "1.0.0-alpha02"
+          },
+          "reason": "remotecallback-processor is in atomic group androidx.remotecallback"
+        }
+      ],
+      "files": [
+        {
+          "name": "remotecallback-processor-1.0.0-alpha02.jar",
+          "url": "remotecallback-processor-1.0.0-alpha02.jar",
+          "size": 18133,
+          "sha512": "85cb8df6d8a494896cdb31970b592ea1fdd56fe13f60c5a5f62854b4822ff2d606514b7d9dc76ed0f51a63a58e62e828bf150dc6bbaa4305f56349cda08f0950",
+          "sha256": "d7956dd186734f036f9197267410662945ae4bdbd102480cbc447636b0056217",
+          "sha1": "cb9b7987474ace9135339da509ab6098f92edf11",
+          "md5": "18d57190c965072984dc3dafa81449da"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "com.squareup",
+          "module": "javapoet",
+          "version": {
+            "requires": "1.13.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.remotecallback",
+          "module": "remotecallback",
+          "version": {
+            "requires": "1.0.0-alpha02"
+          },
+          "reason": "remotecallback-processor is in atomic group androidx.remotecallback"
+        }
+      ],
+      "files": [
+        {
+          "name": "remotecallback-processor-1.0.0-alpha02.jar",
+          "url": "remotecallback-processor-1.0.0-alpha02.jar",
+          "size": 18133,
+          "sha512": "85cb8df6d8a494896cdb31970b592ea1fdd56fe13f60c5a5f62854b4822ff2d606514b7d9dc76ed0f51a63a58e62e828bf150dc6bbaa4305f56349cda08f0950",
+          "sha256": "d7956dd186734f036f9197267410662945ae4bdbd102480cbc447636b0056217",
+          "sha1": "cb9b7987474ace9135339da509ab6098f92edf11",
+          "md5": "18d57190c965072984dc3dafa81449da"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.remotecallback",
+          "module": "remotecallback",
+          "version": {
+            "requires": "1.0.0-alpha02"
+          },
+          "reason": "remotecallback-processor is in atomic group androidx.remotecallback"
+        }
+      ],
+      "files": [
+        {
+          "name": "remotecallback-processor-1.0.0-alpha02-sources.jar",
+          "url": "remotecallback-processor-1.0.0-alpha02-sources.jar",
+          "size": 12235,
+          "sha512": "5e04279a1fc40a79576aa0d0877fc0d5ba201b1f34eaaed341cbda8e02a01154d747f19f7dba66cf4dc3c63672210dec786462b4ac286c6eb11d5aa32e853d1c",
+          "sha256": "07873977a374e0127418ab2c8844102070fb8b11574c96f32a44982b7bdaa806",
+          "sha1": "86f4b8e6d1c2808a9636af76d9becbff018e6d00",
+          "md5": "7b8bad165649197d6a048a6602960f03"
+        }
+      ]
+    }
+  ]
+}

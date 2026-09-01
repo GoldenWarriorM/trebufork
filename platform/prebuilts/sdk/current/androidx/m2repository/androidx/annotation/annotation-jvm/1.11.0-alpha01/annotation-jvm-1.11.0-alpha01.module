@@ -1,0 +1,123 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../annotation/1.11.0-alpha01/annotation-1.11.0-alpha01.module",
+    "group": "androidx.annotation",
+    "module": "annotation",
+    "version": "1.11.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "annotation-jvm-1.11.0-alpha01.jar",
+          "url": "annotation-jvm-1.11.0-alpha01.jar",
+          "size": 62378,
+          "sha512": "92eefde3143d7e82900121219ad8d70976fdf81a5f064dc572c9a231192da3a7e3976c8c2565b45bec3b19f7a7c2f84dcca28bfe672f3adc2dac0f7cdf2f8d3d",
+          "sha256": "0ede7cf06eb15210786f0dedd2a436906ec70f320749ccc12ffdbdfd342852b8",
+          "sha1": "b60bcdfa9d57045a643fab8e3cefcc1e3ff990e2",
+          "md5": "ba2bf00efa89d345ece38c3a5b4aa3fa"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.annotation-internal",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.0"
+          },
+          "reason": "prevents symbols duplication"
+        }
+      ],
+      "files": [
+        {
+          "name": "annotation-jvm-1.11.0-alpha01.jar",
+          "url": "annotation-jvm-1.11.0-alpha01.jar",
+          "size": 62378,
+          "sha512": "92eefde3143d7e82900121219ad8d70976fdf81a5f064dc572c9a231192da3a7e3976c8c2565b45bec3b19f7a7c2f84dcca28bfe672f3adc2dac0f7cdf2f8d3d",
+          "sha256": "0ede7cf06eb15210786f0dedd2a436906ec70f320749ccc12ffdbdfd342852b8",
+          "sha1": "b60bcdfa9d57045a643fab8e3cefcc1e3ff990e2",
+          "md5": "ba2bf00efa89d345ece38c3a5b4aa3fa"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "annotation-jvm-1.11.0-alpha01-sources.jar",
+          "url": "annotation-jvm-1.11.0-alpha01-sources.jar",
+          "size": 73411,
+          "sha512": "317cd4f1108722a6f7e144b1f2c3f52b15b3a75d20654c503a906ee5a2fe4ded0181762534cd9bb9a22a7fff4b8a495a66d411209d7abc389cad2b2f902ed560",
+          "sha256": "d210ac7a4c176ac179b7a4756eefa2fa50ee731bdeb5e80f2331e2cf73d18cfa",
+          "sha1": "3fdbc44e7be94120e90a32de6cc45affbd8d62bd",
+          "md5": "32f1a3f94b66dcef1e6868662ef4e469"
+        }
+      ]
+    }
+  ]
+}

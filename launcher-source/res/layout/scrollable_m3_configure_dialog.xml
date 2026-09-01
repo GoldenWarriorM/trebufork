@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<!-- trebufork: Material 3 style popup that configures an inline group — rename field,
+     alignment selector and a draggable member list for reordering. Follows the M3 spec like
+     the rename dialog: rounded surface container, filled text field, accent chips and end
+     aligned text action buttons. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="24dp"
+    android:paddingBottom="16dp"
+    android:background="@drawable/scrollable_m3_dialog_bg">
+
+    <TextView
+        android:id="@+id/m3_config_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scrollable_group_configure"
+        android:textColor="?attr/workspaceTextColor"
+        android:textSize="24sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/scrollable_group_configure_name"
+        android:textColor="?attr/allAppsSearchTextColor"
+        android:textSize="12sp" />
+
+    <com.android.launcher3.ExtendedEditText
+        android:id="@+id/m3_config_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/scrollable_m3_textfield_bg"
+        android:maxLines="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:singleLine="true"
+        android:textColor="?attr/workspaceTextColor"
+        android:textColorHint="?attr/allAppsSearchTextColor"
+        android:textSize="16sp"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/scrollable_group_configure_align"
+        android:textColor="?attr/allAppsSearchTextColor"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/m3_config_align_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/m3_config_align_start"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/scrollable_group_align_start"
+            android:src="@drawable/ic_align_preview_start" />
+
+        <ImageButton
+            android:id="@+id/m3_config_align_center"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="12dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/scrollable_group_align_center"
+            android:src="@drawable/ic_align_preview_center" />
+
+        <ImageButton
+            android:id="@+id/m3_config_align_end"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="12dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/scrollable_group_align_end"
+            android:src="@drawable/ic_align_preview_end" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/scrollable_group_configure_order"
+        android:textColor="?attr/allAppsSearchTextColor"
+        android:textSize="12sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/m3_config_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:clipToPadding="false"
+        android:overScrollMode="ifContentScrolls"
+        android:paddingBottom="2dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/m3_config_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="12dp"
+            android:text="@string/scrollable_m3_cancel"
+            android:textAllCaps="true"
+            android:textColor="?android:attr/colorAccent"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/m3_config_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="12dp"
+            android:text="@string/scrollable_m3_done"
+            android:textAllCaps="true"
+            android:textColor="?android:attr/colorAccent"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

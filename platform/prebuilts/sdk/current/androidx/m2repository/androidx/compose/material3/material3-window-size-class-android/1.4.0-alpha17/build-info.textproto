@@ -1,0 +1,79 @@
+version: "1.4.0-alpha17"
+dependency_list {
+  dependency {
+    group_id: "androidx.compose.material3"
+    artifact_id: "material3-window-size-class-android"
+    version: "1.4.0-alpha17"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.material3"
+    artifact_id: "material3-window-size-class-jvmstubs"
+    version: "1.4.0-alpha17"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.material3"
+    artifact_id: "material3-window-size-class-linuxx64stubs"
+    version: "1.4.0-alpha17"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui"
+    version: "1.8.2"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-unit"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "13737533"
+group_id: "androidx.compose.material3"
+artifact_id: "material3-window-size-class"
+path: "/compose/material3/material3-window-size-class"
+sha: "84c18801ee8982f06562f6c17cf5b4ee81e28c80"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.compose.material3-material3-window-size-class-all-13737533-1.4.0-alpha17.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.compose.material3"
+    artifact_id: "material3"
+    version: "1.4.0-alpha17"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.material3"
+    artifact_id: "material3-adaptive-navigation-suite"
+    version: "1.4.0-alpha17"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.compose.material3"
+    artifact_id: "material3-lint"
+    version: "1.4.0-alpha17"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx"
+kmp_children: "android"
+kmp_children: "jvmstubs"
+kmp_children: "linuxx64stubs"
+test_module_names: ":compose:material3:material3-window-size-class:jvmStubsTest"
+test_module_names: ":compose:material3:material3-window-size-class:linuxx64StubsTest"
+test_module_names: "compose-material3-material3-window-size-classandroidInstrumentedTest.xml"
+test_module_names: ":compose:material3:material3-window-size-class:testAndroidHostTest"

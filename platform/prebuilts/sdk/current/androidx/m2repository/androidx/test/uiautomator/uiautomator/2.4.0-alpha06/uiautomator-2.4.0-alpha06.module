@@ -1,0 +1,144 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.test.uiautomator",
+    "module": "uiautomator",
+    "version": "2.4.0-alpha06",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14066893"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "uiautomator-2.4.0-alpha06-sources.jar",
+          "url": "uiautomator-2.4.0-alpha06-sources.jar",
+          "size": 137534,
+          "sha512": "2c453318b866adb54ef5cb3188d8f9ba19b7f10b575bb1f9853c78e4b71ec07827147609f20ca829c8b8a84646080ed47afb528bd39abdeff062481c709a0112",
+          "sha256": "acf36f4ec267256934c512a2794dc771d3ff720f2c3c646578ed5026b09c85e0",
+          "sha1": "22a0f756d499d6604b8f8ea37d87053dba2315aa",
+          "md5": "d12fa5852042d53e877fe84abf57d977"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "uiautomator-2.4.0-alpha06.aar",
+          "url": "uiautomator-2.4.0-alpha06.aar",
+          "size": 226025,
+          "sha512": "28d438a695f1d321e745bbd44c42a08cd2d054b153b9f3fb1fba027475367fd0c61436b024cf39406028d0543d023d83b00efc5ff5421da546e8e4f98b0bf579",
+          "sha256": "fc7ced184b0c0e7ea048bf824fdf243967b9995d67955bbb6bc8af5dd0fc5fc2",
+          "sha1": "83b62e62ef0ec6128ae874ac89846f3b6828e725",
+          "md5": "2cc52795514ae1563001ada74713ece3"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.test",
+          "module": "core",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.tracing",
+          "module": "tracing",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "junit",
+          "module": "junit",
+          "version": {
+            "requires": "4.13.2"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "uiautomator-2.4.0-alpha06.aar",
+          "url": "uiautomator-2.4.0-alpha06.aar",
+          "size": 226025,
+          "sha512": "28d438a695f1d321e745bbd44c42a08cd2d054b153b9f3fb1fba027475367fd0c61436b024cf39406028d0543d023d83b00efc5ff5421da546e8e4f98b0bf579",
+          "sha256": "fc7ced184b0c0e7ea048bf824fdf243967b9995d67955bbb6bc8af5dd0fc5fc2",
+          "sha1": "83b62e62ef0ec6128ae874ac89846f3b6828e725",
+          "md5": "2cc52795514ae1563001ada74713ece3"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "uiautomator-2.4.0-alpha06-versionMetadata.json",
+          "url": "uiautomator-2.4.0-alpha06-versionMetadata.json",
+          "size": 50858,
+          "sha512": "e628e4389e7743921828239fcd29df60bd8bd7de4b53864b732f137ee48807f2cc897d12dc1c94fce0df916f47550b8931c4d97fe38011a4cab32e3e925f6fcb",
+          "sha256": "24bcf0dd75396429948a9f43ab10dfb397225e3d20bbe3dbd3ab3f658a05cdb4",
+          "sha1": "98b3b47652c2cd6436e886e589475af030717570",
+          "md5": "715deff89096207c6829ec4cf7f5c63b"
+        }
+      ]
+    }
+  ]
+}

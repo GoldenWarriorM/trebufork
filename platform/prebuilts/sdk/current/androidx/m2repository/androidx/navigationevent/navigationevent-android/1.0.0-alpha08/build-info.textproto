@@ -1,0 +1,191 @@
+version: "1.0.0-alpha08"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.9.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-android"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-desktop"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-iosarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-iossimulatorarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-iosx64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-js"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-linuxarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-linuxx64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-macosarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-macosx64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-mingwx64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-tvosarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-tvossimulatorarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-tvosx64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-wasm-js"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-watchosarm32"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-watchosarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-watchosdevicearm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-watchossimulatorarm64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-watchosx64"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.navigationevent"
+artifact_id: "navigationevent"
+path: "/navigationevent/navigationevent"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.navigationevent-navigationevent-all-1.0.0-alpha08.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-compose"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.navigationevent"
+    artifact_id: "navigationevent-testing"
+    version: "1.0.0-alpha08"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: true
+target: "androidx_multiplatform_mac"
+kmp_children: "android"
+kmp_children: "desktop"
+kmp_children: "macosx64"
+kmp_children: "macosarm64"
+kmp_children: "linuxarm64"
+kmp_children: "linuxx64"
+kmp_children: "iosx64"
+kmp_children: "iosarm64"
+kmp_children: "iossimulatorarm64"
+kmp_children: "watchosx64"
+kmp_children: "watchosarm32"
+kmp_children: "watchosarm64"
+kmp_children: "watchosdevicearm64"
+kmp_children: "watchossimulatorarm64"
+kmp_children: "tvosx64"
+kmp_children: "tvosarm64"
+kmp_children: "tvossimulatorarm64"
+kmp_children: "mingwx64"
+kmp_children: "js"
+kmp_children: "wasm-js"
+test_module_names: ":navigationevent:navigationevent:desktopTest"
+test_module_names: ":navigationevent:navigationevent:macosX64Test"
+test_module_names: ":navigationevent:navigationevent:macosArm64Test"
+test_module_names: ":navigationevent:navigationevent:linuxX64Test"
+test_module_names: ":navigationevent:navigationevent:iosX64Test"
+test_module_names: ":navigationevent:navigationevent:iosSimulatorArm64Test"
+test_module_names: ":navigationevent:navigationevent:watchosX64Test"
+test_module_names: ":navigationevent:navigationevent:watchosSimulatorArm64Test"
+test_module_names: ":navigationevent:navigationevent:tvosX64Test"
+test_module_names: ":navigationevent:navigationevent:tvosSimulatorArm64Test"
+test_module_names: ":navigationevent:navigationevent:mingwX64Test"
+test_module_names: ":navigationevent:navigationevent:jsBrowserTest"
+test_module_names: ":navigationevent:navigationevent:wasmJsBrowserTest"
+test_module_names: "navigationevent-navigationeventandroidInstrumentedTest.xml"
+test_module_names: ":navigationevent:navigationevent:testAndroidHostTest"

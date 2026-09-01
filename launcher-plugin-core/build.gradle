@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// PluginCoreLib — migrated from
+// frameworks/base/packages/SystemUI/plugin_core/Android.bp. Carries the core
+// plugin interfaces (Plugin, PluginListener, PluginLifecycleManager,
+// PluginManager, PluginWrapper, ProtectedPluginListener, PluginFragment) that
+// the launcher's shared lib uses at runtime. The annotations subpackage is
+// excluded (it is PluginAnnotationLib, now launcher-plugin-annotations).
+def lineageRoot = rootProject.ext.lineageRoot
+def coreSrc = "${lineageRoot}/frameworks/base/packages/SystemUI/plugin_core/src"
+
+android {
+    namespace 'com.android.systemui.plugins'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [coreSrc]
+            kotlin.srcDirs = [coreSrc]
+            java.exclude '**/annotations/**'
+            kotlin.exclude '**/annotations/**'
+        }
+    }
+
+    // The kotlin source-set exclude is not honored by KGP (it compiles the
+    // whole kotlin.srcDirs tree), so drop the annotations package at the task
+    // level too — launcher-plugin-annotations provides the classes.
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        exclude('**/annotations/**')
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+dependencies {
+    implementation project(':launcher-plugin-annotations')
+    implementation project(':launcher-systemui-log')
+}

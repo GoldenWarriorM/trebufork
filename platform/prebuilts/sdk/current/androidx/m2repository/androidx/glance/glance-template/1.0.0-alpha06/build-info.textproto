@@ -1,0 +1,92 @@
+version: "1.0.0-alpha06"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation-experimental"
+    version: "1.4.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.1.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-graphics"
+    version: "1.1.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-unit"
+    version: "1.1.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences-core"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance"
+    version: "1.2.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget"
+    version: "1.2.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime"
+    version: "2.7.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime-ktx"
+    version: "2.7.1"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "13740253"
+group_id: "androidx.glance"
+artifact_id: "glance-template"
+path: "/glance/glance-template"
+sha: "50823057bff756367f94902b9f2de0aac14375cc"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.glance-glance-template-all-13740253-1.0.0-alpha06.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "glance-glance-templatereleaseAndroidTest.xml"
+test_module_names: ":glance:glance-template:testReleaseUnitTest"

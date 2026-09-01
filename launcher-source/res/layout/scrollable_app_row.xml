@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="start|center_vertical">
+
+    <!-- The tap target: a consistent-width rounded ripple holding icon + label. Its right margin
+         is set dynamically so it stops exactly where the alphabet touch strip begins. -->
+    <LinearLayout
+        android:id="@+id/scroll_app_row_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="@drawable/scrollable_app_row_background">
+
+        <com.android.launcher3.BubbleTextView
+            android:id="@+id/scroll_app_icon"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:contentDescription="@null"
+            android:gravity="center"
+            android:text=""
+            launcher:iconSizeOverride="44dp"
+            launcher:layoutHorizontal="true" />
+
+        <TextView
+            android:id="@+id/scroll_app_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:textColor="?attr/workspaceTextColor"
+            android:shadowColor="#66000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3" />
+
+        <!-- trebufork: drag handle, visible only on desktop rows while reorder mode is active
+             (see ScrollableAppsView). Removal and reorder live in the long-press menu. -->
+        <ImageView
+            android:id="@+id/scroll_app_drag_handle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/scrollable_desktop_reorder"
+            android:padding="6dp"
+            android:src="@drawable/ic_more_vert_dots"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

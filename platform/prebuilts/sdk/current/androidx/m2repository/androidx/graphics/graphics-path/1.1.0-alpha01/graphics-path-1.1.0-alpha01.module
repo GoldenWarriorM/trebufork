@@ -1,0 +1,142 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.graphics",
+    "module": "graphics-path",
+    "version": "1.1.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "graphics-path-1.1.0-alpha01-sources.jar",
+          "url": "graphics-path-1.1.0-alpha01-sources.jar",
+          "size": 16264,
+          "sha512": "f66488e5b40efda65ef42cdcc399995be4ef96883ffe07296a028030d8525f1555ddad8fc6044d867cf584668623ea468af6252f94324a41495fbfeac10c8f73",
+          "sha256": "cf8f8174f00b4191cdc9b8fdb4fd07908518b8e618f0ede44260c9e9877f49dd",
+          "sha1": "a15095650bc669579f0bae072d41619d24dd2082",
+          "md5": "6aeaf0aa2db4aef48c78bf04397c4b20"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "graphics-path-1.1.0-alpha01.aar",
+          "url": "graphics-path-1.1.0-alpha01.aar",
+          "size": 49325,
+          "sha512": "dbbd2c1171ce43fcf78cfa0a1e8a3ac29922a8f9d04a09f019ed99b263a0079e2ff9400da01111b02309ca0f9e51966f4df58fdb6228c521409dbf69ea066484",
+          "sha256": "c82272bf3d9d3dd282b81f9b738d1fccadc4a659072e55cf87a3dbbb9d3a09a3",
+          "sha1": "3dedf647d5b3b63492d9917647775c2b2f06af8a",
+          "md5": "cfddb565bb0492ed93b6afb446dda82a"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.5.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.12.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "graphics-path-1.1.0-alpha01.aar",
+          "url": "graphics-path-1.1.0-alpha01.aar",
+          "size": 49325,
+          "sha512": "dbbd2c1171ce43fcf78cfa0a1e8a3ac29922a8f9d04a09f019ed99b263a0079e2ff9400da01111b02309ca0f9e51966f4df58fdb6228c521409dbf69ea066484",
+          "sha256": "c82272bf3d9d3dd282b81f9b738d1fccadc4a659072e55cf87a3dbbb9d3a09a3",
+          "sha1": "3dedf647d5b3b63492d9917647775c2b2f06af8a",
+          "md5": "cfddb565bb0492ed93b6afb446dda82a"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "graphics-path-1.1.0-alpha01-versionMetadata.json",
+          "url": "graphics-path-1.1.0-alpha01-versionMetadata.json",
+          "size": 2032,
+          "sha512": "a5ec62b302b8ee9cc3660373864b3d98679ebb2f9bb0f531c7aeb61d214587dbd26b2db3eda3789868786b0a072ecc20ac810c0308663e3e8101340c0d3ebcd3",
+          "sha256": "f8c0d7f127248394a1f9e7a1c12eb107ec8884ebf622a05e9d4aa191770c0fbc",
+          "sha1": "7f85890a8859ceb2666a3e01d2ebc6a853e505c9",
+          "md5": "1396b56542d9c9b7984c0b5615723812"
+        }
+      ]
+    }
+  ]
+}

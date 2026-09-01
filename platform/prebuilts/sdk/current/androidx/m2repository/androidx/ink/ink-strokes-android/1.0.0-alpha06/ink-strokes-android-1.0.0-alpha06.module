@@ -1,0 +1,361 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../ink-strokes/1.0.0-alpha06/ink-strokes-1.0.0-alpha06.module",
+    "group": "androidx.ink",
+    "module": "ink-strokes",
+    "version": "1.0.0-alpha06",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-strokes.aar",
+          "url": "ink-strokes-android-1.0.0-alpha06.aar",
+          "size": 37668,
+          "sha512": "b001c64569a09650944dddffee2708ab793e8380761a54755ed221fa5434d5ee037be53743f2967aa245afb629a31696fbbe6204307e9c69e8cddf594e553610",
+          "sha256": "14de17bc6061def2ec2f73ff1b685533cef7df1494ae35e3640f0b8556aa9fcd",
+          "sha1": "e464bbb66b6b9b7201cada198a4eaabbfaaaad1a",
+          "md5": "769f7af3a5eac5ee4de9062f1f088fbb"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.0"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-strokes.aar",
+          "url": "ink-strokes-android-1.0.0-alpha06.aar",
+          "size": 37668,
+          "sha512": "b001c64569a09650944dddffee2708ab793e8380761a54755ed221fa5434d5ee037be53743f2967aa245afb629a31696fbbe6204307e9c69e8cddf594e553610",
+          "sha256": "14de17bc6061def2ec2f73ff1b685533cef7df1494ae35e3640f0b8556aa9fcd",
+          "sha1": "e464bbb66b6b9b7201cada198a4eaabbfaaaad1a",
+          "md5": "769f7af3a5eac5ee4de9062f1f088fbb"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-nativeloader",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-strokes is in atomic group androidx.ink"
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-strokes-android-1.0.0-alpha06-sources.jar",
+          "url": "ink-strokes-android-1.0.0-alpha06-sources.jar",
+          "size": 25858,
+          "sha512": "6f4999c09074039bc67e57b96d130d98fe4193a8afc4d9a3f5412214cdbe28273c0f8df8b937f5e98961c50db8666657687fb4d0843babef708721038b89a8a8",
+          "sha256": "8b61a516827aa0eb8fc68f89f11fdd883957ce1c012fd67db3995923e64f2a17",
+          "sha1": "c8c6fec8ecb5e068a66cc03bf11e41307f57296a",
+          "md5": "cc0d182304533e03e6b8ac56a465e776"
+        }
+      ]
+    }
+  ]
+}

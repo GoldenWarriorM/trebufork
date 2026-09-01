@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<com.android.launcher3.ScrollableWidgetRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_widget_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:clipToPadding="false">
+
+    <!-- The widget host view is added here by the adapter. -->
+
+    <!-- trebufork: drag handle, visible only while reorder mode is active (see ScrollableAppsView).
+         Removal and reorder live in the long-press menu. -->
+    <ImageView
+        android:id="@+id/scroll_widget_drag_handle"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="top|end"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/scrollable_desktop_reorder"
+        android:padding="6dp"
+        android:src="@drawable/ic_more_vert_dots"
+        android:visibility="gone" />
+
+</com.android.launcher3.ScrollableWidgetRow>

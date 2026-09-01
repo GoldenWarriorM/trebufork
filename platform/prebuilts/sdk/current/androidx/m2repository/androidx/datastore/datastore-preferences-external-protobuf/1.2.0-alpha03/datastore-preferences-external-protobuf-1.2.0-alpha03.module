@@ -1,0 +1,460 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.datastore",
+    "module": "datastore-preferences-external-protobuf",
+    "version": "1.2.0-alpha03",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-guava",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-preferences-external-protobuf-1.2.0-alpha03.jar",
+          "url": "datastore-preferences-external-protobuf-1.2.0-alpha03.jar",
+          "size": 1050687,
+          "sha512": "4a2a7fe2ab3e4bd9b97a1acd7624773d473b2a226fb6b6f3143680a9cc3a9974f5a13a500f1d58e9d33ae1df50dba1ef404e72c15d931cd521efb593074b5be2",
+          "sha256": "4f09ba7fca2a073a5c5527a9b637582b93e262c2b6a89977c584d28cea838ebc",
+          "sha1": "200a891fd29602b4bcff8e197d243a372fb026d5",
+          "md5": "80e72813e22e9695eaf82ff9ccb727e0"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-guava",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-preferences-external-protobuf-1.2.0-alpha03.jar",
+          "url": "datastore-preferences-external-protobuf-1.2.0-alpha03.jar",
+          "size": 1050687,
+          "sha512": "4a2a7fe2ab3e4bd9b97a1acd7624773d473b2a226fb6b6f3143680a9cc3a9974f5a13a500f1d58e9d33ae1df50dba1ef404e72c15d931cd521efb593074b5be2",
+          "sha256": "4f09ba7fca2a073a5c5527a9b637582b93e262c2b6a89977c584d28cea838ebc",
+          "sha1": "200a891fd29602b4bcff8e197d243a372fb026d5",
+          "md5": "80e72813e22e9695eaf82ff9ccb727e0"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-guava",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-preferences-external-protobuf-1.2.0-alpha03-sources.jar",
+          "url": "datastore-preferences-external-protobuf-1.2.0-alpha03-sources.jar",
+          "size": 1697,
+          "sha512": "2901d78ac963a945cb8e29ae70fbadeaeec7fe3fb4ac6691b529d15c172c699eca5f7fff421bead9129ef38421c21d146cd4bf1677c731bc267fadb9eb3734a3",
+          "sha256": "c4f5c4b4ea4e5e07aa310349c7914f0c214885def7296c2ad28e81200683be26",
+          "sha1": "44b126ffdb275476eeaf6bb1ba683dc6800692f1",
+          "md5": "964baba8c001014d7165c1544deec1c6"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.datastore",
+          "module": "datastore",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-core-okio",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-guava",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-core",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-proto",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-preferences-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava2",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        },
+        {
+          "group": "androidx.datastore",
+          "module": "datastore-rxjava3",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          },
+          "reason": "datastore-preferences-external-protobuf is in atomic group androidx.datastore"
+        }
+      ],
+      "files": [
+        {
+          "name": "datastore-preferences-external-protobuf-1.2.0-alpha03-versionMetadata.json",
+          "url": "datastore-preferences-external-protobuf-1.2.0-alpha03-versionMetadata.json",
+          "size": 2,
+          "sha512": "b25b294cb4deb69ea00a4c3cf3113904801b6015e5956bd019a8570b1fe1d6040e944ef3cdee16d0a46503ca6e659a25f21cf9ceddc13f352a3c98138c15d6af",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "sha1": "97d170e1550eee4afc0af065b78cda302a97674c",
+          "md5": "d751713988987e9331980363e24189ce"
+        }
+      ]
+    }
+  ]
+}

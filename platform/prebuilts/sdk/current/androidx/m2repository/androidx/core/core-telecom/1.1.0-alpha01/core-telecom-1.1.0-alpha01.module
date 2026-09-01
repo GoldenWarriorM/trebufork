@@ -1,0 +1,170 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.core",
+    "module": "core-telecom",
+    "version": "1.1.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "core-telecom-1.1.0-alpha01-sources.jar",
+          "url": "core-telecom-1.1.0-alpha01-sources.jar",
+          "size": 136467,
+          "sha512": "a2601f62a17c92e2f90d254d711be7b0a203d168ac65eed1b095e9df1f153752dba9d6ca8a3bf4fa8224ce36d69557db13586d8557d66ae2ff60617b15d69682",
+          "sha256": "2231d920b92d5da70e0b22d94c378b50e6fe5d8711f2d4ce9f7aa1c6e0c5258f",
+          "sha1": "e57144b2a095aeb6cd267048e651fae2be0639e9",
+          "md5": "b3ec9dbdf1ca80fa0ecfa3a75d09367e"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.guava",
+          "module": "listenablefuture",
+          "version": {
+            "requires": "1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "core-telecom-1.1.0-alpha01.aar",
+          "url": "core-telecom-1.1.0-alpha01.aar",
+          "size": 624349,
+          "sha512": "f5cf96ef9ed299f803b182139d8a2f26125463555780f3a00f18b0bdc1aa9ea24a9b703f235f095c835a3367847cc7c3bc1e7bd86cc109cef772e4eef1e33131",
+          "sha256": "020f3dabaefc94e56b39a48a7868cb23566059ffb9957a3df503393fcde58667",
+          "sha1": "746b4009e3f21c7e256041c5f0c3776ff065fcf9",
+          "md5": "76b84a2b856a7f6b9e964949c80aa7cf"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.13.1"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-service",
+          "version": {
+            "requires": "2.8.1"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "listenablefuture",
+          "version": {
+            "requires": "1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.8.1"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "core-telecom-1.1.0-alpha01.aar",
+          "url": "core-telecom-1.1.0-alpha01.aar",
+          "size": 624349,
+          "sha512": "f5cf96ef9ed299f803b182139d8a2f26125463555780f3a00f18b0bdc1aa9ea24a9b703f235f095c835a3367847cc7c3bc1e7bd86cc109cef772e4eef1e33131",
+          "sha256": "020f3dabaefc94e56b39a48a7868cb23566059ffb9957a3df503393fcde58667",
+          "sha1": "746b4009e3f21c7e256041c5f0c3776ff065fcf9",
+          "md5": "76b84a2b856a7f6b9e964949c80aa7cf"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "core-telecom-1.1.0-alpha01-versionMetadata.json",
+          "url": "core-telecom-1.1.0-alpha01-versionMetadata.json",
+          "size": 12556,
+          "sha512": "66f67aca298e28bbf69e64ac5e72e96b877303f8b2dc72a60ed7716935a02173e2f84aa0412633bbfedeecffe412f93ea4b0006046a481c63ec354d7ade2ead8",
+          "sha256": "7058c437e163b35a55bdd849b2e274a8c9d0b48ef1db557592a15702f91ff41e",
+          "sha1": "ba1d310db0c0056ef08b026c7e45df660727e157",
+          "md5": "2dcb167ee8cb52c7870ba81c332620b7"
+        }
+      ]
+    }
+  ]
+}

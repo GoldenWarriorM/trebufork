@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<!-- trebufork: bottom search field for the scrollable apps list. It filters the list as the
+     user types, highlights the first match, and Enter opens it. The clear (X) button resets the
+     query; the back key closes the field (see ScrollableAppsView). Sizing and styling mirror the
+     stock Trebuchet all-apps search box (search_container_all_apps.xml / widgets_search_bar.xml):
+     a 20sp edit text with the magnifier as drawableStart and a rounded surface background. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_all_apps_searchbox">
+
+    <com.android.launcher3.ExtendedEditText
+        android:id="@+id/scroll_search_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@null"
+        android:hint="@string/scrollable_search_hint"
+        android:paddingVertical="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="4dp"
+        android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_allapps_search"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:inputType="text|textNoSuggestions|textCapWords"
+        android:imeOptions="actionSearch|flagNoExtractUi"
+        android:importantForAutofill="no"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?attr/allAppsSearchTextColor"
+        android:textSize="20sp" />
+
+    <ImageButton
+        android:id="@+id/scroll_search_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="12dp"
+        android:src="@drawable/ic_gm_close_24"
+        android:background="@drawable/full_rounded_transparent_ripple"
+        android:contentDescription="@string/scrollable_search_clear"
+        android:visibility="gone" />
+
+</LinearLayout>

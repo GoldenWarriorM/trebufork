@@ -1,0 +1,29 @@
+version: "1.2.0-rc01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.2.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "androidx.versionedparcelable"
+group_id: "androidx.versionedparcelable"
+artifact_id: "versionedparcelable"
+path: "/versionedparcelable/versionedparcelable"
+sha: "edd19514b50734044a2a42cd9be3930fdf188b0f"
+require_same_version_group_build: false
+project_zip_path: "per-project-zips/androidx.versionedparcelable-versionedparcelable-all-12133442-1.2.0-rc01.zip"
+kotlin_version: "1.9.24"
+dependency_constraint_list {
+}
+should_publish_docs: true
+is_kmp: false

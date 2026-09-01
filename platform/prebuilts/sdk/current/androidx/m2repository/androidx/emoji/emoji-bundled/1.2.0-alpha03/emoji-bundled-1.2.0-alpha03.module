@@ -1,0 +1,130 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.emoji",
+    "module": "emoji-bundled",
+    "version": "1.2.0-alpha03",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "emoji-bundled-1.2.0-alpha03-sources.jar",
+          "url": "emoji-bundled-1.2.0-alpha03-sources.jar",
+          "size": 5987,
+          "sha512": "07e3bc23d6e04cd098255a2baead17bf9d61311f88a2aab48ff4a3dd485d6ecf2be87fde0ba1a9db8f1cc7fa395eb60621f0ffc9aa5ad1b15d5b5c0f78ae7915",
+          "sha256": "70a5b144ba52f6598e31e564df81642374b17aa5d31a44a6fb17ee88350a9a5a",
+          "sha1": "f337441fc03966fb52bd550c60f2ac1f6b88ef4f",
+          "md5": "7db5f2b921b9ad2f81f965529a81ac20"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.emoji",
+          "module": "emoji",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji-bundled-1.2.0-alpha03.aar",
+          "url": "emoji-bundled-1.2.0-alpha03.aar",
+          "size": 9873361,
+          "sha512": "9a67b3808076a95768ae81e09916b37bbd17dfee72f945542f916d64a678e0d6cbd3813aa6a96221d6de1dc28fcf1c797a37256082ac0def0559f00ce0e5505c",
+          "sha256": "954c6f94773f22d8e1d52bf1c82e2c383c0df70488288147b7d25b565606b224",
+          "sha1": "ad014a9cafe82becf295a1b43bbc9d7066f685a3",
+          "md5": "4dd0b5e28ab08cdb008b2a704d6cca3d"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.emoji",
+          "module": "emoji",
+          "version": {
+            "requires": "1.2.0-alpha03"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "emoji-bundled-1.2.0-alpha03.aar",
+          "url": "emoji-bundled-1.2.0-alpha03.aar",
+          "size": 9873361,
+          "sha512": "9a67b3808076a95768ae81e09916b37bbd17dfee72f945542f916d64a678e0d6cbd3813aa6a96221d6de1dc28fcf1c797a37256082ac0def0559f00ce0e5505c",
+          "sha256": "954c6f94773f22d8e1d52bf1c82e2c383c0df70488288147b7d25b565606b224",
+          "sha1": "ad014a9cafe82becf295a1b43bbc9d7066f685a3",
+          "md5": "4dd0b5e28ab08cdb008b2a704d6cca3d"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "emoji-bundled-1.2.0-alpha03-versionMetadata.json",
+          "url": "emoji-bundled-1.2.0-alpha03-versionMetadata.json",
+          "size": 184,
+          "sha512": "337b63372a2ebcc4335116c35441584ce7043dde18130ed6d3cd26f961f46aacdbc958ad0dcdfce430a9c7ee9e10a8f6d418373aed069980da4ff425aa9846ad",
+          "sha256": "4e34177d9c083f721fc6b2a9af34e5b141d032e9c73034ae74c1d1cee7a3cea6",
+          "sha1": "6bbf7e36f9c2bc09635a1d59970d098ddd161394",
+          "md5": "f8bf058da86cd0a791ffd8e5c109cf1b"
+        }
+      ]
+    }
+  ]
+}

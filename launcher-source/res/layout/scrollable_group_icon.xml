@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<!-- trebufork: one icon inside an inline group row. A BubbleTextView (rather than a plain
+     ImageView) so the icon gets the same themed shape and adaptive-icon treatment as the
+     desktop app rows, at the same 44dp size. -->
+<com.android.launcher3.BubbleTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    android:layout_width="44dp"
+    android:layout_height="44dp"
+    android:contentDescription="@null"
+    android:gravity="center"
+    android:text=""
+    launcher:iconSizeOverride="44dp"
+    launcher:layoutHorizontal="true" />

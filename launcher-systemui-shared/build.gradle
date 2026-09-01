@@ -1,0 +1,108 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+// SystemUISharedLib (com.android.systemui.shared.*) — migrated from
+// frameworks/base/packages/SystemUI/shared/Android.bp. The launcher calls
+// QuickStepContract, ActivityManagerWrapper, PluginManagerImpl,
+// PluginActionManager, InputConsumerController, RecentsTransition,
+// UnfoldMoveFromCenterAnimator etc. at runtime — previously packaged from
+// prebuilt Soong jars, now compiled from sources.
+//
+// The wm_shell AIDL stubs (shared + main) are compiled by launcher-wmshell;
+// the shared module references them via the implementation dependency (AGP
+// propagates library AIDL outputs to consumers). Its own 6 AIDL files
+// (ISystemUiProxy, ILauncherProxy, Task, smartspace controllers/state) are
+// compiled in this module's aidl source set (see below).
+def lineageRoot = rootProject.ext.lineageRoot
+def sharedSrc = "${lineageRoot}/frameworks/base/packages/SystemUI/shared/src"
+def sharedRes = "${lineageRoot}/frameworks/base/packages/SystemUI/shared/res"
+// SystemUI-shared-utils pod: the launcher Soong build packages WindowManagerUtils
+// (used by the shared rotation/recents code), so it must be compiled here too.
+def utilsSrc = "${lineageRoot}/frameworks/base/packages/SystemUI/utils/src"
+
+android {
+    namespace 'com.android.systemui.shared'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 36
+    }
+
+    buildFeatures {
+        aidl true
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = [sharedSrc, utilsSrc]
+            kotlin.srcDirs = [sharedSrc, utilsSrc]
+            // The shared lib's own 6 AIDL (ISystemUiProxy, ILauncherProxy,
+            // Task, smartspace controllers/state) — the launcher's SystemUiProxy
+            // calls them at runtime. The wm_shell AIDL are compiled by
+            // launcher-wmshell; no overlap (different packages). The default
+            // src/main/aidl holds bare declarations for the hidden framework
+            // types these AIDL reference.
+            aidl.srcDirs = [sharedSrc, 'src/main/aidl']
+            res.srcDirs = [sharedRes]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+        languageVersion = '1.9'
+        apiVersion = '1.9'
+        // Matches Android.bp kotlincflags: ["-Xjvm-default=all"].
+        freeCompilerArgs += ['-Xjvm-default=all']
+    }
+}
+
+dependencies {
+    // Full framework (hidden com.android.internal.*, android.gui.*) — the root
+    // build.gradle puts it first on the compile classpath.
+    compileOnly files(rootProject.ext.frameworkJar)
+    // com.android.systemui.dagger.qualifiers.{Application,Main,UiBackground}
+    // (same vendored dagger-api jar the launcher uses; compileOnly — the
+    // qualifiers are not packaged, exactly like the Soong launcher APK).
+    compileOnly files(rootProject.ext.platformJar(
+            'out/soong/.intermediates/frameworks/base/packages/SystemUI/pods/src/com/android/systemui/dagger/com.android.systemui.dagger-api/android_common/javac/com.android.systemui.dagger-api.jar'))
+    // aconfig flag classes from the generated-source modules: launcher-flags
+    // carries the packaged com.android.wm.shell / com.android.systemui.shared
+    // packages (QuickStepContract imports com.android.systemui.shared.Flags),
+    // launcher-flags-framework the framework-provided window.flags,
+    // virtualdevice and devicestate ones. All compileOnly — never packaged here.
+    compileOnly project(':launcher-flags')
+    compileOnly project(':launcher-flags-framework')
+    // com.android.app.viewcapture.ViewCaptureAwareWindowManagerFactory (utils
+    // pod WindowManagerProviderImpl). compileOnly — the launcher packages the
+    // view_capture classes via the migrated launcher-viewcapture module.
+    compileOnly project(':launcher-viewcapture')
+
+    // Migrated chain modules.
+    implementation project(':launcher-systemui-log')
+    implementation project(':launcher-pluginlib')
+    implementation project(':launcher-plugin-annotations')
+    implementation project(':launcher-plugin-core')
+    implementation project(':launcher-unfold')
+    implementation project(':launcher-rotation')
+    implementation project(':launcher-tracing')
+    implementation project(':launcher-animationlib')
+    implementation project(':launcher-wmshell')
+    implementation project(':launcher-platformanimation')
+
+    implementation 'com.google.dagger:dagger:2.60.1'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'com.google.guava:guava:32.1.2-jre'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
+    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.concurrent:concurrent-futures:1.3.0-alpha01'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0-alpha04'
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.1.0-alpha04'
+}

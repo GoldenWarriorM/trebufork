@@ -1,0 +1,311 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.car.app",
+    "module": "app-automotive",
+    "version": "1.8.0-alpha02",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.car.app",
+          "module": "app",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-projected",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-testing",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        }
+      ],
+      "files": [
+        {
+          "name": "app-automotive-1.8.0-alpha02-sources.jar",
+          "url": "app-automotive-1.8.0-alpha02-sources.jar",
+          "size": 87901,
+          "sha512": "de984142d7fa85c25c8bcc749cbc1d8850c81f85837ef19cb83610ad2f1d30dc2d397feda08d945d338ecc402cec4f47a1c92d38061f5ca731b205db8106b4d7",
+          "sha256": "e613faaa4a17314074f87ea391f7c776116bcc83ccb49ed9d098e6085b5244f3",
+          "sha1": "2b6d90dab7391028d2ab361d3e762a19633168f7",
+          "md5": "0968b24cbd0719e5d84058ee92eb3718"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation-experimental",
+          "version": {
+            "requires": "1.4.1"
+          }
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "listenablefuture",
+          "version": {
+            "requires": "1.0"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.car.app",
+          "module": "app",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-projected",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-testing",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        }
+      ],
+      "files": [
+        {
+          "name": "app-automotive-1.8.0-alpha02.aar",
+          "url": "app-automotive-1.8.0-alpha02.aar",
+          "size": 280316,
+          "sha512": "264fecc68f6237419786384266a514cb441d6752206bcd47fdf03d7f39c59f4edc602e11e1aa230202995fee24cf823c749368f1e8468e839bcc26b752c1f4bf",
+          "sha256": "846dc5136cd5e0b24ccb52932bbe589f5f76b83fd77ea26b0a11824b30d2cb9f",
+          "sha1": "4e36788d7f82565fcaeb33a6d74e476092e09107",
+          "md5": "68f125ef0f70964e616236b41c6d085b"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation-experimental",
+          "version": {
+            "requires": "1.4.1"
+          }
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          }
+        },
+        {
+          "group": "androidx.concurrent",
+          "module": "concurrent-futures",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-common-java8",
+          "version": {
+            "requires": "2.2.0"
+          }
+        },
+        {
+          "group": "com.google.auto.value",
+          "module": "auto-value-annotations",
+          "version": {
+            "requires": "1.6.3"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "31.1-android"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "listenablefuture",
+          "version": {
+            "requires": "1.0"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.car.app",
+          "module": "app",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-projected",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-testing",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        }
+      ],
+      "files": [
+        {
+          "name": "app-automotive-1.8.0-alpha02.aar",
+          "url": "app-automotive-1.8.0-alpha02.aar",
+          "size": 280316,
+          "sha512": "264fecc68f6237419786384266a514cb441d6752206bcd47fdf03d7f39c59f4edc602e11e1aa230202995fee24cf823c749368f1e8468e839bcc26b752c1f4bf",
+          "sha256": "846dc5136cd5e0b24ccb52932bbe589f5f76b83fd77ea26b0a11824b30d2cb9f",
+          "sha1": "4e36788d7f82565fcaeb33a6d74e476092e09107",
+          "md5": "68f125ef0f70964e616236b41c6d085b"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.car.app",
+          "module": "app",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-projected",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        },
+        {
+          "group": "androidx.car.app",
+          "module": "app-testing",
+          "version": {
+            "requires": "1.8.0-alpha02"
+          },
+          "reason": "app-automotive is in atomic group androidx.car.app"
+        }
+      ],
+      "files": [
+        {
+          "name": "app-automotive-1.8.0-alpha02-versionMetadata.json",
+          "url": "app-automotive-1.8.0-alpha02-versionMetadata.json",
+          "size": 3782,
+          "sha512": "7e77640c23c84e9ae0c170a9c90db7416fe1002e45acfaed88625dfcc7aeb8e5df0573a361e9078f4630175a077f33317674a9e3fd87a969b5559be4d4d44e8a",
+          "sha256": "9e5787bc47bf1e0326528c91eb031e14c4d129243a9f28aa3d99eab53ffc5b7d",
+          "sha1": "e284fa81812f81723dbc29d6fde297ca62c65545",
+          "md5": "c98f249b6eec225a4ccdaacf92c2e098"
+        }
+      ]
+    }
+  ]
+}

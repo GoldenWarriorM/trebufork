@@ -1,0 +1,340 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../ink-nativeloader/1.0.0-alpha06/ink-nativeloader-1.0.0-alpha06.module",
+    "group": "androidx.ink",
+    "module": "ink-nativeloader",
+    "version": "1.0.0-alpha06",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-strokes",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-nativeloader.aar",
+          "url": "ink-nativeloader-android-1.0.0-alpha06.aar",
+          "size": 1937869,
+          "sha512": "52b76b5455d0337e7cf692310a55dead1fd715b20fc9f523f1aa062daece8e0def07dd89449eed2dfdcf81bbe0bd4b6f00d7a22eb1955a94885275b0d900b1e4",
+          "sha256": "dddeaab66074db5f5e7838fe206994172a02b9aa57cbc4482ef75bfeb1cc6f72",
+          "sha1": "5ee866922289b9ba9da43b48366899df8d4e8234",
+          "md5": "5fb9b5f49a8c7296abf9663387d8ad02"
+        }
+      ]
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-strokes",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-nativeloader.aar",
+          "url": "ink-nativeloader-android-1.0.0-alpha06.aar",
+          "size": 1937869,
+          "sha512": "52b76b5455d0337e7cf692310a55dead1fd715b20fc9f523f1aa062daece8e0def07dd89449eed2dfdcf81bbe0bd4b6f00d7a22eb1955a94885275b0d900b1e4",
+          "sha256": "dddeaab66074db5f5e7838fe206994172a02b9aa57cbc4482ef75bfeb1cc6f72",
+          "sha1": "5ee866922289b9ba9da43b48366899df8d4e8234",
+          "md5": "5fb9b5f49a8c7296abf9663387d8ad02"
+        }
+      ]
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-authoring-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-brush-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-geometry-compose",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-storage",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-strokes",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        },
+        {
+          "group": "androidx.ink",
+          "module": "ink-rendering",
+          "version": {
+            "requires": "1.0.0-alpha06"
+          },
+          "reason": "ink-nativeloader is in atomic group androidx.ink"
+        }
+      ],
+      "files": [
+        {
+          "name": "ink-nativeloader-android-1.0.0-alpha06-sources.jar",
+          "url": "ink-nativeloader-android-1.0.0-alpha06-sources.jar",
+          "size": 7831,
+          "sha512": "f121d387959a0b9121e524f200b5d3a700f25dc00d792dc1b18d5c999f92fc17a5daf4225969fbd9a05ec72a6b94b6520afed1045f5e9aca157717074c0af7b4",
+          "sha256": "46403abf45cc7589c366f81176f165c1d66de352a7b68904ac96f9de57229458",
+          "sha1": "d00453710e9646b71717fc99190b11fff85c0d34",
+          "md5": "f5affcb4c69c05b7968cebe521d74ae4"
+        }
+      ]
+    }
+  ]
+}

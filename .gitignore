@@ -1,0 +1,18 @@
+.gradle/
+.kotlin/
+build/
+launcher/build/
+launcher-*/build/
+launcher-source/build/
+launcher-source/.idea/
+*.iml
+local.properties
+keystore.properties
+
+# Local Freebuff/Gradle state, agent instructions, and captured UI screenshots.
+AGENTS.md
+.*
+!.gitignore
+!.github/
+/*.png
+/.screen-view.html

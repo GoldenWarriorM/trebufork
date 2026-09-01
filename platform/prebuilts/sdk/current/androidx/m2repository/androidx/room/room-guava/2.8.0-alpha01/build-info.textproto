@@ -1,0 +1,152 @@
+version: "2.8.0-alpha01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.arch.core"
+    artifact_id: "core-runtime"
+    version: "2.2.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.concurrent"
+    artifact_id: "concurrent-futures"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-common"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+release_checklist {
+}
+build_id: "13842168"
+group_id: "androidx.room"
+artifact_id: "room-guava"
+path: "/room/room-guava"
+sha: "7ceb138d49622d882b103d960594301ad0a735f6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.room-room-guava-all-13842168-2.8.0-alpha01.zip"
+kotlin_version: "2.1.21"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-common"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-compiler"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-compiler-processing"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-compiler-processing-testing"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-external-antlr"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-gradle-plugin"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-ktx"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-migration"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging-guava"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging-rxjava2"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-paging-rxjava3"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-runtime"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-rxjava2"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-rxjava3"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-sqlite-wrapper"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.room"
+    artifact_id: "room-testing"
+    version: "2.8.0-alpha01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "room-room-guavareleaseAndroidTest.xml"
+test_module_names: ":room:room-guava:testReleaseUnitTest"

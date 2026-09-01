@@ -1,0 +1,235 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.wear",
+    "module": "wear",
+    "version": "1.4.0-alpha02",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "wear-1.4.0-alpha02-sources.jar",
+          "url": "wear-1.4.0-alpha02-sources.jar",
+          "size": 150014,
+          "sha512": "ec89d408b301f2573749df0ca0a1dccc7b3995c2ea52c19be92a6d16237fa6a5a3df45f6f4abd491b5970a4ba2fa3b0aedd73097d0457a1986583807bcbf5742",
+          "sha256": "7d67ad912c6449d7df90a049be6a8f34a5bbe9567ecb4c26420961fc7ec0fccb",
+          "sha1": "81659c2b85be1486ee1cf138daaac6b9aa0e296d",
+          "md5": "d9d287f22e64cd62e8273a833ca9bf3f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "androidx.dynamicanimation",
+          "module": "dynamicanimation",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment",
+          "version": {
+            "requires": "1.2.4"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-runtime",
+          "version": {
+            "requires": "2.5.1"
+          }
+        },
+        {
+          "group": "androidx.recyclerview",
+          "module": "recyclerview",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.swiperefreshlayout",
+          "module": "swiperefreshlayout",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.versionedparcelable",
+          "module": "versionedparcelable",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wear-1.4.0-alpha02.aar",
+          "url": "wear-1.4.0-alpha02.aar",
+          "size": 326379,
+          "sha512": "d22ab81a181854debbd2a352272ce3cd5967470894f385108fd5a033a195de74fb474087e6e96a887cc182bdb0fe75b97ee7686380f272b7178379549c20f7ea",
+          "sha256": "dfb44b4e35a160e53113a116df50b536434200e0374b0e0f629d9c61adcf102e",
+          "sha1": "f6e41f68ee893bae3521d969bc6d7cbb41161a82",
+          "md5": "63c097a7ff5565943a9395e65a97331f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "androidx.dynamicanimation",
+          "module": "dynamicanimation",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment",
+          "version": {
+            "requires": "1.2.4"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-runtime",
+          "version": {
+            "requires": "2.5.1"
+          }
+        },
+        {
+          "group": "androidx.recyclerview",
+          "module": "recyclerview",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.swiperefreshlayout",
+          "module": "swiperefreshlayout",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.versionedparcelable",
+          "module": "versionedparcelable",
+          "version": {
+            "requires": "1.1.1"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wear-1.4.0-alpha02.aar",
+          "url": "wear-1.4.0-alpha02.aar",
+          "size": 326379,
+          "sha512": "d22ab81a181854debbd2a352272ce3cd5967470894f385108fd5a033a195de74fb474087e6e96a887cc182bdb0fe75b97ee7686380f272b7178379549c20f7ea",
+          "sha256": "dfb44b4e35a160e53113a116df50b536434200e0374b0e0f629d9c61adcf102e",
+          "sha1": "f6e41f68ee893bae3521d969bc6d7cbb41161a82",
+          "md5": "63c097a7ff5565943a9395e65a97331f"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "wear-1.4.0-alpha02-versionMetadata.json",
+          "url": "wear-1.4.0-alpha02-versionMetadata.json",
+          "size": 27374,
+          "sha512": "785bde9dd08bb1fdb8ace0f8bc6759568cce63046821eb1132c4e8fc3e8d4433a71325ae4af6f26dd13919f39d945ba9c711943d66f22ea7b019557b21655d53",
+          "sha256": "187b7c7ac596ec56a4eb85b3e69510e4a918de6ff3f39e880b69e1e942d8472b",
+          "sha1": "007012f03ce5b3e670e337e16902cae0b04e9e5c",
+          "md5": "460d6d440b421954fc5e3a41e5231a53"
+        }
+      ]
+    }
+  ]
+}

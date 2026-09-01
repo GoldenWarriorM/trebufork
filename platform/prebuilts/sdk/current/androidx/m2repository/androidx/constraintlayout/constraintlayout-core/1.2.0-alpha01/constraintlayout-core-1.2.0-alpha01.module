@@ -1,0 +1,132 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.constraintlayout",
+    "module": "constraintlayout-core",
+    "version": "1.2.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14",
+      "buildId:": "13737533"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "constraintlayout-core-1.2.0-alpha01.jar",
+          "url": "constraintlayout-core-1.2.0-alpha01.jar",
+          "size": 586063,
+          "sha512": "f9ad67c6ab6373a02ba48860d329d76f52811060c12c238b8e910fb5107e597d64a50700a827f843cd493839de332a11472571674ca35078cfb2d74f8679d6dc",
+          "sha256": "9cca98afa745735193f21bbbfa18674f239138dea895559ea5624088cc9667bf",
+          "sha1": "ec0f4f6c31b15d179d665691bf3d64f0c81ba088",
+          "md5": "23cd63e35f13266f0e63bd1a3e49a8cb"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "constraintlayout-core-1.2.0-alpha01.jar",
+          "url": "constraintlayout-core-1.2.0-alpha01.jar",
+          "size": 586063,
+          "sha512": "f9ad67c6ab6373a02ba48860d329d76f52811060c12c238b8e910fb5107e597d64a50700a827f843cd493839de332a11472571674ca35078cfb2d74f8679d6dc",
+          "sha256": "9cca98afa745735193f21bbbfa18674f239138dea895559ea5624088cc9667bf",
+          "sha1": "ec0f4f6c31b15d179d665691bf3d64f0c81ba088",
+          "md5": "23cd63e35f13266f0e63bd1a3e49a8cb"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "constraintlayout-core-1.2.0-alpha01-sources.jar",
+          "url": "constraintlayout-core-1.2.0-alpha01-sources.jar",
+          "size": 361584,
+          "sha512": "c342d09f4c6c59b31e3256d82d51667781f5fe9be7eb81791d8daf53f4160b44dbcbba6c5fe0d711be353323934c21d2bbe8271346770d9cbdea69ba01791627",
+          "sha256": "2664165dee6e0346598f512a56db385f8c570eec577cef2c776808c25600e1d5",
+          "sha1": "5f2f051b7eadd6d231f1b40483df00d0772e5039",
+          "md5": "17b42c7e1c15e6cb3dbc89327ce883db"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "constraintlayout-core-1.2.0-alpha01-versionMetadata.json",
+          "url": "constraintlayout-core-1.2.0-alpha01-versionMetadata.json",
+          "size": 177935,
+          "sha512": "5e20865fdc8a82502c00d08f1188182a97463f3f98acdb7d6ea3d49259cd040aa722a5d7ea4fdf5401b0e1b3eeeba6e3cd655ee06dde7fa214e8639384002d4e",
+          "sha256": "11d1410790c0f09ab5bd879a727d69eefb9b570a165b560fcc43455f842bdb99",
+          "sha1": "4f21abce687d6a456ebcca637d8e6e335674d3f5",
+          "md5": "65e66818ed45bb692679047155d8345b"
+        }
+      ]
+    }
+  ]
+}

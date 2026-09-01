@@ -1,0 +1,1 @@
+[{"class":"androidx.hilt.lifecycle.viewmodel.HiltViewModelFactory","addedIn":"1.3.0-rc01","methods":[{"method":"create(android.content.Context,androidx.lifecycle.ViewModelProvider.Factory)","addedIn":"1.3.0-rc01"}],"fields":[]}]

@@ -1,0 +1,143 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.swiperefreshlayout",
+    "module": "swiperefreshlayout",
+    "version": "1.2.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "swiperefreshlayout-1.2.0-alpha01-sources.jar",
+          "url": "swiperefreshlayout-1.2.0-alpha01-sources.jar",
+          "size": 26330,
+          "sha512": "eca67daf4eb5996240c9ebf840eeeb306d534f117f02663f47b62b78cd027fa4ff0582f394d7df53e2841b910528a81503cc70860e35d16e45cee83ffeb9304b",
+          "sha256": "62404fdbde3f97aadb71c2b6d0f2d40bffc46451e6115dc67c1cabb0d13d97e1",
+          "sha1": "c990fe9abdf9bd0b645d452dc0f94ddb87127e9a",
+          "md5": "c3ce96a1b9fd4e1cadb9112efe790160"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.interpolator",
+          "module": "interpolator",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "swiperefreshlayout-1.2.0-alpha01.aar",
+          "url": "swiperefreshlayout-1.2.0-alpha01.aar",
+          "size": 40470,
+          "sha512": "038c0721195686b19e73840b2dfd795a323a8efbe7b1313a9643f957d5c0ce2163f467859a38c731e0439fd8d5d1830bbfee66f80b12cfa11437abe6f62c86ed",
+          "sha256": "ffca5e145f7fcf8f4a28ccdfe1ba3e79ed51d8a46d5d428d1655933c15774d33",
+          "sha1": "5033e444479c41ae2e3842d7464641a2b8f96361",
+          "md5": "bb43d482b3d7e540252d6a7d3ec64a38"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.interpolator",
+          "module": "interpolator",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "swiperefreshlayout-1.2.0-alpha01.aar",
+          "url": "swiperefreshlayout-1.2.0-alpha01.aar",
+          "size": 40470,
+          "sha512": "038c0721195686b19e73840b2dfd795a323a8efbe7b1313a9643f957d5c0ce2163f467859a38c731e0439fd8d5d1830bbfee66f80b12cfa11437abe6f62c86ed",
+          "sha256": "ffca5e145f7fcf8f4a28ccdfe1ba3e79ed51d8a46d5d428d1655933c15774d33",
+          "sha1": "5033e444479c41ae2e3842d7464641a2b8f96361",
+          "md5": "bb43d482b3d7e540252d6a7d3ec64a38"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "swiperefreshlayout-1.2.0-alpha01-versionMetadata.json",
+          "url": "swiperefreshlayout-1.2.0-alpha01-versionMetadata.json",
+          "size": 5184,
+          "sha512": "0b25b3519fbebf5fa4a1ae138242039111ca531d93311ab8a00c14d8327ca5a4f30abf78b74b7dd0fe578212953a4439f617b7910700fb87b69999ba2431f38e",
+          "sha256": "1dee10b86238ffa045088cef0bff1941de250339689862e82b84b99fa3d5d68d",
+          "sha1": "c98f8280c1dd484fc46dfe3280ed27c7ac6bb451",
+          "md5": "07e1f6059a8e8d2d340e799c6b912393"
+        }
+      ]
+    }
+  ]
+}

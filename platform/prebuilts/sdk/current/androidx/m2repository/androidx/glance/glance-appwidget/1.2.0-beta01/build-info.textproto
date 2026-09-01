@@ -1,0 +1,170 @@
+version: "1.2.0-beta01"
+dependency_list {
+  dependency {
+    group_id: "androidx.annotation"
+    artifact_id: "annotation"
+    version: "1.8.1"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.collection"
+    artifact_id: "collection-ktx"
+    version: "1.4.3"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.runtime"
+    artifact_id: "runtime"
+    version: "1.7.8"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-graphics"
+    version: "1.6.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-unit"
+    version: "1.6.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.compose.ui"
+    artifact_id: "ui-util"
+    version: "1.6.5"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core-ktx"
+    version: "1.7.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.core"
+    artifact_id: "core-remoteviews"
+    version: "1.1.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-core"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.datastore"
+    artifact_id: "datastore-preferences-core"
+    version: "1.0.0"
+    is_tip_of_tree: false
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-proto"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.work"
+    artifact_id: "work-runtime-ktx"
+    version: "2.7.1"
+    is_tip_of_tree: false
+  }
+}
+release_checklist {
+}
+build_id: "14059446"
+group_id: "androidx.glance"
+artifact_id: "glance-appwidget"
+path: "/glance/glance-appwidget"
+sha: "da32c20ed1a2ec422566c4a657945751631361a6"
+require_same_version_group_build: true
+project_zip_path: "per-project-zips/androidx.glance-glance-appwidget-all-1.2.0-beta01.zip"
+kotlin_version: "2.2.10"
+dependency_constraint_list {
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-external-protobuf"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-multiprocess"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-preview"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-proto"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-appwidget-testing"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-material"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-material3"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-preview"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+  dependency {
+    group_id: "androidx.glance"
+    artifact_id: "glance-testing"
+    version: "1.2.0-beta01"
+    is_tip_of_tree: true
+  }
+}
+should_publish_docs: true
+is_kmp: false
+target: "androidx"
+test_module_names: "glance-glance-appwidgetreleaseAndroidTest.xml"
+test_module_names: ":glance:glance-appwidget:testReleaseUnitTest"

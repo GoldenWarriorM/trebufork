@@ -1,0 +1,100 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.health",
+    "module": "health-services-client-external-protobuf",
+    "version": "1.1.0-alpha05",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "health-services-client-external-protobuf-1.1.0-alpha05.jar",
+          "url": "health-services-client-external-protobuf-1.1.0-alpha05.jar",
+          "size": 1048859,
+          "sha512": "04f1d8298392576eebd4237bd40df137407c3c82cbb4841a0dde2b4d6fbdcf121f1d06e324e83152bfbba5c9d7cc3474b14e02a4fc472b64882dd4023a39cc38",
+          "sha256": "1070ab1508893a025123ded0a6ae27e123bdaacbeab9e84a208a2befd6f4e8cf",
+          "sha1": "cebe523bbc3ed5f8ddd2159935032b9c29d39daf",
+          "md5": "53e6a2504a0514096f0988c80f1c8433"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "health-services-client-external-protobuf-1.1.0-alpha05.jar",
+          "url": "health-services-client-external-protobuf-1.1.0-alpha05.jar",
+          "size": 1048859,
+          "sha512": "04f1d8298392576eebd4237bd40df137407c3c82cbb4841a0dde2b4d6fbdcf121f1d06e324e83152bfbba5c9d7cc3474b14e02a4fc472b64882dd4023a39cc38",
+          "sha256": "1070ab1508893a025123ded0a6ae27e123bdaacbeab9e84a208a2befd6f4e8cf",
+          "sha1": "cebe523bbc3ed5f8ddd2159935032b9c29d39daf",
+          "md5": "53e6a2504a0514096f0988c80f1c8433"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "health-services-client-external-protobuf-1.1.0-alpha05-sources.jar",
+          "url": "health-services-client-external-protobuf-1.1.0-alpha05-sources.jar",
+          "size": 1683,
+          "sha512": "4d46b98557648a8b42626f195cb45d3a604053ea63cb11c3a14a2f0ffd2038c3b74534e05974f114a9dd778a887fceb4ad85ee042e99e5046e1e23e43bf1ee74",
+          "sha256": "9cde3bcecf0fcd31877ed817445ccf5fd1575682c2c973ccf1c7aff0b65ca0e8",
+          "sha1": "c987c258406cc9f68f9d7292e70abeb203f18ebb",
+          "md5": "fc28a5381bf32a1b824ac3b2aa4d1100"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "health-services-client-external-protobuf-1.1.0-alpha05-versionMetadata.json",
+          "url": "health-services-client-external-protobuf-1.1.0-alpha05-versionMetadata.json",
+          "size": 2,
+          "sha512": "b25b294cb4deb69ea00a4c3cf3113904801b6015e5956bd019a8570b1fe1d6040e944ef3cdee16d0a46503ca6e659a25f21cf9ceddc13f352a3c98138c15d6af",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "sha1": "97d170e1550eee4afc0af065b78cda302a97674c",
+          "md5": "d751713988987e9331980363e24189ce"
+        }
+      ]
+    }
+  ]
+}

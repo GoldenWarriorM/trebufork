@@ -1,0 +1,130 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.heifwriter",
+    "module": "heifwriter",
+    "version": "1.1.0-alpha05",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.12",
+      "buildId:": "13054831"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "heifwriter-1.1.0-alpha05-sources.jar",
+          "url": "heifwriter-1.1.0-alpha05-sources.jar",
+          "size": 42240,
+          "sha512": "26a21a0c50ee4ed6b02ba77f0a1759e18dc974f643987045820951ef8f5feb0a929c0aba45147a9b598217f84c2bc8ebf129b7191898019d23ae036ec7f3e516",
+          "sha256": "e598f8ad136344224dbca360a9e3eef6ab1085f478b16809221c50003aa92b4e",
+          "sha1": "d8070e9f220c6249360e9e7b45e8d03b843e6966",
+          "md5": "65bf5e21eeb12d65b0de626059ccfefe"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "heifwriter-1.1.0-alpha05.aar",
+          "url": "heifwriter-1.1.0-alpha05.aar",
+          "size": 53497,
+          "sha512": "82fc345fd614f2ed1add3e5d28470ba8b4d94abf33722a520748a3a82517ee0a4ef2874ec01cb20047df7b0469ef45ceb2a6625bc04c6d211ccd521a00275bca",
+          "sha256": "00b83b1835bb94afb3610ea7d7d0613cdb086f73e6032792818b3fce81f3bbf1",
+          "sha1": "8c113f2c0c59a1e18b9cfb052b42da440c0f46d1",
+          "md5": "9946f9b600d35141a8bbc4b8a66a9bad"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "org.jspecify",
+          "module": "jspecify",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "heifwriter-1.1.0-alpha05.aar",
+          "url": "heifwriter-1.1.0-alpha05.aar",
+          "size": 53497,
+          "sha512": "82fc345fd614f2ed1add3e5d28470ba8b4d94abf33722a520748a3a82517ee0a4ef2874ec01cb20047df7b0469ef45ceb2a6625bc04c6d211ccd521a00275bca",
+          "sha256": "00b83b1835bb94afb3610ea7d7d0613cdb086f73e6032792818b3fce81f3bbf1",
+          "sha1": "8c113f2c0c59a1e18b9cfb052b42da440c0f46d1",
+          "md5": "9946f9b600d35141a8bbc4b8a66a9bad"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "heifwriter-1.1.0-alpha05-versionMetadata.json",
+          "url": "heifwriter-1.1.0-alpha05-versionMetadata.json",
+          "size": 3496,
+          "sha512": "8e3cf5c5c77402526b35bfb72321c15706dfe70bd8f813c7e5db37e90bb022d6bc977f16821cca79fbe1ae1436293ced687038b66c0358d020df38c5da037b60",
+          "sha256": "3ddb6392bf5e12bc9bd650956c75f9490b0fc3be0961e45834dbfcbb0a0d3a21",
+          "sha1": "4ee72f4601a16cf2a581c9cc243772f8e55a9f0e",
+          "md5": "5d2b3e32d34d756da6c5adabe7d0980d"
+        }
+      ]
+    }
+  ]
+}

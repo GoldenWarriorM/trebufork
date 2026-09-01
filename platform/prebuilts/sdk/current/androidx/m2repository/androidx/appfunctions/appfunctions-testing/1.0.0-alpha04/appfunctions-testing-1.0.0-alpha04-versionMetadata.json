@@ -1,0 +1,1 @@
+[{"class":"androidx.appfunctions.testing.AppFunctionTestRule","addedIn":"1.0.0-alpha04","methods":[{"method":"AppFunctionTestRule(android.content.Context)","addedIn":"1.0.0-alpha04"},{"method":"apply(org.junit.runners.model.Statement,org.junit.runner.Description)","addedIn":"1.0.0-alpha04"},{"method":"getAppFunctionManagerCompat()","addedIn":"1.0.0-alpha04"}],"fields":[]}]

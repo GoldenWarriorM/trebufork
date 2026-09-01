@@ -1,0 +1,246 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.preference",
+    "module": "preference",
+    "version": "1.3.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.preference",
+          "module": "preference-ktx",
+          "version": {
+            "requires": "1.3.0-alpha01"
+          },
+          "reason": "preference is in atomic group androidx.preference"
+        }
+      ],
+      "files": [
+        {
+          "name": "preference-1.3.0-alpha01-sources.jar",
+          "url": "preference-1.3.0-alpha01-sources.jar",
+          "size": 118356,
+          "sha512": "751a953d63dd2f6718256d8b362781b3574d7ef5debbbceca2e4b8f90ff471a9896ed88d9334b35b52bfae95ddf4975b242f60433879ebe30c59e75c8193d39a",
+          "sha256": "0b8c81e21a60a0270c669a9c3b3fefb6d8cb25abadd2037ce3c1a16988c41935",
+          "sha1": "b8c0bdbf074494220f6fcd05bdf8b9997126a2e5",
+          "md5": "4a0e31075f9e372c939c59997870f429"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.activity",
+          "module": "activity-ktx",
+          "version": {
+            "requires": "1.5.1"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment-ktx",
+          "version": {
+            "requires": "1.3.6"
+          }
+        },
+        {
+          "group": "androidx.recyclerview",
+          "module": "recyclerview",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.slidingpanelayout",
+          "module": "slidingpanelayout",
+          "version": {
+            "requires": "1.2.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.preference",
+          "module": "preference-ktx",
+          "version": {
+            "requires": "1.3.0-alpha01"
+          },
+          "reason": "preference is in atomic group androidx.preference"
+        }
+      ],
+      "files": [
+        {
+          "name": "preference-1.3.0-alpha01.aar",
+          "url": "preference-1.3.0-alpha01.aar",
+          "size": 251569,
+          "sha512": "699960a9dd97cc3e85e71d0fda169ea42e8e90195bb3481ad138577b316e805165ce9a88df7af16379117ee88647e12b63c29fb29cb5f24bcf19c3823574cf46",
+          "sha256": "72881d00299ebabd4243a1fc2b0dabd9ba08186eb4c5e098b7b33c108336f533",
+          "sha1": "d7c06cb1af539007938cb5a505ae2ced9fbe609e",
+          "md5": "6a1baff63efad4cee1bf44f10fc51eb4"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.activity",
+          "module": "activity-ktx",
+          "version": {
+            "requires": "1.5.1"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "androidx.collection",
+          "module": "collection",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment-ktx",
+          "version": {
+            "requires": "1.3.6"
+          }
+        },
+        {
+          "group": "androidx.recyclerview",
+          "module": "recyclerview",
+          "version": {
+            "requires": "1.0.0"
+          }
+        },
+        {
+          "group": "androidx.slidingpanelayout",
+          "module": "slidingpanelayout",
+          "version": {
+            "requires": "1.2.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.preference",
+          "module": "preference-ktx",
+          "version": {
+            "requires": "1.3.0-alpha01"
+          },
+          "reason": "preference is in atomic group androidx.preference"
+        }
+      ],
+      "files": [
+        {
+          "name": "preference-1.3.0-alpha01.aar",
+          "url": "preference-1.3.0-alpha01.aar",
+          "size": 251569,
+          "sha512": "699960a9dd97cc3e85e71d0fda169ea42e8e90195bb3481ad138577b316e805165ce9a88df7af16379117ee88647e12b63c29fb29cb5f24bcf19c3823574cf46",
+          "sha256": "72881d00299ebabd4243a1fc2b0dabd9ba08186eb4c5e098b7b33c108336f533",
+          "sha1": "d7c06cb1af539007938cb5a505ae2ced9fbe609e",
+          "md5": "6a1baff63efad4cee1bf44f10fc51eb4"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.preference",
+          "module": "preference-ktx",
+          "version": {
+            "requires": "1.3.0-alpha01"
+          },
+          "reason": "preference is in atomic group androidx.preference"
+        }
+      ],
+      "files": [
+        {
+          "name": "preference-1.3.0-alpha01-versionMetadata.json",
+          "url": "preference-1.3.0-alpha01-versionMetadata.json",
+          "size": 36021,
+          "sha512": "058526e2349d084e1e100519de1dee740f90e4c6c65da52300e1b9d367f38cff813e02c0a2985b7e313623fa49a8589e53b621f72cc84e45ac82b180faedda0e",
+          "sha256": "83de8c0734ba612c212b3aaf1ac1ae9374d74c48d580dfec73a9b5caf2d2e444",
+          "sha1": "481ba1e7fb542a040416c85bc6144bc2f4d602ca",
+          "md5": "d12087957b768a1145136691e593ca9c"
+        }
+      ]
+    }
+  ]
+}

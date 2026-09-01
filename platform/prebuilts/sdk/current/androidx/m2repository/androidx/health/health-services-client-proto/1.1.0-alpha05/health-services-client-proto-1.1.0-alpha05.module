@@ -1,0 +1,106 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.health",
+    "module": "health-services-client-proto",
+    "version": "1.1.0-alpha05",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.health",
+          "module": "health-services-client-external-protobuf",
+          "version": {
+            "requires": "1.1.0-alpha05"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "health-services-client-proto-1.1.0-alpha05.jar",
+          "url": "health-services-client-proto-1.1.0-alpha05.jar",
+          "size": 617463,
+          "sha512": "b78a5b1241f6ebea236e09f6d4b88114434c9ce2f247cbdb373a0a9a199b4cd50a2542a02694f34c2c822b0b774079f535654de89c6aab82dc5b1afdff0a358f",
+          "sha256": "50aee7d88487211dfb31fc7debc957e2923190d7df8f6dc44acada3106306bba",
+          "sha1": "490011ed9aa9e5a7992219bf0eaa4f6aec30835c",
+          "md5": "94356bcdd6cb7ec8c8319d627ce6545e"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.health",
+          "module": "health-services-client-external-protobuf",
+          "version": {
+            "requires": "1.1.0-alpha05"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "health-services-client-proto-1.1.0-alpha05.jar",
+          "url": "health-services-client-proto-1.1.0-alpha05.jar",
+          "size": 617463,
+          "sha512": "b78a5b1241f6ebea236e09f6d4b88114434c9ce2f247cbdb373a0a9a199b4cd50a2542a02694f34c2c822b0b774079f535654de89c6aab82dc5b1afdff0a358f",
+          "sha256": "50aee7d88487211dfb31fc7debc957e2923190d7df8f6dc44acada3106306bba",
+          "sha1": "490011ed9aa9e5a7992219bf0eaa4f6aec30835c",
+          "md5": "94356bcdd6cb7ec8c8319d627ce6545e"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "health-services-client-proto-1.1.0-alpha05-sources.jar",
+          "url": "health-services-client-proto-1.1.0-alpha05-sources.jar",
+          "size": 125735,
+          "sha512": "031a4d7c1d5d66e0973fed21c488392de0113b11b00c256f9b38264dca29d1dc5ccf0431b8524de2472152ebd580037bc93f849dbfd770e4031c77e103bba996",
+          "sha256": "437c7932a07c6c4794379c80a62a6423ea399c978f910e1d8b4e3531f511843a",
+          "sha1": "b67397c85176100510fccf58f0870d4355c9639e",
+          "md5": "d06dd2ffc8993a71646ceabe79bb3cd0"
+        }
+      ]
+    }
+  ]
+}

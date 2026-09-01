@@ -1,0 +1,76 @@
+name: Build and publish Magisk module release
+
+# Builds the release APK, signs it with the vendored platform key, packages the
+# Magisk module and publishes it as a GitHub Release. Also refreshes
+# magisk/update.json on main so Magisk's in-app update check finds the new
+# version. Triggered by the `release.sh` helper which bumps the version and
+# pushes a v* tag.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install missing SDK components
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.1.0" || true
+
+      - name: Set up Gradle 8.13 (repo has no wrapper)
+        run: |
+          curl -fsSL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.13-bin.zip
+          unzip -q /tmp/gradle.zip -d /opt
+          echo "/opt/gradle-8.13/bin" >> "$GITHUB_PATH"
+
+      - name: Build release APK
+        run: gradle :launcher:assembleRelease
+        env:
+          ANDROID_HOME: $ANDROID_HOME
+          ANDROID_SDK_ROOT: $ANDROID_HOME
+
+      - name: Package Magisk module (signs with vendored platform key)
+        run: ./package-magisk.sh
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/Trebufork-magisk-*.zip
+          generate_release_notes: true
+
+      - name: Refresh magisk/update.json on main
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VER="$(grep -m1 '^version=' magisk-template/module.prop | cut -d= -f2)"
+          CODE="$(grep -m1 '^versionCode=' magisk-template/module.prop | cut -d= -f2)"
+          ZIP="build/Trebufork-magisk-$(echo "$VER" | tr ' ' '_').zip"
+          ZIP_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/$(basename "$ZIP")"
+          cat > magisk/update.json <<EOF
+          {
+            "version": "$VER",
+            "versionCode": $CODE,
+            "zipUrl": "$ZIP_URL",
+            "changelog": "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${TAG}"
+          }
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add magisk/update.json
+          git commit -m "Refresh Magisk update.json for ${TAG}"
+          git push origin HEAD:main

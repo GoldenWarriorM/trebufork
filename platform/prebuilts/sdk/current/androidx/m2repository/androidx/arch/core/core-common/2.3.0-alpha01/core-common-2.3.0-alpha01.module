@@ -1,0 +1,189 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.arch.core",
+    "module": "core-common",
+    "version": "2.3.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-testing",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-common-2.3.0-alpha01.jar",
+          "url": "core-common-2.3.0-alpha01.jar",
+          "size": 15944,
+          "sha512": "cd4830b6cb4b520bce5447c817ea68cdfadee4cbb81ba40a535bf44010e1907f1e70d2860b62125ad4c5800f64e4498b20e27fac2271479a8ebcdd7f6b691154",
+          "sha256": "1440fa4e5d315758f60cb6d2d58d52f7779268d3044c0593596e9fd943539507",
+          "sha1": "bdb33baa54df01528f232d0a69d8ed3c216e8f67",
+          "md5": "d49352a5ca6b224be32067c4598bf266"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.1.0"
+          }
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-testing",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-common-2.3.0-alpha01.jar",
+          "url": "core-common-2.3.0-alpha01.jar",
+          "size": 15944,
+          "sha512": "cd4830b6cb4b520bce5447c817ea68cdfadee4cbb81ba40a535bf44010e1907f1e70d2860b62125ad4c5800f64e4498b20e27fac2271479a8ebcdd7f6b691154",
+          "sha256": "1440fa4e5d315758f60cb6d2d58d52f7779268d3044c0593596e9fd943539507",
+          "sha1": "bdb33baa54df01528f232d0a69d8ed3c216e8f67",
+          "md5": "d49352a5ca6b224be32067c4598bf266"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-testing",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-common-2.3.0-alpha01-sources.jar",
+          "url": "core-common-2.3.0-alpha01-sources.jar",
+          "size": 9958,
+          "sha512": "3a137ceff0873adae86ec6b9dc6be65d1ce80384a44331a3fd7468d4a51430ff835c2a09ca69131437ffa94417e86f9ca2ce48f2f201979ad3ef14e4cd19ab68",
+          "sha256": "c5cac3f3dff53d330434772a45c10279ed87dea2bdb3d45b48a8ef60a0ed061b",
+          "sha1": "8e3c4212ac9deff8011ef780461f2e758003c7b0",
+          "md5": "b777c353e803b8669565899e06c7c209"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "dependencyConstraints": [
+        {
+          "group": "androidx.arch.core",
+          "module": "core-runtime",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        },
+        {
+          "group": "androidx.arch.core",
+          "module": "core-testing",
+          "version": {
+            "requires": "2.3.0-alpha01"
+          },
+          "reason": "core-common is in atomic group androidx.arch.core"
+        }
+      ],
+      "files": [
+        {
+          "name": "core-common-2.3.0-alpha01-versionMetadata.json",
+          "url": "core-common-2.3.0-alpha01-versionMetadata.json",
+          "size": 128,
+          "sha512": "380ce4f943c94caa7a753c41702b66904ff78f9e63d25a9709430ba9e3c08667768d3692ea6bef8a67cb5e0633f0613584361e653bfd3d2e5406195e2185a40b",
+          "sha256": "c7ffde448c68d7a0c5b6a591b98891aed732634370d62b66e80de20899a6821d",
+          "sha1": "c1d2e1d890384ee70790315ccb03420652e68339",
+          "md5": "8dd1755a3583d4d8146a2cff6a6898ea"
+        }
+      ]
+    }
+  ]
+}

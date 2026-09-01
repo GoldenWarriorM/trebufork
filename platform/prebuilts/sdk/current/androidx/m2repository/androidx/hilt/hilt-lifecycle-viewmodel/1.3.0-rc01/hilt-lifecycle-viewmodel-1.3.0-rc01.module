@@ -1,0 +1,129 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.hilt",
+    "module": "hilt-lifecycle-viewmodel",
+    "version": "1.3.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "hilt-lifecycle-viewmodel-1.3.0-rc01-sources.jar",
+          "url": "hilt-lifecycle-viewmodel-1.3.0-rc01-sources.jar",
+          "size": 6004,
+          "sha512": "4d266e8c6b7b4a193b6aaffdcd979dbf8c7848c960cc09c7811abb91022f0d9a419a8abc624d77b749e0dcc1f93e547f0add93a9cd65e4560b3f0769758151b6",
+          "sha256": "3577e5df08e03074a3ea3081586449004138652b6f26ae3c4d2a4d1eb9519029",
+          "sha1": "f2a1578ff8e47706deb6ad41e6f2208f7d72ae6a",
+          "md5": "c046b76cf4a967d9f8eb72191d7865bd"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.dagger",
+          "module": "hilt-android",
+          "version": {
+            "requires": "2.54"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "hilt-lifecycle-viewmodel-1.3.0-rc01.aar",
+          "url": "hilt-lifecycle-viewmodel-1.3.0-rc01.aar",
+          "size": 7397,
+          "sha512": "f4900c3818b7bd2d18ec47d81d101ae4480689fe4369b3bc10f2e8713b39a032fd01587d4786e72e16dd574dc0e66452a486a44a51e9e6d758e9f106a6a3f1c0",
+          "sha256": "ba65429ef8ce9f64a724c628b7981a18f95e4f7007b3a66387202b51f615160f",
+          "sha1": "d7cc14888d4398391fadc26b6f608c8ac34ebbb7",
+          "md5": "c6c0256a4eb6d6cb47c5acd4efb7a91a"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.dagger",
+          "module": "hilt-android",
+          "version": {
+            "requires": "2.54"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "hilt-lifecycle-viewmodel-1.3.0-rc01.aar",
+          "url": "hilt-lifecycle-viewmodel-1.3.0-rc01.aar",
+          "size": 7397,
+          "sha512": "f4900c3818b7bd2d18ec47d81d101ae4480689fe4369b3bc10f2e8713b39a032fd01587d4786e72e16dd574dc0e66452a486a44a51e9e6d758e9f106a6a3f1c0",
+          "sha256": "ba65429ef8ce9f64a724c628b7981a18f95e4f7007b3a66387202b51f615160f",
+          "sha1": "d7cc14888d4398391fadc26b6f608c8ac34ebbb7",
+          "md5": "c6c0256a4eb6d6cb47c5acd4efb7a91a"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "hilt-lifecycle-viewmodel-1.3.0-rc01-versionMetadata.json",
+          "url": "hilt-lifecycle-viewmodel-1.3.0-rc01-versionMetadata.json",
+          "size": 228,
+          "sha512": "bc04d4d409f27fb22400c14232044fec9167f8eb87a661dd014a26090bc31a7c8375004ead8d29151f35357ea9960101ad8ca578f65a7ab91cadc7c10feabc1e",
+          "sha256": "f7136c49d6b73bd0fb396df1f498afbdd993bddef805f235f2a793fef8f37dbc",
+          "sha1": "df93378a7e49c13bc1d1fa6e007b33efd6281a01",
+          "md5": "dffc4585eb78d82c487a1c194edf74d7"
+        }
+      ]
+    }
+  ]
+}

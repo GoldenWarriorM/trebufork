@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 The trebufork Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="start|center_vertical">
+
+    <!-- The tap target: a consistent-width rounded ripple holding a 2x2 member preview + title.
+         Its right margin is set dynamically so it stops where the alphabet touch strip begins. -->
+    <LinearLayout
+        android:id="@+id/scroll_folder_row_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="@drawable/scrollable_app_row_background">
+
+        <!-- trebufork: 2x2 preview grid of the folder's first four members. -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.android.launcher3.BubbleTextView
+                    android:id="@+id/scroll_folder_cell0"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_marginEnd="1dp"
+                    android:contentDescription="@null"
+                    android:gravity="center"
+                    android:text=""
+                    launcher:iconSizeOverride="21dp"
+                    launcher:layoutHorizontal="true" />
+
+                <com.android.launcher3.BubbleTextView
+                    android:id="@+id/scroll_folder_cell1"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_marginStart="1dp"
+                    android:contentDescription="@null"
+                    android:gravity="center"
+                    android:text=""
+                    launcher:iconSizeOverride="21dp"
+                    launcher:layoutHorizontal="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp">
+
+                <com.android.launcher3.BubbleTextView
+                    android:id="@+id/scroll_folder_cell2"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_marginEnd="1dp"
+                    android:contentDescription="@null"
+                    android:gravity="center"
+                    android:text=""
+                    launcher:iconSizeOverride="21dp"
+                    launcher:layoutHorizontal="true" />
+
+                <com.android.launcher3.BubbleTextView
+                    android:id="@+id/scroll_folder_cell3"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_marginStart="1dp"
+                    android:contentDescription="@null"
+                    android:gravity="center"
+                    android:text=""
+                    launcher:iconSizeOverride="21dp"
+                    launcher:layoutHorizontal="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/scroll_folder_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:textColor="?attr/workspaceTextColor"
+            android:shadowColor="#66000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3" />
+
+        <!-- trebufork: drag handle, visible only on desktop rows while reorder mode is active. -->
+        <ImageView
+            android:id="@+id/scroll_folder_drag_handle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/scrollable_desktop_reorder"
+            android:padding="6dp"
+            android:src="@drawable/ic_more_vert_dots"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

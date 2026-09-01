@@ -1,0 +1,128 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "androidx.annotation",
+    "module": "annotation-experimental",
+    "version": "1.6.0-alpha01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0",
+      "buildId:": "14059446"
+    }
+  },
+  "variants": [
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "annotation-experimental-1.6.0-alpha01-sources.jar",
+          "url": "annotation-experimental-1.6.0-alpha01-sources.jar",
+          "size": 9680,
+          "sha512": "c831391f09d6fe46e376ffb6c90c9515a36dc0fb222ed29eb221b21527a3230949b8b2d5d5f83bd601860b915055225eceddf50a108896184c93e3ced80a35a1",
+          "sha256": "3f06451dbd7451b63833d552897a60c53550f92d1fd495e7a2e0ec9b295052ab",
+          "sha1": "93ea46d873d95e309a3d8d21d780a6b7c5fa7af0",
+          "md5": "78c937db0488167e6ef6601bcf6fe60c"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "annotation-experimental-1.6.0-alpha01.aar",
+          "url": "annotation-experimental-1.6.0-alpha01.aar",
+          "size": 45296,
+          "sha512": "a466a0eced03f45f5be68a2fe554d43083598430a52221fb88fb194abeffc703cd85e783a93753162620f98741ea59c41305f4034d42311cf14faa7ec5746793",
+          "sha256": "bb3b4d69882ab3a8cd6fe37ac18dbc070369098d9dd95d33c6c997dc45ff3f0f",
+          "sha1": "0735f1e65c5b4e30427355edd0081c7a13b3d9a1",
+          "md5": "6a9c628282b09b9c3bbc2e17f3fc224f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "annotation-experimental-1.6.0-alpha01.aar",
+          "url": "annotation-experimental-1.6.0-alpha01.aar",
+          "size": 45296,
+          "sha512": "a466a0eced03f45f5be68a2fe554d43083598430a52221fb88fb194abeffc703cd85e783a93753162620f98741ea59c41305f4034d42311cf14faa7ec5746793",
+          "sha256": "bb3b4d69882ab3a8cd6fe37ac18dbc070369098d9dd95d33c6c997dc45ff3f0f",
+          "sha1": "0735f1e65c5b4e30427355edd0081c7a13b3d9a1",
+          "md5": "6a9c628282b09b9c3bbc2e17f3fc224f"
+        }
+      ]
+    },
+    {
+      "name": "libraryVersionMetadata",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.usage": "library-version-metadata"
+      },
+      "files": [
+        {
+          "name": "annotation-experimental-1.6.0-alpha01-versionMetadata.json",
+          "url": "annotation-experimental-1.6.0-alpha01-versionMetadata.json",
+          "size": 1844,
+          "sha512": "b1459c84652d12661d0793fa06300bc2966d2d6e6de7a16a5069d5da1870a72c48038e10a8460690a6d39713ee7ba547bf8499bb82d715d3a6df0178ebe136d9",
+          "sha256": "c6ecfddf5acbc235adca25dd56673dbdb914ae761c7c04fceac5b2b79083d29f",
+          "sha1": "06564b7847c8ff78a3f2119b902bac2808167d47",
+          "md5": "2a8a04495c6cab41ed6e8fc9a2ca8b90"
+        }
+      ]
+    }
+  ]
+}
