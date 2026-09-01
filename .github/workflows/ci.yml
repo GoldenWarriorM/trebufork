@@ -1,0 +1,41 @@
+name: Build Magisk module
+
+# Builds the release APK, signs it with the vendored platform key and packages
+# the Magisk module on every push to main / pull request, uploading the ZIP as
+# a downloadable artifact. Tag pushes are handled by release.yml.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up build environment
+        uses: ./.github/actions/setup-build
+
+      - name: Build release APK
+        run: gradle :launcher:assembleRelease
+        env:
+          ANDROID_HOME: $ANDROID_HOME
+          ANDROID_SDK_ROOT: $ANDROID_HOME
+
+      - name: Package Magisk module (signs with vendored platform key)
+        run: ./package-magisk.sh
+
+      - name: Upload module ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: trebufork-magisk
+          path: build/Trebufork-magisk-*.zip
+          if-no-files-found: error
