@@ -598,6 +598,10 @@ public class ScrollableAppsView extends RecyclerView
         if (mSearchEdit == null) {
             return;
         }
+        // trebufork: remember whether a query was present before it is cleared below — only a
+        // non-empty query replaced the desktop content with the search results, so only then
+        // should ending the search fade the desktop list back in.
+        boolean hadQuery = !mSearchQuery.isEmpty();
         mSearchEdit.setText("");
         mSearchEdit.clearFocus();
         mSearchEdit.hideKeyboard();
@@ -607,6 +611,14 @@ public class ScrollableAppsView extends RecyclerView
         if (mMode == MODE_DESKTOP) {
             mHighlightedPosition = -1;
             applyRows(mDesktopRows);
+            if (hadQuery) {
+                // trebufork: quick, simultaneous fade-in of the restored desktop rows — the same
+                // animation as the apps-list -> desktop switch (see showDesktop) — so leaving the
+                // desktop search does not snap the list back without any transition.
+                animate().cancel();
+                setAlpha(0f);
+                animate().alpha(1f).setDuration(MODE_TRANSITION_DURATION_MS).start();
+            }
         }
         updateSearchSidebarVisibility();
     }
