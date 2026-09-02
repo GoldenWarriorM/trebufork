@@ -125,12 +125,14 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.RemoteAnimationTarget;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewTreeObserver.OnScrollChangedListener;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ListView;
 import android.widget.OverScroller;
@@ -165,6 +167,7 @@ import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.dagger.LauncherComponentProvider;
 import com.android.launcher3.desktop.DesktopRecentsTransitionController;
 import com.android.launcher3.deviceprofile.OverviewProfile;
+import com.android.launcher3.uioverrides.states.OverviewState;
 import com.android.launcher3.logger.LauncherAtom;
 import com.android.launcher3.logging.StatsLogManager;
 import com.android.launcher3.model.data.ItemInfo;
@@ -622,6 +625,36 @@ public abstract class RecentsView<
     private boolean mShowAsGridLastOnLayout = false;
     protected final IntSet mTopRowIdSet = new IntSet();
     private int mClearAllShortTotalWidthTranslation = 0;
+
+    // ------------------------------------------------------------------
+    // trebufork: HyperOS-style vertical two-column overview (prototype)
+    // ------------------------------------------------------------------
+    private static final int TREBUFORK_GRID_COLUMNS = 2;
+    private static final float TREBUFORK_GRID_COL_GAP_DP = 12f;
+    private static final float TREBUFORK_GRID_ROW_GAP_DP = 14f;
+    private static final float TREBUFORK_GRID_MARGIN_SIDE_DP = 22f;
+    private static final float TREBUFORK_GRID_MARGIN_TOP_DP = 26f;
+    private static final float TREBUFORK_GRID_MARGIN_BOTTOM_DP = 52f;
+    // Card height expressed as a multiple of its width (portrait screenshots).
+    private static final float TREBUFORK_GRID_CARD_RATIO = 1.55f;
+    // Whether the HyperOS-style grid is enabled by the setting (see LauncherPrefs).
+    private boolean mTrebuforkGridEnabled = false;
+    // Whether the grid is currently engaged for the visible overview session. When engaged the
+    // vertical grid owns the layout and touch handling of the task cards; the stock horizontal
+    // carousel logic is bypassed (see onLayout / onTouchEvent below).
+    private boolean mTrebuforkGridActive = false;
+    // Vertical scroll offset of the grid, in pixels (>= 0).
+    private float mTrebuforkGridScrollY = 0f;
+    // Cached cell width; -1 forces a full re-measure when the grid engages.
+    private int mTrebuforkGridCellWidth = -1;
+    // Touch state of the custom scroll engine.
+    private float mTrebuforkGridTouchDownY;
+    private boolean mTrebuforkGridTouchScrolling;
+    @Nullable
+    private TaskView mTrebuforkGridTouchCandidate;
+    // True after the grid engages, until the first arrange has run and played the cards' slide-up
+    // entrance (see trebuforkPlayEntranceAnimation).
+    private boolean mTrebuforkGridEntrancePending = false;
 
     // The GestureEndTarget that is still in progress.
     @Nullable
@@ -1767,7 +1800,21 @@ public abstract class RecentsView<
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        // trebufork vertical grid owns every touch; the stock pager must never intercept
+        // (it would page horizontally or steal the vertical drag).
+        if (mTrebuforkGridActive && mOverviewStateEnabled) {
+            return false;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        // trebufork vertical grid: the custom scroll engine replaces the pager touch handling.
+        if (mTrebuforkGridActive && mOverviewStateEnabled) {
+            return trebuforkHandleTouch(ev);
+        }
         super.onTouchEvent(ev);
 
         if (showAsGrid()) {
@@ -2429,6 +2476,24 @@ public abstract class RecentsView<
         mContainerInterface.calculateGridSize(dp, mContainer, mLastComputedGridSize);
         mContainerInterface.calculateGridTaskSize(mContainer, dp, mLastComputedGridTaskSize,
                 getPagedOrientationHandler());
+
+        // trebufork: the stock grid task size is tuned for tablets and is unusable when the grid
+        // is forced onto a phone (the "Vertical recents grid" experiment): cards would keep the
+        // full carousel size and overlap in the two grid rows. Instead derive a phone grid cell
+        // from the grid content area (mLastComputedGridSize) so two rows of cards exactly fit the
+        // available height, with the card width following the screen aspect ratio.
+        if (OverviewState.sTrebuforkForceGridForPhone
+                && !dp.getDeviceProperties().isTablet()) {
+            Rect phoneGridArea = mLastComputedGridSize;
+            int thumbnailPad = dp.getOverviewProfile().getTaskThumbnailTopMarginPx();
+            int rowSpacing = dp.getOverviewProfile().getRowSpacing();
+            int gridH = Math.max(1,
+                    Math.round((phoneGridArea.height() - 2 * thumbnailPad - rowSpacing) / 2f));
+            int gridW = Math.max(1, Math.round(gridH * phoneGridArea.width()
+                    / (float) Math.max(1, phoneGridArea.height())));
+            mLastComputedGridTaskSize.set(phoneGridArea.left, phoneGridArea.top,
+                    phoneGridArea.left + gridW, phoneGridArea.top + gridH);
+        }
 
         mTaskGridVerticalDiff = mLastComputedGridTaskSize.top - mLastComputedTaskSize.top;
         mTopBottomRowHeightDiff = mLastComputedGridTaskSize.height()
@@ -4955,6 +5020,16 @@ public abstract class RecentsView<
 
         mShowAsGridLastOnLayout = showAsGrid();
 
+        if (mTrebuforkGridActive && mOverviewStateEnabled) {
+            // trebufork vertical grid: keep the paged view's internal layout state, then
+            // overwrite every task card position with the two-column flow. The stock page
+            // offsets are bypassed so they never fight the grid placement.
+            super.onLayout(changed, left, top, right, bottom);
+            updateEmptyStateUi(changed);
+            trebuforkArrangeGrid();
+            return;
+        }
+
         super.onLayout(changed, left, top, right, bottom);
 
         updateEmptyStateUi(changed);
@@ -4969,6 +5044,233 @@ public abstract class RecentsView<
         setImportantForAccessibility(isModal() ? IMPORTANT_FOR_ACCESSIBILITY_NO
                 : IMPORTANT_FOR_ACCESSIBILITY_AUTO);
         recalculateTaskViewScreenEdgeIntersections();
+    }
+
+    // ------------------------------------------------------------------
+    // trebufork: HyperOS-style vertical grid helpers
+    // ------------------------------------------------------------------
+
+    /** Enables/disables the vertical grid from the launcher settings (see LauncherPrefs). */
+    public void setTrebuforkGridEnabled(boolean enabled) {
+        mTrebuforkGridEnabled = enabled;
+        if (!enabled) {
+            setTrebuforkGridActive(false);
+        }
+    }
+
+    public boolean isTrebuforkGridEnabled() {
+        return mTrebuforkGridEnabled;
+    }
+
+    /**
+     * Engages the vertical grid for the current overview session (after the overview open
+     * animation has settled so the recents entry still uses the stock geometry), or disengages
+     * it when leaving overview.
+     */
+    public void setTrebuforkGridActive(boolean active) {
+        if (mTrebuforkGridActive == active) {
+            return;
+        }
+        mTrebuforkGridActive = active;
+        mTrebuforkGridScrollY = 0f;
+        mTrebuforkGridTouchScrolling = false;
+        mTrebuforkGridTouchCandidate = null;
+        if (active) {
+            // Force the first arrange to re-measure every card for the new cell size, and let it
+            // play the slide-up entrance once the cards are placed.
+            mTrebuforkGridCellWidth = -1;
+            mTrebuforkGridEntrancePending = true;
+        }
+        requestLayout();
+    }
+
+    /**
+     * trebufork: plays the vertical-grid entrance once the cards have been arranged: each card
+     * rises from below its resting spot while fading in. Cards lower in the list start further
+     * down and later, and the motion decelerates (fast start, slow finish) for a "pushed from
+     * below" feel.
+     */
+    private void trebuforkPlayEntranceAnimation(List<TaskView> tasks) {
+        float density = getResources().getDisplayMetrics().density;
+        int seq = 0;
+        for (TaskView taskView : tasks) {
+            // Later cards start lower, so the whole column appears to be pushed up from the
+            // bottom edge.
+            float rise = density * (90f + Math.min(320f, seq * 70f));
+            taskView.animate().cancel();
+            taskView.setAlpha(0f);
+            taskView.setTranslationY(rise);
+            taskView.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(430)
+                    .setStartDelay(seq * 45)
+                    .setInterpolator(new DecelerateInterpolator(2.2f))
+                    .start();
+            seq++;
+        }
+    }
+
+    /**
+     * Places every task card in a two-column vertical flow (most recent child first, at the
+     * top) and scrolls the flow by {@link #mTrebuforkGridScrollY}. Cards are re-measured to
+     * their cell size so the paged-view geometry never bleeds out of a cell.
+     */
+    private void trebuforkArrangeGrid() {
+        if (!mOverviewStateEnabled) {
+            return;
+        }
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        float density = getResources().getDisplayMetrics().density;
+        int marginSide = Math.round(TREBUFORK_GRID_MARGIN_SIDE_DP * density);
+        int marginTop = Math.round(TREBUFORK_GRID_MARGIN_TOP_DP * density);
+        int marginBottom = Math.round(TREBUFORK_GRID_MARGIN_BOTTOM_DP * density);
+        int gapCol = Math.round(TREBUFORK_GRID_COL_GAP_DP * density);
+        int gapRow = Math.round(TREBUFORK_GRID_ROW_GAP_DP * density);
+        int cellW = (width - 2 * marginSide - gapCol * (TREBUFORK_GRID_COLUMNS - 1))
+                / TREBUFORK_GRID_COLUMNS;
+        int cellH = Math.round(cellW * TREBUFORK_GRID_CARD_RATIO);
+        if (cellW <= 0 || cellH <= 0) {
+            return;
+        }
+
+        List<TaskView> tasks = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof TaskView) {
+                tasks.add((TaskView) child);
+            }
+        }
+        int taskCount = tasks.size();
+        if (taskCount == 0) {
+            return;
+        }
+        int rows = (taskCount + TREBUFORK_GRID_COLUMNS - 1) / TREBUFORK_GRID_COLUMNS;
+        int sheetHeight = marginTop + rows * cellH + (rows - 1) * gapRow;
+        int maxScroll = Math.max(0, sheetHeight - (height - marginBottom));
+        mTrebuforkGridScrollY = Math.max(0f, Math.min(maxScroll, mTrebuforkGridScrollY));
+        int scrollY = Math.round(mTrebuforkGridScrollY);
+
+        boolean cellChanged = mTrebuforkGridCellWidth != cellW;
+        mTrebuforkGridCellWidth = cellW;
+        // A stale horizontal scroll from the stock pager would shift the whole sheet; the grid
+        // always owns the scroll position.
+        if (getScrollX() != 0) {
+            setScrollX(0);
+        }
+
+        // Children are added newest -> oldest (applyLoadPlan adds in reverse), so iterating
+        // forward puts the most recent task in the top-left cell.
+        int seq = 0;
+        for (TaskView tv : tasks) {
+            int col = seq % TREBUFORK_GRID_COLUMNS;
+            int row = seq / TREBUFORK_GRID_COLUMNS;
+            seq++;
+            int left = marginSide + col * (cellW + gapCol);
+            int top = marginTop + row * (cellH + gapRow) - scrollY;
+            if (cellChanged) {
+                // Re-measure only when the cell size actually changed; otherwise measure()
+                // short-circuits on an identical spec, keeping scroll frames cheap.
+                tv.forceLayout();
+            }
+            tv.measure(MeasureSpec.makeMeasureSpec(cellW, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(cellH, MeasureSpec.EXACTLY));
+            tv.layout(left, top, left + cellW, top + cellH);
+        }
+        trebuforkMarkAllTasksFullyVisible(tasks);
+        if (mTrebuforkGridEntrancePending) {
+            mTrebuforkGridEntrancePending = false;
+            trebuforkPlayEntranceAnimation(tasks);
+        }
+    }
+
+    /**
+     * trebufork: the stock pipeline loads and keeps high-res snapshots only for the tasks the
+     * horizontal carousel considers fully visible. In the grid every placed card is on screen (or
+     * scrolled to), so tell the view model every grid task is fully visible — otherwise the
+     * off-window cards stay as blank/solid placeholders.
+     */
+    private void trebuforkMarkAllTasksFullyVisible(List<TaskView> tasks) {
+        if (enableRefactorTaskThumbnail()) {
+            Set<Integer> fullyVisibleTaskIds = new HashSet<>();
+            for (TaskView taskView : tasks) {
+                int[] ids = taskView.getTaskIds();
+                if (ids != null) {
+                    for (int id : ids) {
+                        fullyVisibleTaskIds.add(id);
+                    }
+                }
+            }
+            mRecentsViewModel.updateTasksFullyVisible(fullyVisibleTaskIds);
+        } else {
+            for (TaskView taskView : tasks) {
+                taskView.setOverlayEnabled(mOverlayEnabled);
+            }
+        }
+    }
+
+    /** Returns the topmost task card under (x, y) in this view's coordinates, if any. */
+    @Nullable
+    private TaskView trebuforkFindChildAt(float x, float y) {
+        for (int i = getChildCount() - 1; i >= 0; i--) {
+            View child = getChildAt(i);
+            if (child instanceof TaskView && x >= child.getLeft() && x <= child.getRight()
+                    && y >= child.getTop() && y <= child.getBottom()) {
+                return (TaskView) child;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Custom touch engine for the vertical grid: vertical drags scroll the two-column flow,
+     * a tap (with no meaningful movement) opens the tapped card through its own click handler.
+     */
+    private boolean trebuforkHandleTouch(MotionEvent ev) {
+        switch (ev.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN: {
+                mTrebuforkGridTouchDownY = ev.getY();
+                mTrebuforkGridTouchScrolling = false;
+                mTrebuforkGridTouchCandidate = trebuforkFindChildAt(ev.getX(), ev.getY());
+                return true;
+            }
+            case MotionEvent.ACTION_MOVE: {
+                float dy = ev.getY() - mTrebuforkGridTouchDownY;
+                if (!mTrebuforkGridTouchScrolling && Math.abs(dy) > ViewConfiguration
+                        .get(getContext()).getScaledTouchSlop()) {
+                    mTrebuforkGridTouchScrolling = true;
+                    mTrebuforkGridTouchCandidate = null;
+                }
+                if (mTrebuforkGridTouchScrolling) {
+                    mTrebuforkGridScrollY -= dy;
+                    mTrebuforkGridTouchDownY = ev.getY();
+                    trebuforkArrangeGrid();
+                    invalidate();
+                }
+                return true;
+            }
+            case MotionEvent.ACTION_UP: {
+                TaskView candidate = mTrebuforkGridTouchCandidate;
+                boolean wasScrolling = mTrebuforkGridTouchScrolling;
+                mTrebuforkGridTouchCandidate = null;
+                mTrebuforkGridTouchScrolling = false;
+                if (!wasScrolling && candidate != null) {
+                    candidate.performClick();
+                }
+                return true;
+            }
+            case MotionEvent.ACTION_CANCEL: {
+                mTrebuforkGridTouchCandidate = null;
+                mTrebuforkGridTouchScrolling = false;
+                return true;
+            }
+            default:
+                return true;
+        }
     }
 
     private void updatePivots() {

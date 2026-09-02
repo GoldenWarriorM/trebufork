@@ -256,6 +256,10 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         // trebufork: render folder members as a scrolling list instead of the 2x3 icon grid.
         // Defaults to list (true); the toggle inside the folder switches to the grid.
         @JvmField val SCROLLABLE_FOLDER_LIST = backedUpItem("pref_scrollable_folder_list", true)
+        // trebufork: HyperOS-style recents experiment — vertical two-column grid of recent
+        // apps (most recent at the top) instead of the horizontal carousel. See
+        // RecentsView (trebufork vertical grid section) and LauncherRecentsView.
+        @JvmField val RECENTS_VERTICAL_GRID = backedUpItem("pref_recents_vertical_grid", false)
         // trebufork: alphabet sidebar configuration (see ScrollableAppsSidebar).
         // Not exposed in Settings; tune via adb by editing com.android.launcher3.prefs.xml.
         // Vertical position (0..100, 100 = bottom), top/bottom padding in dp, distance from
