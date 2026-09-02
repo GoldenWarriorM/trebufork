@@ -698,7 +698,7 @@ public class ScrollableAppsView extends RecyclerView
         // the framework's WindowInsetsAnimation callback) so resetSearchBarLift() can cancel
         // it reliably — the framework callback kept firing after an app opened from a result
         // and left the bar stuck mid-transition.
-        mSearchBar.animate().cancel();
+        cancelSearchBarAnimation();
         mSearchBar.animate().translationY(-translate)
                 .setDuration(SEARCH_BAR_LIFT_ANIMATION_MS)
                 .start();
@@ -715,10 +715,25 @@ public class ScrollableAppsView extends RecyclerView
      */
     private void resetSearchBarLift() {
         if (mSearchBar != null) {
-            mSearchBar.animate().cancel();
+            cancelSearchBarAnimation();
             mSearchBar.setTranslationY(0f);
             setSearchBarMargins(Math.round(SEARCH_BAR_RESTING_MARGIN_DP
                     * getResources().getDisplayMetrics().density));
+        }
+    }
+
+    /**
+     * trebufork: cancels any in-flight animation on the search bar and pins its alpha to 1.
+     * The return-from-recents fade-in (setRecentsVisible(true)) drives the bar's alpha from 0
+     * to 1 with a duration'd ViewPropertyAnimator. Taking that same animator over with a
+     * translationY animation (keyboard lift, alphabet drag) cancels the alpha fade mid-flight,
+     * leaving the search bar semi-transparent forever — so every interaction that repositions
+     * the bar must first complete the alpha.
+     */
+    private void cancelSearchBarAnimation() {
+        if (mSearchBar != null) {
+            mSearchBar.animate().cancel();
+            mSearchBar.setAlpha(1f);
         }
     }
 
@@ -803,6 +818,13 @@ public class ScrollableAppsView extends RecyclerView
             return;
         }
         mSidebar.animate().cancel();
+        // trebufork: the recents fade-in drives the sidebar alpha with a separate ObjectAnimator
+        // (fadeSidebarRecentsAlpha); cancel it before starting our own alpha animation so the two
+        // never fight over the property and leave the sidebar mid-alpha.
+        if (mSidebarRecentsFade != null) {
+            mSidebarRecentsFade.cancel();
+            mSidebarRecentsFade = null;
+        }
         if (visible) {
             mSidebar.setVisibility(View.VISIBLE);
             mSidebar.setAlpha(0f);
@@ -1329,7 +1351,7 @@ public class ScrollableAppsView extends RecyclerView
         }
         float hideDistance = Math.max(mSearchBar.getHeight(), 48f * density)
                 + 12f * density + navBar + 8f * density;
-        mSearchBar.animate().cancel();
+        cancelSearchBarAnimation();
         if (hidden && instantHide) {
             mSearchBar.setTranslationY(hideDistance);
         } else {
