@@ -32,6 +32,7 @@ import android.view.MotionEvent;
 import androidx.annotation.Nullable;
 
 import com.android.launcher3.Launcher;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.LauncherState;
 import com.android.launcher3.desktop.DesktopRecentsTransitionController;
 import com.android.launcher3.logging.StatsLogManager;
@@ -43,6 +44,7 @@ import com.android.launcher3.uioverrides.QuickstepLauncher;
 import com.android.launcher3.util.PendingSplitSelectInfo;
 import com.android.launcher3.util.SplitConfigurationOptions;
 import com.android.launcher3.util.SplitConfigurationOptions.SplitSelectSource;
+import com.android.launcher3.uioverrides.states.OverviewState;
 import com.android.quickstep.GestureState;
 import com.android.quickstep.SystemUiProxy;
 import com.android.quickstep.util.SplitSelectStateController;
@@ -131,6 +133,15 @@ public class LauncherRecentsView extends RecentsView<QuickstepLauncher, Launcher
     public void onStateTransitionStart(LauncherState toState) {
         setOverviewStateEnabled(toState.isRecentsViewVisible);
 
+        // trebufork: HyperOS-style recents grid toggle (launcher settings). Read per transition
+        // so changing the setting takes effect on the next overview open. Experiment: when the
+        // pref is on, drive the STOCK tablet grid path (force-grid flag in OverviewState) instead
+        // of the custom vertical engine, so both layouts can be compared on the phone.
+        boolean gridPref = LauncherPrefs.RECENTS_VERTICAL_GRID.get(getContext());
+        OverviewState.sTrebuforkForceGridForPhone = gridPref;
+        setTrebuforkGridEnabled(gridPref && toState.isRecentsViewVisible
+                && !OverviewState.sTrebuforkForceGridForPhone);
+
         if (enableGridOnlyOverview()) {
             if (toState.displayOverviewTasksAsGrid(mContainer.getDeviceProfile())) {
                 setOverviewGridEnabled(true);
@@ -184,6 +195,12 @@ public class LauncherRecentsView extends RecentsView<QuickstepLauncher, Launcher
         if (isOverlayEnabled) {
             mBlurUtils.setDrawLiveTileBelowRecents(true);
         }
+        // trebufork: after the state transition settles, swap the carousel for the vertical
+        // two-column grid (or back), so the recents open/close animations keep using the stock
+        // geometry while the grid only appears in the steady overview. Skipped while the stock
+        // grid experiment is active (the custom engine would fight the stock grid layout).
+        setTrebuforkGridActive(finalState.isRecentsViewVisible && isTrebuforkGridEnabled()
+                && !OverviewState.sTrebuforkForceGridForPhone);
     }
 
     @Override

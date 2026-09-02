@@ -59,6 +59,10 @@
     <string name="pref_scrollable_desktop_search_title">Search bar on home screen</string>
     <string name="pref_scrollable_desktop_search_summary">Show the app search bar at the bottom of the desktop</string>
 
+    <!-- Recents: vertical grid experiment -->
+    <string name="pref_recents_vertical_grid_title">Vertical recents grid</string>
+    <string name="pref_recents_vertical_grid_summary">Show recent apps as a two-column scrollable grid (HyperOS style)</string>
+
     <!-- Scrollable home: long-press add-to-home placeholder -->
     <string name="trebufork_add_to_home_stub">Add to home screen is not available yet</string>
 

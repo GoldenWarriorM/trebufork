@@ -56,6 +56,7 @@ import com.android.launcher3.Flags.enableRefactorTaskContentView
 import com.android.launcher3.Flags.enableRefactorTaskThumbnail
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
+import com.android.launcher3.uioverrides.states.OverviewState
 import com.android.launcher3.anim.AnimatedFloat
 import com.android.launcher3.logging.StatsLogManager.LauncherEvent
 import com.android.launcher3.model.data.ItemInfo
@@ -162,8 +163,13 @@ constructor(
         get() = taskContainers.map { it.taskContentView }.toTypedArray()
 
     val isGridTask: Boolean
-        /** Returns whether the task is part of overview grid and not being focused. */
-        get() = container.deviceProfile.getDeviceProperties().isTablet && !isLargeTile
+        /**
+         * Returns whether the task is part of overview grid and not being focused. On tablets the
+         * grid is always on; the forced-grid experiment ("Vertical recents grid" pref) also drives
+         * the grid on phones, so treat non-focused tasks the same way there.
+         */
+        get() = (container.deviceProfile.getDeviceProperties().isTablet ||
+            OverviewState.sTrebuforkForceGridForPhone) && !isLargeTile
 
     val isRunningTask: Boolean
         get() = this === recentsView?.runningTaskView
@@ -1252,40 +1258,28 @@ constructor(
         val thumbnailPadding = container.deviceProfile.overviewProfile.taskThumbnailTopMarginPx
         val taskWidth = lastComputedTaskSize.width()
         val taskHeight = lastComputedTaskSize.height()
-        val nonGridScale: Float
-        val boxTranslationY: Float
-        val expectedWidth: Int
-        val expectedHeight: Int
-        if (container.deviceProfile.getDeviceProperties().isTablet) {
-            val boxWidth: Int
-            val boxHeight: Int
 
-            // Focused task and Desktop tasks should use focusTaskRatio that is associated
-            // with the original orientation of the focused task.
-            if (isLargeTile) {
-                boxWidth = taskWidth
-                boxHeight = taskHeight
-            } else {
-                // Otherwise task is in grid, and should use lastComputedGridTaskSize.
-                boxWidth = lastComputedGridTaskSize.width()
-                boxHeight = lastComputedGridTaskSize.height()
-            }
-
-            // Bound width/height to the box size.
-            expectedWidth = boxWidth
-            expectedHeight = boxHeight + thumbnailPadding
-
-            // Scale to to fit task Rect.
-            nonGridScale = taskWidth / boxWidth.toFloat()
-
-            // Align to top of task Rect.
-            boxTranslationY = (expectedHeight - thumbnailPadding - taskHeight) / 2.0f
+        // Grid (non-focused) cards shrink to the grid box: always on tablets, and on phones
+        // during the forced-grid experiment. Focused tasks and Desktop tasks keep the full task
+        // size in both cases.
+        val gridBox: Rect?
+        if (isGridTask) {
+            gridBox = lastComputedGridTaskSize
         } else {
-            nonGridScale = 1f
-            boxTranslationY = 0f
-            expectedWidth = taskWidth
-            expectedHeight = taskHeight + thumbnailPadding
+            gridBox = null
         }
+        val boxWidth = gridBox?.width() ?: taskWidth
+        val boxHeight = gridBox?.height() ?: taskHeight
+
+        // Bound width/height to the box size.
+        val expectedWidth = boxWidth
+        val expectedHeight = boxHeight + thumbnailPadding
+
+        // Scale to fit the task Rect (1 when not shrunk).
+        val nonGridScale = if (boxWidth == 0) 1f else taskWidth / boxWidth.toFloat()
+
+        // Align to top of task Rect.
+        val boxTranslationY = (expectedHeight - thumbnailPadding - taskHeight) / 2.0f
         this.nonGridScale = nonGridScale
         this.boxTranslationY = boxTranslationY
         updateLayoutParams<ViewGroup.LayoutParams> {

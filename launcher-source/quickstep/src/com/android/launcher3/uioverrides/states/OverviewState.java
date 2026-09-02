@@ -170,9 +170,13 @@ public class OverviewState extends LauncherState {
                 Themes.getAttrColor(launcher, R.attr.overviewScrimForegroundSecondary)));
     }
 
+    // trebufork: experiment flag — when set, force the stock tablet grid overview path even on
+    // phones (set from LauncherRecentsView when the "Vertical recents grid" pref is enabled).
+    public static boolean sTrebuforkForceGridForPhone = false;
+
     @Override
     public boolean displayOverviewTasksAsGrid(DeviceProfile deviceProfile) {
-        return deviceProfile.getDeviceProperties().isTablet();
+        return sTrebuforkForceGridForPhone || deviceProfile.getDeviceProperties().isTablet();
     }
 
     @Override
