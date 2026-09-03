@@ -129,6 +129,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.os.Trace;
@@ -281,6 +283,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -2423,7 +2426,15 @@ public class Launcher extends StatefulActivity<LauncherState>
                     + " state=" + mStateManager.getState());
             mIsDeferringLaunchForTransition = true;
             RunnableList result = new RunnableList();
+            // trebufork: the re-issue may be triggered by two independent paths (the transition
+            // finish callback, or the watchdog below when that callback is lost), so make it run
+            // exactly once.
+            AtomicBoolean relaunchPending = new AtomicBoolean(true);
             Runnable relaunch = () -> {
+                if (!relaunchPending.getAndSet(false)) {
+                    // The launch was already re-issued through another path.
+                    return;
+                }
                 // Keep the guard set while the re-issued launch runs so it is not deferred (and
                 // re-deferred) again; clear it once this launch has been handed off.
                 Log.d(TREBUFORK_TAG, "startActivitySafely: re-issuing deferred launch");
@@ -2436,6 +2447,18 @@ public class Launcher extends StatefulActivity<LauncherState>
                 }
             };
             deferLaunchForRunningTransition(relaunch);
+            // Watchdog: the force-finish callback can be dropped if the running transition
+            // completes (or is aborted) on its own between the deferral check and the finish
+            // call. Without this, the launch would never be re-issued AND
+            // mIsDeferringLaunchForTransition would stay set, making every later launch bypass
+            // the deferral and race directly into whatever transition is running. If the
+            // callback has not fired within the grace period, re-issue the launch ourselves.
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (relaunchPending.get()) {
+                    Log.d(TREBUFORK_TAG, "startActivitySafely: deferred launch watchdog fired");
+                    relaunch.run();
+                }
+            }, DEFERRED_LAUNCH_WATCHDOG_DELAY_MS);
             return result;
         }
 
@@ -2473,6 +2496,13 @@ public class Launcher extends StatefulActivity<LauncherState>
     // trebufork: set while a launch is being re-issued after the running transition was finished,
     // to avoid deferring (and re-deferring) the re-issued launch forever.
     private boolean mIsDeferringLaunchForTransition = false;
+
+    // trebufork: grace period after which a deferred launch is re-issued even if the running
+    // transition's finish callback never fired (e.g. the transition finished on its own before
+    // the force-finish call landed). Long enough that a genuine force-finish callback (fast
+    // binder round-trip) always wins, short enough that a lost callback cannot drop the launch
+    // or leave the deferral guard stuck.
+    private static final long DEFERRED_LAUNCH_WATCHDOG_DELAY_MS = 500L;
 
     /**
      * trebufork: defers {@param relaunch} until the running window/recents animation has finished.

@@ -235,6 +235,13 @@ public class ScrollableAppsView extends RecyclerView
     // desktop; the search bar is then hidden instantly (it was never visible) instead of
     // animating down.
     private boolean mJustEnteredAppsMode;
+    // trebufork: true while the recents/overview is open and this view's content (rows, search
+    // bar, sidebar) is hidden behind it by setRecentsVisible(false). While hidden, the search
+    // bar's alpha must stay 0: cancelSearchBarAnimation() normally pins alpha to 1, but an app
+    // launch from recents loses window focus before the launcher state settles, and that focus
+    // path (onWindowFocusChanged -> resetSearchBarLift) would resurrect the search bar alone
+    // over the launch animation while the rest of the home is still hidden.
+    private boolean mRecentsHidden = false;
     // trebufork: state of the in-group member drag (reorder mode). A long-press on a group icon
     // lifts it; horizontal finger movement slides it between the group's slots (see
     // beginGroupMemberDrag / handleGroupMemberDragMove / endGroupMemberDrag).
@@ -409,6 +416,7 @@ public class ScrollableAppsView extends RecyclerView
      * sits above the scrim and would otherwise stay crisp.
      */
     public void setRecentsVisible(boolean visible) {
+        mRecentsHidden = !visible;
         if (visible) {
             // Return to home: fade the home content back in.
             animateRecentsAlpha(this, 1f);
@@ -745,7 +753,13 @@ public class ScrollableAppsView extends RecyclerView
     private void cancelSearchBarAnimation() {
         if (mSearchBar != null) {
             mSearchBar.animate().cancel();
-            mSearchBar.setAlpha(1f);
+            // Pin the alpha to 1 only while the home is actually on screen. While the
+            // recents/overview is open the home content is faded out (setRecentsVisible(false))
+            // and the search bar must stay hidden; otherwise a focus-loss during an app launch
+            // from recents pops the bar back in over the launch animation.
+            if (!mRecentsHidden) {
+                mSearchBar.setAlpha(1f);
+            }
         }
     }
 

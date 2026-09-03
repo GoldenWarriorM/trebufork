@@ -16,7 +16,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <com.android.quickstep.views.LauncherRecentsView
+    <com.android.quickstep.views.VerticalRecentsView
         android:id="@+id/overview_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
