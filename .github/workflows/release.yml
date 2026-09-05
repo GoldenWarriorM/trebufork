@@ -59,7 +59,7 @@ jobs:
             "version": "$VER",
             "versionCode": $CODE,
             "zipUrl": "$ZIP_URL",
-            "changelog": "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${TAG}"
+            "changelog": "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/magisk/changelog.md"
           }
           EOF
           git config user.name "github-actions[bot]"

@@ -6,6 +6,11 @@ set -euo pipefail
 # which builds the APK, signs it with the vendored platform key, packages the
 # module, publishes the GitHub Release and refreshes magisk/update.json.
 #
+# Short release notes for Magisk's update dialog are taken from
+# magisk/changelog.md (plain Markdown, English); edit that file before running
+# this script. update.json points its "changelog" field at the raw file so
+# Magisk shows the notes in the update window.
+#
 # versionCode convention (matches existing 0.5.0 -> 500, 0.5.1 -> 501):
 #   major * 1000 + minor * 100 + patch
 
@@ -43,15 +48,18 @@ cat > magisk/update.json <<EOF
   "version": "$TAG",
   "versionCode": $CODE,
   "zipUrl": "https://github.com/GoldenWarriorM/trebufork/releases/download/${TAG}/Trebufork-magisk-${TAG}.zip",
-  "changelog": "https://github.com/GoldenWarriorM/trebufork/releases/tag/${TAG}"
+  "changelog": "https://raw.githubusercontent.com/GoldenWarriorM/trebufork/main/magisk/changelog.md"
 }
 EOF
 
-git add magisk-template/module.prop magisk/update.json
+git add magisk-template/module.prop magisk/update.json magisk/changelog.md
 git commit -m "Bump module version to $TAG"
 git tag "$TAG"
-git push origin HEAD
-git push origin "$TAG"
+# Release into the public module repo (GoldenWarriorM/trebufork), not the
+# private history archive. Local dev branch publish mirrors public/main.
+REMOTE="${RELEASE_REMOTE:-public}"
+git push "$REMOTE" HEAD:main
+git push "$REMOTE" "$TAG"
 
 echo "Released $TAG. GitHub Actions is building and publishing the module;"
 echo "watch it at https://github.com/GoldenWarriorM/trebufork/actions"
