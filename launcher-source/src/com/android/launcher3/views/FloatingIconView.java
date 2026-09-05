@@ -125,6 +125,12 @@ public class FloatingIconView extends FrameLayout implements
 
     private float mIconOffsetY;
 
+    // trebufork: the latest animation rect + whether it has been set. Used by the layout-change
+    // listener to re-align the container translation right after a layout pass (see constructor),
+    // so the container never draws one frame at layout-position + stale pre-layout translation.
+    private final RectF mLastRect = new RectF();
+    private boolean mHasLastRect = false;
+
     // trebufork: per-instance id so create/finish/cancel logs can be paired exactly.
     private static int sInstanceCounter;
     private final int mInstanceId = ++sInstanceCounter;
@@ -195,6 +201,22 @@ public class FloatingIconView extends FrameLayout implements
         addView(mBtvDrawable);
         addView(mClipIconView);
         setWillNotDraw(false);
+
+        // trebufork: a layout pass can re-position this view (its margins take effect) while an
+        // animation tick's translation is still based on the pre-layout getLeft()/getTop() (0 on
+        // the very first frame). ClipIconView.update() only re-syncs the translation on the next
+        // animator tick, so the frame between "layout moved the view" and "animator recomputed"
+        // would draw the icon offset by exactly the new layout position - the single-frame warm-
+        // open ghost (visible one cell right because cold opens start with icon alpha 0). Re-align
+        // the translation to the latest animation rect as soon as the layout lands, so the drawn
+        // position is correct on the same frame.
+        addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight,
+                oldBottom) -> {
+            if (mIsOpening && mHasLastRect && (left != oldLeft || top != oldTop)) {
+                setTranslationX(mLastRect.left - left);
+                setTranslationY(mLastRect.top - top);
+            }
+        });
     }
 
     @Override
@@ -229,8 +251,26 @@ public class FloatingIconView extends FrameLayout implements
      * @param isOpening True if view is used for app open animation, false for app close animation.
      * @param taskViewDrawAlpha the drawn {@link com.android.quickstep.views.TaskView} alpha
      */
+    private int mOpenUpdateLog;
+
     public void update(float alpha, RectF rect, float progress, float shapeProgressStart,
             float cornerRadius, boolean isOpening, int taskViewDrawAlpha) {
+        mLastRect.set(rect);
+        mHasLastRect = true;
+        // trebufork: first-frames diagnostic for the single-frame open-icon ghost.
+        if (mIsOpening && mOpenUpdateLog < 14) {
+            mOpenUpdateLog++;
+            Log.d("OpenAnim", String.format("FIV id=%d vis=%s laid=%b alpha=%.2f p=%.3f "
+                            + "rect=[%.0f,%.0f][%.0f,%.0f] myL=%.0f myT=%.0f tx=%.1f ty=%.1f "
+                            + "scale=%.2f parent=%s taskAlpha=%d",
+                    mInstanceId, getVisibility() == VISIBLE ? "V" : "H", isLaidOut(), alpha,
+                    progress, rect.left, rect.top, rect.right, rect.bottom,
+                    (float) getLeft(), (float) getTop(),
+                    getTranslationX(), getTranslationY(), getScaleX(),
+                    getParent() == null ? "none" : getParent().getClass().getSimpleName(),
+                    taskViewDrawAlpha));
+        }
+
         // trebufork: shrink-to-zero mode - the target icon is gone, so the window collapses to a
         // point. Fade the icon out over the final stretch so it dissolves to nothing instead of
         // popping once the unreachable icon is removed.
@@ -603,6 +643,8 @@ public class FloatingIconView extends FrameLayout implements
 
     @Override
     public void onAnimationStart(Animator animator) {
+        // trebufork: per-open log window so warm opens are captured too.
+        mOpenUpdateLog = 0;
         if ((mIconLoadResult != null && mIconLoadResult.isIconLoaded)
                 || (!mIsOpening && mBtvDrawable.getBackground() != null)) {
             // No need to wait for icon load since we can display the BubbleTextView drawable.
@@ -979,6 +1021,7 @@ public class FloatingIconView extends FrameLayout implements
         mShrinkToZero = false;
         mListViewport = null;
         mBadge = null;
+        mHasLastRect = false;
         sRecycledFetchIconId = sFetchIconId;
         mIconLoadResult = null;
         mClipIconView.recycle();

@@ -1268,8 +1268,26 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                     NAV_FADE_IN_INTERPOLATOR, ANIMATION_DELAY_NAV_FADE_IN,
                     ANIMATION_NAV_FADE_IN_DURATION, APP_LAUNCH_DURATION));
 
+            private int mLoggedFrames;
+
             @Override
             public void onUpdate(float percent, boolean initOnly) {
+                // trebufork: first-frames diagnostic for the single-frame open-icon ghost.
+                if (mLoggedFrames < 8 && (initOnly || percent < 0.15f)) {
+                    mLoggedFrames++;
+                    Log.d("OpenAnim", String.format(
+                            "#%d init=%b p=%.3f cropC=(%.0f,%.0f) cropW=%.0f cropH=%.0f "
+                                    + "iconAlpha=%.2f iconScale=%.2f dX=%.1f dY=%.1f "
+                                    + "iconBounds=[%.0f,%.0f][%.0f,%.0f]",
+                            mLoggedFrames, initOnly, percent,
+                            mCropRectCenterX.value, mCropRectCenterY.value,
+                            mCropRectWidth.value, mCropRectHeight.value,
+                            mIconAlpha.value, mIconScaleToFitScreen.value,
+                            mDx.value, mDy.value,
+                            launcherIconBounds.left, launcherIconBounds.top,
+                            launcherIconBounds.right, launcherIconBounds.bottom));
+                }
+
                 if (cropToInset && bottomInsetPos[0] != mSystemUiProxy.getHomeVisibilityState()
                         .getNavbarInsetPosition()) {
                     final RemoteAnimationTarget target = openingTargets.getFirstAppTarget();
@@ -1348,10 +1366,20 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 floatingIconBounds.bottom += offsetY;
 
                 if (initOnly) {
-                    // For the init pass, we want full alpha since the window is not yet ready.
+                    // The init pass runs on the composition frame while the animator is still in
+                    // its one-frame start delay. Show the floating icon at full alpha here...
                     floatingView.update(1f, floatingIconBounds, percent, 0f,
                             mWindowRadius.value * scale, true /* isOpening */);
-                    return;
+                    // trebufork: previously this branch returned early WITHOUT scheduling a
+                    // surface transaction, so during the start-delay frame the opening window's
+                    // leash kept its system default state (full screen, no crop, no transform,
+                    // full alpha). That made the starting surface flash for one frame with its
+                    // splash icon at the SCREEN CENTER - visible as a single-frame duplicate of
+                    // the tapped app's icon offset to the right (further for right-hand columns).
+                    // Fall through instead: with the properties still at their start values this
+                    // applies the initial crop/scale/translation (and alpha = 1 - iconAlpha) so
+                    // the surface is already positioned over the launcher icon on the very first
+                    // composited frame.
                 }
 
                 SurfaceTransaction transaction = new SurfaceTransaction();
