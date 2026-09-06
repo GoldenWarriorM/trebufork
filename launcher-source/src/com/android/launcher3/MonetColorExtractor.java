@@ -25,47 +25,49 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * trebufork: the Monet dynamic-color engine for the media player row. Generates the exact
- * tonal palettes the SystemUI shade/lockscreen player uses (via the HCT solver port in
- * {@link HctSolverUtils}), picking colors the same way <code>MediaColorSchemes.kt</code>
- * does:
+ * trebufork: the Monet dynamic-color engine for the media player row. Reproduces the exact
+ * scheme the SystemUI shade/lockscreen player uses (frameworks/libs/systemui monet +
+ * MediaColorSchemes.kt):
  * <ul>
- *     <li>on-surface text over the album scrim: neutral palette tone 90 (dark theme)</li>
- *     <li>primary (play-pause pill, seekbar progress): primaryFixed — primary tone 90</li>
- *     <li>on-primary (pill icon): primary tone 10</li>
+ *     <li>ColorScheme(wallpaperColors, darkTheme=false, Style.TONAL_SPOT) with seed
+ *     extraction from the artwork (filter=true: GOOGLE_BLUE when chroma &lt; 5)</li>
+ *     <li>TONAL_SPOT palette chromas: accent1 36, accent2 16, neutral1 6, neutral2 8</li>
+ *     <li>SystemUI shade mapping: shade N = tone((1000 - N) / 10)</li>
+ *     <li>MediaColorSchemes.kt selections: pill bg = accent1.s100, pill icon =
+ *     neutral1.s900, scrim = accent2.s800, title/seekbar = neutral1.s50, artist =
+ *     neutral2.s200, seekbar rest = neutral2.s400</li>
  * </ul>
- * The seed is extracted from the album artwork, falling back to a fixed neutral seed when
- * the artwork is unavailable.
  */
 public final class MonetColorExtractor {
 
-    public static final int TONE_ON_SURFACE_DARK = 90;
-    public static final int TONE_ON_SURFACE_LIGHT = 10;
-    public static final int TONE_PRIMARY_FIXED = 90;
-    public static final int TONE_ON_PRIMARY_FIXED = 10;
+    // TONAL_SPOT palette chromas (ColorSpec2021 get*Palette).
+    private static final double CHROMA_ACCENT1 = 36.0;
+    private static final double CHROMA_ACCENT2 = 16.0;
+    private static final double CHROMA_NEUTRAL1 = 6.0;
+    private static final double CHROMA_NEUTRAL2 = 8.0;
 
-    // SchemeContent palette rules (libmonet scheme/SchemeContent.kt), the style SystemUI
-    // uses for the media player: new ColorScheme(wallpaperColors, /* darkTheme= */ false,
-    // ThemeStyle.CONTENT).
-    private static final double CONTENT_PRIMARY_CHROMA_OFFSET = 32.0;
-    private static final double CONTENT_PRIMARY_CHROMA_FACTOR = 0.5;
-    private static final double CONTENT_NEUTRAL_CHROMA_DIVISOR = 8.0;
-    private static final double CONTENT_NEUTRAL_CHROMA_MAX = 8.0;
+    // ColorScheme.ACCENT1_CHROMA / MIN_CHROMA: seed with chroma < 5 falls back to blue
+    // because the player always passes filter=true (ColorScheme(WallpaperColors, darkTheme)).
+    private static final double MIN_CHROMA = 5.0;
+    private static final int GOOGLE_BLUE = 0xFF1b6ef3;
 
     private final boolean mDark;
-    private final HctSolverUtils.TonalPalette mPrimary;
-    private final HctSolverUtils.TonalPalette mNeutral;
+    private final HctSolverUtils.TonalPalette mAccent1;
+    private final HctSolverUtils.TonalPalette mAccent2;
+    private final HctSolverUtils.TonalPalette mNeutral1;
+    private final HctSolverUtils.TonalPalette mNeutral2;
 
     private MonetColorExtractor(int seed, boolean dark) {
         mDark = dark;
-        double[] hc = HctSolverUtils.hctFromInt(seed);
-        double sourceChroma = hc[1];
-        double primaryChroma = Math.max(sourceChroma - CONTENT_PRIMARY_CHROMA_OFFSET,
-                sourceChroma * CONTENT_PRIMARY_CHROMA_FACTOR);
-        double neutralChroma = Math.min(sourceChroma / CONTENT_NEUTRAL_CHROMA_DIVISOR,
-                CONTENT_NEUTRAL_CHROMA_MAX);
-        mPrimary = HctSolverUtils.TonalPalette.fromHueAndChroma(hc[0], primaryChroma);
-        mNeutral = HctSolverUtils.TonalPalette.fromHueAndChroma(hc[0], neutralChroma);
+        double[] hct = HctSolverUtils.hctFromInt(seed);
+        if (hct[1] < MIN_CHROMA) {
+            hct = HctSolverUtils.hctFromInt(GOOGLE_BLUE);
+        }
+        double hue = hct[0];
+        mAccent1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_ACCENT1);
+        mAccent2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_ACCENT2);
+        mNeutral1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_NEUTRAL1);
+        mNeutral2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_NEUTRAL2);
     }
 
     /** Builds the scheme from a source color (the average artwork color). */
@@ -74,26 +76,22 @@ public final class MonetColorExtractor {
     }
 
     /**
-     * Extracts the seed color from the album artwork exactly like SystemUI does for the
-     * media player: {@code new ColorScheme(WallpaperColors.fromBitmap(...), darkTheme=false,
-     * ThemeStyle.CONTENT)} — the seed is the top-scored quantized color of the bitmap
-     * (a faithful port of {@code ColorScheme.getSeedColors(wallpaperColors, filter=false)};
-     * CONTENT passes filter=false). Falls back to a neutral gray-blue seed if there is no
-     * artwork.
+     * Extracts the seed color from the album artwork exactly like
+     * {@code ColorScheme(WallpaperColors.fromBitmap(art), darkTheme)}: the seed is the
+     * top-scored quantized color of the bitmap (a faithful port of
+     * {@code ColorScheme.getSeedColors(wallpaperColors, filter=true)}). Falls back to the
+     * monet neutral seed when there is no artwork.
      */
     public static MonetColorExtractor fromArtwork(Bitmap artwork, boolean darkTheme) {
-        int seed = 0xFF606573; // neutral fallback seed (grayish blue, like monet default)
+        int seed = 0xFF606573; // neutral fallback seed
         if (artwork != null && !artwork.isRecycled()) {
             seed = extractSeed(artwork);
         }
         return new MonetColorExtractor(seed, darkTheme);
     }
 
-    private static final double ACCENT1_CHROMA = 48.0;
-    private static final int GOOGLE_BLUE = 0xFF1b6ef3;
-
     /**
-     * Faithful port of {@code ColorScheme.getSeedColor(WallpaperColors, filter=false)}:
+     * Faithful port of {@code ColorScheme.getSeedColor(WallpaperColors, filter=true)}:
      * scores every quantized color by hue population and chroma, then picks the first color
      * that is hue-distinct from the higher-scored ones, iteratively relaxing the required
      * hue distance (90° down to 15°).
@@ -103,7 +101,7 @@ public final class MonetColorExtractor {
         Map<Integer, Integer> allColors = colors.getAllColors();
         if (allColors == null || allColors.isEmpty()) {
             // Population meaningless (colors didn't come from quantization): trust the
-            // ordering of the provided main colors (filter=false: no chroma filter).
+            // ordering of the provided main colors.
             for (Color mainColor : colors.getMainColors()) {
                 return mainColor.toArgb();
             }
@@ -174,9 +172,9 @@ public final class MonetColorExtractor {
 
     private static double score(double[] hc, double proportion) {
         double proportionScore = 0.7 * 100.0 * proportion;
-        double chromaScore = hc[1] < ACCENT1_CHROMA
-                ? 0.1 * (hc[1] - ACCENT1_CHROMA)
-                : 0.3 * (hc[1] - ACCENT1_CHROMA);
+        double chromaScore = hc[1] < 48.0
+                ? 0.1 * (hc[1] - 48.0)
+                : 0.3 * (hc[1] - 48.0);
         return chromaScore + proportionScore;
     }
 
@@ -214,23 +212,65 @@ public final class MonetColorExtractor {
         return mDark;
     }
 
-    /** Text/icon color drawn over the album art scrim (media_on_background). */
-    public int getOnSurface() {
-        return mNeutral.tone(mDark ? TONE_ON_SURFACE_DARK : TONE_ON_SURFACE_LIGHT);
+    // ---------------------------------------------------------------------
+    // SystemUI TonalPalette shade mapping: shade N = tone((1000 - N) / 10).
+    // ---------------------------------------------------------------------
+
+    private static int shade(HctSolverUtils.TonalPalette palette, int shade) {
+        return palette.tone((1000 - shade) / 10);
     }
 
-    /** Secondary (artist) text: neutral tone 80 / 30. */
-    public int getOnSurfaceVariant() {
-        return mNeutral.tone(mDark ? 80 : 30);
+    /**
+     * The play/pause pill background: MediaColorSchemes.accentPrimaryFromScheme =
+     * accent1.s100 (a saturated pastel of the artwork hue — NOT the faded CONTENT tone 90).
+     */
+    public int getPillBackground() {
+        return shade(mAccent1, 100);
     }
 
-    /** Play-pause pill background and seekbar progress: primaryFixed (tone 90). */
-    public int getPrimaryFixed() {
-        return mPrimary.tone(TONE_PRIMARY_FIXED);
+    /**
+     * The icon inside the pill: ColorSchemeTransition.textPrimaryInverse =
+     * neutral1.s900 (a dark, near-black tone of the artwork hue).
+     */
+    public int getPillIcon() {
+        return shade(mNeutral1, 900);
     }
 
-    /** Icon inside the play-pause pill: onPrimaryFixed (tone 10). */
-    public int getOnPrimaryFixed() {
-        return mPrimary.tone(TONE_ON_PRIMARY_FIXED);
+    /**
+     * The album scrim: MediaColorSchemes.surfaceFromScheme = accent2.s800.
+     */
+    public int getScrim() {
+        return shade(mAccent2, 800);
+    }
+
+    /**
+     * Title text and seekbar wave/thumb: ColorSchemeTransition.textPrimary =
+     * neutral1.s50 (nearly white).
+     */
+    public int getTextPrimary() {
+        return shade(mNeutral1, 50);
+    }
+
+    /**
+     * Artist text: ColorSchemeTransition.textSecondary = neutral2.s200.
+     */
+    public int getTextSecondary() {
+        return shade(mNeutral2, 200);
+    }
+
+    /**
+     * The un-played rest of the seekbar: ColorSchemeTransition.textTertiary =
+     * neutral2.s400.
+     */
+    public int getSeekbarRest() {
+        return shade(mNeutral2, 400);
+    }
+
+    /**
+     * The LightSourceDrawable press glow: ColorSchemeTransition multiRipple/turbulence
+     * updates use accentPrimary = accent1.s100, same as the pill.
+     */
+    public int getHighlight() {
+        return getPillBackground();
     }
 }

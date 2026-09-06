@@ -2,15 +2,16 @@
 <!--
   ~ Copyright (C) 2026 The trebufork Project
   ~
-  ~ Verbatim port of SystemUI res/drawable/qs_media_round_button_background.xml: the
-  ~ circular pill background of the play/pause button, retinted at runtime with the
-  ~ scheme's solid button color (media_player_solid_button_bg).
+  ~ Verbatim port of SystemUI res/drawable/qs_media_round_button_background.xml: the oval
+  ~ (48dp natural size, stretched into a capsule by the 72dp-wide play/pause button)
+  ~ retinted at runtime with the scheme's accent (media_player_solid_button_bg =
+  ~ accent1.s100). The ripple color is media_seamless_border like the original.
   -->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?android:attr/colorAccent">
+    android:color="@color/scrollable_media_seamless_border">
     <item android:id="@android:id/background">
         <shape android:shape="oval">
-            <solid android:color="?android:attr/colorAccent" />
+            <solid android:color="@color/scrollable_media_seamless_border" />
             <size android:width="48dp" android:height="48dp" />
         </shape>
     </item>
