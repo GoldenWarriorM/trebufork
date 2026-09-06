@@ -48,13 +48,12 @@
         <item name="android:scaleType">centerInside</item>
     </style>
 
-    <!-- Verbatim MediaPlayer.SessionAction.Primary: ripple pill tinted at runtime with
-         the scheme solid-button color (media_player_solid_button_bg). -->
+    <!-- Verbatim MediaPlayer.SessionAction.Primary: oval pill tinted at runtime with
+         the scheme accent color (media_player_solid_button_bg = accent1.s100); the icon is
+         tinted at runtime with neutral1.s900 like textPrimaryInverse. -->
     <style name="ScrollableMediaPlayer.SessionAction.Primary"
         parent="ScrollableMediaPlayer.SessionAction">
-        <item name="android:tint">@android:color/system_on_primary_dark</item>
         <item name="android:background">@drawable/scrollable_media_round_button_background</item>
-        <item name="android:backgroundTint">@color/scrollable_media_solid_button_bg</item>
     </style>
 
     <style name="ScrollableMediaPlayer.SessionAction.Secondary"
@@ -76,11 +75,9 @@
     <dimen name="scrollable_media_seekbar_progress_stroke_width">2dp</dimen>
     <dimen name="scrollable_media_corner_radius">28dp</dimen>
 
-    <!-- Colors: media_on_background is white; button tint/solid colors are applied at
-         runtime from the Monet scheme, like MediaColorSchemes does. -->
+    <!-- Colors: media_on_background is white; media_seamless_border is a placeholder
+         retinted at runtime from the Monet scheme (same as SystemUI). -->
     <color name="scrollable_media_on_background">#FFFFFF</color>
-    <!-- Placeholder for media_player_solid_button_bg / media_seamless_border, both are
-         re-tinted at runtime from the artwork scheme. -->
-    <color name="scrollable_media_solid_button_bg">#FFB4AB</color>
+    <color name="scrollable_media_seamless_border">#FFB4AB</color>
 
 </resources>

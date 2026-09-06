@@ -69,6 +69,15 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     private static final int LABEL_SHADOW_COLOR = 0x66000000;
     private static final float LABEL_SHADOW_RADIUS = 3f;
     private static final float LABEL_SHADOW_DY = 1f;
+    // Desaturation filter for the app icon (MediaControlViewBinder.getGrayscaleFilter).
+    private static final android.graphics.ColorMatrixColorFilter GRAYSCALE_FILTER =
+            createGrayscaleFilter();
+
+    private static android.graphics.ColorMatrixColorFilter createGrayscaleFilter() {
+        android.graphics.ColorMatrix matrix = new android.graphics.ColorMatrix();
+        matrix.setSaturation(0f);
+        return new android.graphics.ColorMatrixColorFilter(matrix);
+    }
 
     private final ImageView mAlbumArt;
     private final TextView mTitle;
@@ -231,6 +240,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         // trebufork: wallpaper-surface legibility — same shadow as the app labels.
         applyLabelShadow(mTitle);
         applyLabelShadow(mArtist);
+        applySystemFont(mTitle, /* medium= */ true);
+        applySystemFont(mArtist, /* medium= */ false);
     }
 
     private float dimen(int resId) {
@@ -251,6 +262,31 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     private static void applyLabelShadow(TextView view) {
         view.setShadowLayer(LABEL_SHADOW_RADIUS, 0f, LABEL_SHADOW_DY, LABEL_SHADOW_COLOR);
+    }
+
+    /**
+     * Applies the SystemUI headline font (the ROM's Google Sans Flex through the framework
+     * config resource, the exact strings the shade player's layout uses). Done in code so
+     * the family string is resolved at runtime even if the XML attribute is overridden by a
+     * launcher theme text appearance. Falls back to the sans-serif-medium / sans-serif
+     * system families when the config resource is unavailable.
+     */
+    private void applySystemFont(TextView view, boolean medium) {
+        int resId = getResources().getIdentifier(
+                medium ? "config_headlineFontFamilyMedium" : "config_headlineFontFamily",
+                "string", "android");
+        String family = null;
+        if (resId != 0) {
+            try {
+                family = getResources().getString(resId);
+            } catch (Exception ignored) {
+                family = null;
+            }
+        }
+        if (family == null || family.isEmpty()) {
+            family = medium ? "sans-serif-medium" : "sans-serif";
+        }
+        view.setTypeface(android.graphics.Typeface.create(family, android.graphics.Typeface.NORMAL));
     }
 
     /** Binds the media source (the shared session monitor). Safe to call repeatedly. */
@@ -524,14 +560,17 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mTitle.setText(title == null ? "" : title);
         mArtist.setText(artist == null ? "" : artist);
 
-        // trebufork: the app icon slot shows the launcher icon tinted with the scheme
-        // primary (ColorSchemeTransition.getAppIconColor). The raw AdaptiveIconDrawable
-        // renders as a solid blob when tinted, so shape it through the LauncherIcons
-        // factory (same masking as home icons).
+        // trebufork: the app icon slot shows the app's icon like the shade player's
+        // resume state (MediaControlViewBinder: launcherIcon + grayscale filter). The raw
+        // AdaptiveIconDrawable renders unmasked (square), so shape it through the
+        // LauncherIcons factory (same masking as home icons) and desaturate it — the
+        // masked, grayscale icon matches the shade player's look.
         Drawable appIcon = mSource == null ? null : mSource.getAppIcon();
         if (appIcon != null) {
             Drawable shaped = shapeAppIcon(appIcon);
             mAppIcon.setImageDrawable(shaped);
+            mAppIcon.clearColorFilter();
+            mAppIcon.setColorFilter(GRAYSCALE_FILTER);
             mAppIcon.setVisibility(VISIBLE);
         } else {
             mAppIcon.setVisibility(GONE);
@@ -543,62 +582,68 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         // trebufork: rebuild the Monet scheme from the artwork and retint the whole player,
         // exactly like ColorSchemeTransition.updateColorScheme in SystemUI.
         updateColorScheme(artworkBitmap);
-        // Title/artist are always white; keep the label shadow for wallpaper legibility.
-        mTitle.setTextColor(getResources().getColor(R.color.scrollable_media_on_background));
-        mArtist.setTextColor(getResources().getColor(R.color.scrollable_media_on_background));
     }
 
     /**
-     * Applies the monet scheme derived from the artwork to every colored surface. Mirrors
-     * the shade/lockscreen player: texts and small icons are always white
-     * (media_on_background), the scrim is the scheme's on-surface at 0.65-0.75 alpha, the
-     * play/pause pill uses the scheme's solid button color (media_player_solid_button_bg =
-     * primary tone 40 in the light scheme) with a white icon, and the press glow
-     * (LightSourceDrawable) uses the scheme highlight.
+     * Applies the monet scheme derived from the artwork to every colored surface. Faithful
+     * port of SystemUI ColorSchemeTransition + MediaColorSchemes: title/seekbar =
+     * neutral1.s50, artist = neutral2.s200, scrim = accent2.s800 (0.65-0.75 alpha),
+     * play/pause pill = accent1.s100 with a neutral1.s900 icon, seekbar rest =
+     * neutral2.s400, press glow = accent1.s100, app icon = accent1.s100.
      */
     private void updateColorScheme(@Nullable Bitmap artwork) {
-        // The shade player uses the LIGHT scheme: salmon pill + dark scrim + white text.
+        // The shade player uses the LIGHT scheme (darkTheme=false) with TONAL_SPOT palettes.
         MonetColorExtractor scheme = MonetColorExtractor.fromArtwork(artwork, false);
         mColorScheme = scheme;
 
-        int scrimColor = scheme.getOnSurface();
-        int primary = scheme.getPrimaryFixed();
-        int white = getResources().getColor(R.color.scrollable_media_on_background);
+        int scrimColor = scheme.getScrim();
+        int accent = scheme.getPillBackground();
+        int pillIcon = scheme.getPillIcon();
+        int textPrimary = scheme.getTextPrimary();
+        int textSecondary = scheme.getTextSecondary();
+        int seekbarRest = scheme.getSeekbarRest();
 
         // Radial scrim over the album art (MediaControlPanel.addGradientToPlayerAlbum).
         applyScrim(scrimColor);
 
-        // All small action icons are always white; the app icon uses the primary color
-        // (ColorSchemeTransition.getAppIconColor).
-        mAppIcon.setColorFilter(primary);
-        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white));
-        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(white));
+        // Title = neutral1.s50 (ColorSchemeTransition.textPrimary); artist = neutral2.s200
+        // (textSecondary). Keep the label shadow for wallpaper legibility.
+        mTitle.setTextColor(textPrimary);
+        mArtist.setTextColor(textSecondary);
 
-        // Play/pause pill: the rounded background retinted with the scheme's solid button
-        // color (backgroundTint = media_player_solid_button_bg), white icon on top.
+        // The app icon uses a grayscale filter like the shade player's resume players
+        // (MediaControlViewBinder.getGrayscaleFilter), not an accent tint.
+        // mAppIcon color is set in bindContent.
+
+        // Small action icons are always media_on_background (white).
+        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white()));
+        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(white()));
+
+        // Play/pause pill: backgroundTint = media_player_solid_button_bg (accent1.s100),
+        // imageTint = textPrimaryInverse (neutral1.s900, a dark icon on the pastel pill).
         Drawable pill = mPlayPause.getBackground();
         if (pill != null) {
-            pill.mutate().setTint(primary);
+            pill.mutate().setTint(accent);
         }
-        mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(white));
+        mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(pillIcon));
 
-        // LightSourceDrawable glow on every action button (the shade player's tap effect).
-        setHighlightColorOnButtons();
+        // LightSourceDrawable glow on every action button (the shade player's tap effect):
+        // ColorSchemeTransition feeds it accentPrimary (accent1.s100).
+        setHighlightColorOnButtons(accent);
 
-        // Seekbar: wave and thumb are white; the flat rest of the bar is dimmed white via
-        // the SquigglyProgress DISABLED alpha (same as SystemUI).
+        // Seekbar: wave and thumb = neutral1.s50 (textPrimary); the un-played rest of the
+        // bar = neutral2.s400 (textTertiary).
         if (mSquiggly != null) {
-            mSquiggly.setTintList(android.content.res.ColorStateList.valueOf(white));
+            mSquiggly.setTintList(
+                    android.content.res.ColorStateList.valueOf(textPrimary));
         }
-        mSeekBar.setThumbTintList(android.content.res.ColorStateList.valueOf(white));
-        // Verbatim ColorSchemeTransition: the un-played rest of the bar is tinted with the
-        // scheme primary (system_primary_dark default in the style), not white.
+        mSeekBar.setThumbTintList(android.content.res.ColorStateList.valueOf(textPrimary));
         mSeekBar.setProgressBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(primary));
+                android.content.res.ColorStateList.valueOf(seekbarRest));
     }
 
     /** Sets the scheme highlight color on every LightSourceDrawable button background. */
-    private void setHighlightColorOnButtons() {
+    private void setHighlightColorOnButtons(int highlightColor) {
         ImageButton[] buttons = new ImageButton[mCustomActions.length + 3];
         buttons[0] = mPrev;
         buttons[1] = mPlayPause;
@@ -607,7 +652,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         for (ImageButton button : buttons) {
             Drawable bg = button.getBackground();
             if (bg instanceof ScrollableMediaLightSourceDrawable) {
-                ((ScrollableMediaLightSourceDrawable) bg).setHighlightColor(white());
+                ((ScrollableMediaLightSourceDrawable) bg).setHighlightColor(highlightColor);
             }
         }
     }
