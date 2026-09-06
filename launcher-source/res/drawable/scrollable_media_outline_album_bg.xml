@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Verbatim port of SystemUI res/drawable/qs_media_outline_album_bg.xml: opaque album
+  ~ placeholder with the notification corner radius (clips the album art).
+  -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FFFFFFFF" />
+    <corners android:radius="@dimen/scrollable_media_corner_radius" />
+</shape>

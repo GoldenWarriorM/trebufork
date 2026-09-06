@@ -19,69 +19,67 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
 import android.media.session.PlaybackState;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.android.launcher3.util.Themes;
-
 /**
- * trebufork: the built-in media player row of the scrollable home. Renders the currently
- * active {@link android.media.session.MediaSession} — artwork, title/artist, a live seek bar
- * and transport controls — in the style of the SystemUI shade / lock screen media controls.
+ * trebufork: the built-in media player row of the scrollable home. A verbatim port of the
+ * SystemUI shade/lockscreen media player (media_session_view.xml + MediaControlPanel):
+ * full-bleed album art with a Monet-tinted radial scrim, app icon, title/artist, a squiggly
+ * seek bar (see {@link SquigglyProgress}) and prev / play-pause / next actions, colored at
+ * runtime from the album artwork through {@link MonetColorExtractor} exactly like
+ * MediaColorSchemes.kt does.
  *
  * <p>Unlike an AppWidget this is a plain in-process view, so nothing is constrained by
- * RemoteViews: the seek bar is interactive, playback state animates, and the row hides itself
- * whenever the session goes away (the desktop keeps the row's position reserved).
- *
- * <p>The row has no card background: it sits directly on the wallpaper and its texts carry the
- * same drop shadow as the app labels. It supports the same user resizing as widget rows
- * (see {@link ScrollableWidgetResizeFrame}) through width/height scales and a horizontal
+ * RemoteViews: the seek bar is interactive, the wave animates while playing, and the row
+ * hides itself whenever the session goes away (the desktop keeps the row's position
+ * reserved). It supports the same user resizing as widget rows (see
+ * {@link ScrollableWidgetResizeFrame}) through width/height scales and a horizontal
  * position persisted in the desktop store. When the media session ends the row animates its
- * height down to zero (so the list closes the gap smoothly instead of leaving a blank space),
- * and grows back when playback resumes.
+ * height down to zero, and grows back when playback resumes.
  */
 public class ScrollableMediaRowView extends FrameLayout implements ScrollableResizableRow {
 
     private static final long PROGRESS_TICK_MS = 500L;
     private static final long COLLAPSE_ANIM_MS = 220L;
+    // trebufork: scrim alphas from MediaControlPanel.MEDIA_PLAYER_SCRIM_*.
+    private static final float SCRIM_START_ALPHA = 0.65f;
+    private static final float SCRIM_END_ALPHA = 0.75f;
     // trebufork: same shadow as the app row labels (see scrollable_app_row.xml / sidebar paint).
     private static final int LABEL_SHADOW_COLOR = 0x66000000;
     private static final float LABEL_SHADOW_RADIUS = 3f;
     private static final float LABEL_SHADOW_DY = 1f;
 
-    private final LinearLayout mContent;
-    private final ImageView mArtwork;
+    private final ImageView mAlbumArt;
     private final TextView mTitle;
     private final TextView mArtist;
-    private final TextView mAppName;
     private final SeekBar mSeekBar;
-    private final TextView mPositionText;
-    private final TextView mDurationText;
-    private final ImageView mPrev;
-    private final ImageView mPlayPause;
-    private final ImageView mNext;
-    private final ImageView mOwnerIcon;
+    private final ImageButton mPrev;
+    private final ImageButton mPlayPause;
+    private final ImageButton mNext;
+    private final ImageButton[] mCustomActions;
+    private final ImageView mAppIcon;
+    private final SquigglyProgress mSquiggly;
 
     @Nullable
     private MediaController mController;
@@ -94,6 +92,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     private float mPlaybackSpeed;
     private boolean mIsPlaying;
     private long mDuration;
+
+    // trebufork: Monet colors extracted from the current artwork.
+    @Nullable
+    private MonetColorExtractor mColorScheme;
 
     // trebufork: user-configurable size, persisted in ScrollableDesktopStore (same fields as
     // widget rows): width relative to the list width, height relative to the natural height.
@@ -140,103 +142,75 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     public ScrollableMediaRowView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        int dp = Math.round(getResources().getDisplayMetrics().density);
+        // trebufork: inflate the verbatim port of SystemUI media_session_view.xml.
+        LayoutInflater.from(context).inflate(R.layout.scrollable_media_player_view, this, true);
 
-        // trebufork: no card background — the row sits on the wallpaper and relies on the same
-        // drop shadow as the app labels for legibility.
-        int contentColor = Themes.getAttrColor(getContext(), android.R.attr.textColorPrimary);
-        int subtextColor = Themes.getAttrColor(getContext(), android.R.attr.textColorSecondary);
+        mAlbumArt = findViewById(R.id.scrollable_media_album_art);
+        mAppIcon = findViewById(R.id.scrollable_media_icon);
+        mTitle = findViewById(R.id.scrollable_media_header_title);
+        mArtist = findViewById(R.id.scrollable_media_header_artist);
+        mSeekBar = findViewById(R.id.scrollable_media_progress_bar);
+        mPrev = findViewById(R.id.scrollable_media_actionPrev);
+        mPlayPause = findViewById(R.id.scrollable_media_actionPlayPause);
+        mNext = findViewById(R.id.scrollable_media_actionNext);
+        mCustomActions = new ImageButton[] {
+                findViewById(R.id.scrollable_media_action0),
+                findViewById(R.id.scrollable_media_action1),
+                findViewById(R.id.scrollable_media_action2),
+                findViewById(R.id.scrollable_media_action3),
+        };
 
-        mContent = new LinearLayout(getContext());
-        mContent.setOrientation(LinearLayout.HORIZONTAL);
-        mContent.setGravity(Gravity.CENTER_VERTICAL);
-        int rootPadding = 16 * dp;
-        mContent.setPadding(rootPadding, rootPadding, rootPadding, rootPadding);
-        addView(mContent, new LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-
-        mArtwork = new ImageView(getContext());
-        mArtwork.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        GradientDrawable artPlaceholder = new GradientDrawable();
-        artPlaceholder.setShape(GradientDrawable.RECTANGLE);
-        artPlaceholder.setCornerRadius(16 * dp);
-        artPlaceholder.setColor(subtextColor);
-        mArtwork.setImageDrawable(artPlaceholder);
-        mArtwork.setClipToOutline(true);
-        LinearLayout.LayoutParams artLp = new LinearLayout.LayoutParams(72 * dp, 72 * dp);
-        artLp.setMarginEnd(16 * dp);
-        mContent.addView(mArtwork, artLp);
-
-        LinearLayout textColumn = new LinearLayout(getContext());
-        textColumn.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams textLp = new LinearLayout.LayoutParams(
-                0, LayoutParams.WRAP_CONTENT, 1f);
-        mContent.addView(textColumn, textLp);
-
-        LinearLayout titleRow = new LinearLayout(getContext());
-        titleRow.setOrientation(LinearLayout.HORIZONTAL);
-        titleRow.setGravity(Gravity.CENTER_VERTICAL);
-        textColumn.addView(titleRow, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        mTitle = new TextView(getContext());
-        mTitle.setTextColor(contentColor);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        mTitle.setSingleLine(true);
-        mTitle.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        titleRow.addView(mTitle, new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-
-        mOwnerIcon = new ImageView(getContext());
-        LinearLayout.LayoutParams ownerLp = new LinearLayout.LayoutParams(14 * dp, 14 * dp);
-        ownerLp.setMarginStart(6 * dp);
-        titleRow.addView(mOwnerIcon, ownerLp);
-
-        mArtist = new TextView(getContext());
-        mArtist.setTextColor(subtextColor);
-        mArtist.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        mArtist.setSingleLine(true);
-        mArtist.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        textColumn.addView(mArtist, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        mAppName = new TextView(getContext());
-        mAppName.setTextColor(subtextColor);
-        mAppName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
-        mAppName.setSingleLine(true);
-        mAppName.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        textColumn.addView(mAppName, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        LinearLayout progressRow = new LinearLayout(getContext());
-        progressRow.setOrientation(LinearLayout.HORIZONTAL);
-        progressRow.setGravity(Gravity.CENTER_VERTICAL);
-        LinearLayout.LayoutParams progressLp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        progressLp.topMargin = 6 * dp;
-        textColumn.addView(progressRow, progressLp);
-
-        mPositionText = new TextView(getContext());
-        mPositionText.setTextColor(subtextColor);
-        mPositionText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-        progressRow.addView(mPositionText, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        mSeekBar = new SeekBar(getContext(), null, android.R.attr.progressBarStyleHorizontal);
-        mSeekBar.getProgressDrawable().setColorFilter(contentColor, PorterDuff.Mode.SRC_IN);
-        if (mSeekBar.getThumb() != null) {
-            mSeekBar.getThumb().setColorFilter(contentColor, PorterDuff.Mode.SRC_IN);
+        mSquiggly = mSeekBar.getProgressDrawable() instanceof SquigglyProgress
+                ? (SquigglyProgress) mSeekBar.getProgressDrawable()
+                : null;
+        if (mSquiggly != null) {
+            mSquiggly.waveLength = dimen(R.dimen.scrollable_media_seekbar_progress_wavelength);
+            mSquiggly.lineAmplitude =
+                    dimen(R.dimen.scrollable_media_seekbar_progress_amplitude);
+            mSquiggly.phaseSpeed = dimen(R.dimen.scrollable_media_seekbar_progress_phase);
+            mSquiggly.strokeWidth =
+                    dimen(R.dimen.scrollable_media_seekbar_progress_stroke_width);
         }
-        LinearLayout.LayoutParams seekLp = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        seekLp.setMargins(8 * dp, 0, 8 * dp, 0);
-        progressRow.addView(mSeekBar, seekLp);
+        // trebufork: media playback is in the direction of tape, not time, so it stays LTR
+        // (mirrors MediaViewHolder.create).
+        mSeekBar.setLayoutDirection(LAYOUT_DIRECTION_LTR);
+
+        mPrev.setImageResource(R.drawable.scrollable_media_ic_prev);
+        mNext.setImageResource(R.drawable.scrollable_media_ic_next);
+        mPlayPause.setImageResource(R.drawable.scrollable_media_ic_pause);
+
+        mPrev.setOnClickListener(v -> {
+            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            MediaController.TransportControls controls =
+                    mController == null ? null : mController.getTransportControls();
+            if (controls != null) {
+                controls.skipToPrevious();
+            }
+        });
+        mPlayPause.setOnClickListener(v -> {
+            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            MediaController.TransportControls controls =
+                    mController == null ? null : mController.getTransportControls();
+            if (controls != null) {
+                if (mIsPlaying) {
+                    controls.pause();
+                } else {
+                    controls.play();
+                }
+            }
+        });
+        mNext.setOnClickListener(v -> {
+            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            MediaController.TransportControls controls =
+                    mController == null ? null : mController.getTransportControls();
+            if (controls != null) {
+                controls.skipToNext();
+            }
+        });
+
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    mPositionText.setText(formatTime(progress));
-                }
             }
 
             @Override
@@ -256,78 +230,13 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             }
         });
 
-        mDurationText = new TextView(getContext());
-        mDurationText.setTextColor(subtextColor);
-        mDurationText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-        progressRow.addView(mDurationText, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        LinearLayout controlsRow = new LinearLayout(getContext());
-        controlsRow.setOrientation(LinearLayout.HORIZONTAL);
-        controlsRow.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams controlsLp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        controlsLp.topMargin = 4 * dp;
-        textColumn.addView(controlsRow, controlsLp);
-
-        mPrev = makeControlButton(controlsRow, contentColor, 36 * dp);
-        mPrev.setImageResource(android.R.drawable.ic_media_previous);
-        mPrev.setOnClickListener(v -> {
-            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            MediaController.TransportControls controls =
-                    mController == null ? null : mController.getTransportControls();
-            if (controls != null) {
-                controls.skipToPrevious();
-            }
-        });
-        mPlayPause = makeControlButton(controlsRow, contentColor, 52 * dp);
-        mPlayPause.setImageResource(android.R.drawable.ic_media_pause);
-        LinearLayout.LayoutParams ppLp = (LinearLayout.LayoutParams) mPlayPause.getLayoutParams();
-        ppLp.setMargins(12 * dp, 0, 12 * dp, 0);
-        mPlayPause.setOnClickListener(v -> {
-            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            MediaController.TransportControls controls =
-                    mController == null ? null : mController.getTransportControls();
-            if (controls != null) {
-                if (mIsPlaying) {
-                    controls.pause();
-                } else {
-                    controls.play();
-                }
-            }
-        });
-        mNext = makeControlButton(controlsRow, contentColor, 36 * dp);
-        mNext.setImageResource(android.R.drawable.ic_media_next);
-        mNext.setOnClickListener(v -> {
-            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            MediaController.TransportControls controls =
-                    mController == null ? null : mController.getTransportControls();
-            if (controls != null) {
-                controls.skipToNext();
-            }
-        });
-
         // trebufork: wallpaper-surface legibility — same shadow as the app labels.
         applyLabelShadow(mTitle);
         applyLabelShadow(mArtist);
-        applyLabelShadow(mAppName);
-        applyLabelShadow(mPositionText);
-        applyLabelShadow(mDurationText);
     }
 
-    private ImageView makeControlButton(LinearLayout parent, int iconColor, int sizeDp) {
-        ImageView button = new ImageView(getContext());
-        button.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
-        GradientDrawable rippleBg = new GradientDrawable();
-        rippleBg.setShape(GradientDrawable.OVAL);
-        button.setBackground(new RippleDrawable(
-                ColorStateList.valueOf(Themes.getAttrColor(getContext(),
-                        android.R.attr.colorControlHighlight)),
-                null, rippleBg));
-        button.setClickable(true);
-        button.setFocusable(true);
-        parent.addView(button, new LinearLayout.LayoutParams(sizeDp, sizeDp));
-        return button;
+    private float dimen(int resId) {
+        return getResources().getDimension(resId);
     }
 
     private static void applyLabelShadow(TextView view) {
@@ -399,12 +308,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     }
 
     /**
-     * Shows or hides the row. When hiding, the height animates to 0 so the list closes the gap
-     * smoothly (a GONE child of a RecyclerView still occupies its measured size, and an
-     * instant jump leaves the rows below snapping up). When showing, the height animates from
-     * 0 back to the natural content height. Nothing overlaps: only lp.height changes, so the
-     * rows below follow the shrinking/growing row frame by frame, and the content fades with
-     * the same fraction.
+     * Shows or hides the row. When hiding, the height animates to 0 so the list closes the
+     * gap smoothly. When showing, the height animates from 0 back to the natural content
+     * height. Nothing overlaps: only lp.height changes, so the rows below follow the
+     * shrinking/growing row frame by frame, and the content fades with the same fraction.
      */
     private void setHidden(boolean hidden) {
         if (mHidden == hidden) {
@@ -469,8 +376,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                     setAlpha(1f);
                     // Back to the natural wrap-content sizing once fully shown.
                     ViewGroup.LayoutParams lp = getLayoutParams();
-                    if (lp != null && lp.height != LayoutParams.WRAP_CONTENT) {
-                        lp.height = LayoutParams.WRAP_CONTENT;
+                    if (lp != null && lp.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                         setLayoutParams(lp);
                     }
                 } else {
@@ -482,7 +389,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         anim.start();
     }
 
-    /** Sets the row's layout height (0 collapses the row; -1 / WRAP_CONTENT restores natural). */
+    /** Sets the row's layout height (0 collapses the row; WRAP_CONTENT restores natural). */
     private void setRowHeight(int height) {
         ViewGroup.LayoutParams lp = getLayoutParams();
         if (lp == null) {
@@ -499,10 +406,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             width = getResources().getDisplayMetrics().widthPixels;
         }
         int contentWidth = Math.round(width * mWidthScale);
-        mContent.measure(
+        measure(
                 MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-        return Math.round(mContent.getMeasuredHeight() * mHeightScale);
+        return Math.round(getMeasuredHeight() * mHeightScale);
     }
 
     // ---------------------------------------------------------------------
@@ -511,7 +418,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     @Override
     public View getWidgetView() {
-        return mContent;
+        return this;
     }
 
     @Override
@@ -546,16 +453,19 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             setMeasuredDimension(width, 0);
             return;
         }
+        // The player card is the single child; measure it at the scaled width so the
+        // ConstraintLayout inside resolves all its constraints at the final size.
         int contentWidth = Math.round(width * mWidthScale);
-        mContent.measure(
+        super.onMeasure(
                 MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-        int naturalHeight = mContent.getMeasuredHeight();
+        int naturalHeight = getMeasuredHeight();
         int height = Math.round(naturalHeight * mHeightScale);
         // During the show/hide animation the layout params carry the exact animated height.
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
             height = MeasureSpec.getSize(heightMeasureSpec);
         }
+        // Report the full row width: the card itself is laid out offset below.
         setMeasuredDimension(width, height);
     }
 
@@ -566,11 +476,18 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         int contentWidth = Math.round(rowWidth * mWidthScale);
         int freeSpace = Math.max(0, rowWidth - contentWidth);
         int offsetX = Math.round(freeSpace * mPositionX);
-        mContent.layout(offsetX, 0, offsetX + contentWidth, rowHeight);
+        if (getChildCount() > 0) {
+            View child = getChildAt(0);
+            // Lay the card out at the size it was measured with, positioned by mPositionX;
+            // ConstraintLayout positions its own children within this frame.
+            int childWidth = Math.min(contentWidth, child.getMeasuredWidth());
+            int childHeight = Math.min(rowHeight, child.getMeasuredHeight());
+            child.layout(offsetX, 0, offsetX + childWidth, childHeight);
+        }
     }
 
     // ---------------------------------------------------------------------
-    // Media content binding
+    // Media content binding (the MediaControlPanel.bindPlayer port)
     // ---------------------------------------------------------------------
 
     private void bindContent() {
@@ -596,18 +513,116 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         }
         mTitle.setText(title == null ? "" : title);
         mArtist.setText(artist == null ? "" : artist);
-        String appName = mSource == null ? null : mSource.getAppName();
-        mAppName.setText(appName == null ? "" : appName);
+
+        // App icon + name in place of the album art when no artwork exists.
         Drawable appIcon = mSource == null ? null : mSource.getAppIcon();
         if (appIcon != null) {
-            mOwnerIcon.setImageDrawable(appIcon);
-            mOwnerIcon.setVisibility(VISIBLE);
+            mAppIcon.setImageDrawable(appIcon);
+            mAppIcon.setVisibility(VISIBLE);
         } else {
-            mOwnerIcon.setVisibility(GONE);
+            mAppIcon.setVisibility(GONE);
         }
+
         if (artworkBitmap != null) {
-            mArtwork.setImageBitmap(artworkBitmap);
+            mAlbumArt.setImageBitmap(artworkBitmap);
         }
+        // trebufork: rebuild the Monet scheme from the artwork and retint the whole player,
+        // exactly like ColorSchemeTransition.updateColorScheme in SystemUI.
+        updateColorScheme(artworkBitmap);
+        // Title/artist are always white; keep the label shadow for wallpaper legibility.
+        mTitle.setTextColor(getResources().getColor(R.color.scrollable_media_on_background));
+        mArtist.setTextColor(getResources().getColor(R.color.scrollable_media_on_background));
+    }
+
+    /**
+     * Applies the monet scheme derived from the artwork to every colored surface. Mirrors
+     * the shade/lockscreen player: texts and small icons are always white
+     * (media_on_background), the scrim is the scheme's on-surface at 0.65-0.75 alpha, the
+     * play/pause pill is primaryFixed with an onPrimaryFixed icon (light scheme).
+     */
+    private void updateColorScheme(@Nullable Bitmap artwork) {
+        // The shade player uses the LIGHT scheme: pastel pill + dark scrim + white text.
+        MonetColorExtractor scheme = MonetColorExtractor.fromArtwork(artwork, false);
+        mColorScheme = scheme;
+
+        int scrimColor = scheme.getOnSurface();
+        int primary = scheme.getPrimaryFixed();
+        int onPrimary = scheme.getOnPrimaryFixed();
+        int white = getResources().getColor(R.color.scrollable_media_on_background);
+
+        // Radial scrim over the album art (MediaControlPanel.addGradientToPlayerAlbum).
+        applyScrim(scrimColor);
+
+        // All texts and small action icons are always white.
+        mAppIcon.setColorFilter(white);
+        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white));
+        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(white));
+        for (ImageButton action : mCustomActions) {
+            action.setImageTintList(android.content.res.ColorStateList.valueOf(white));
+        }
+
+        // Play/pause pill: primaryFixed background, onPrimaryFixed icon.
+        Drawable pill = mPlayPause.getBackground();
+        if (pill instanceof android.graphics.drawable.RippleDrawable) {
+            // Retint the underlying solid layer.
+            GradientDrawable shape = findSolidShape((android.graphics.drawable.RippleDrawable) pill);
+            if (shape != null) {
+                shape.setColor(primary);
+            }
+        }
+        mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(onPrimary));
+
+        // Seekbar: wave and thumb are white; the flat rest of the bar is dimmed white via
+        // the SquigglyProgress DISABLED alpha (same as SystemUI).
+        if (mSquiggly != null) {
+            mSquiggly.setTintList(android.content.res.ColorStateList.valueOf(white));
+        }
+        mSeekBar.setThumbTintList(android.content.res.ColorStateList.valueOf(white));
+        mSeekBar.setProgressBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(white));
+    }
+
+    /**
+     * Overlays the radial scrim on the album art, tinted with the scheme color at the
+     * MediaControlPanel alphas (0.65 center -> 0.75 edges).
+     */
+    private void applyScrim(int scrimColor) {
+        Drawable current = mAlbumArt.getForeground();
+        if (current instanceof LayerDrawable) {
+            current.mutate();
+            GradientDrawable gradient = (GradientDrawable)
+                    ((LayerDrawable) current).getDrawable(0);
+            if (gradient != null) {
+                gradient.setColors(new int[] {
+                        com.android.internal.graphics.ColorUtils.setAlphaComponent(
+                                scrimColor, (int) (SCRIM_START_ALPHA * 255f)),
+                        com.android.internal.graphics.ColorUtils.setAlphaComponent(
+                                scrimColor, (int) (SCRIM_END_ALPHA * 255f)),
+                });
+            }
+            return;
+        }
+        Drawable scrim = getResources().getDrawable(
+                R.drawable.scrollable_media_scrim, getContext().getTheme()).mutate();
+        GradientDrawable gradient = (GradientDrawable) scrim;
+        gradient.setColors(new int[] {
+                com.android.internal.graphics.ColorUtils.setAlphaComponent(
+                        scrimColor, (int) (SCRIM_START_ALPHA * 255f)),
+                com.android.internal.graphics.ColorUtils.setAlphaComponent(
+                        scrimColor, (int) (SCRIM_END_ALPHA * 255f)),
+        });
+        mAlbumArt.setForeground(new LayerDrawable(new Drawable[] {gradient}));
+    }
+
+    @Nullable
+    private static GradientDrawable findSolidShape(android.graphics.drawable.RippleDrawable ripple) {
+        for (int i = 0; i < ripple.getNumberOfLayers(); i++) {
+            Drawable layer = ripple.getDrawable(i);
+            if (layer instanceof GradientDrawable) {
+                return (GradientDrawable) layer;
+            }
+        }
+        return null;
     }
 
     private void applyPlaybackState(@Nullable PlaybackState state) {
@@ -621,12 +636,57 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             mStateElapsedRealtime = SystemClock.elapsedRealtime();
         }
         mPlayPause.setImageResource(mIsPlaying
-                ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                ? R.drawable.scrollable_media_ic_pause : R.drawable.scrollable_media_ic_play);
+        // trebufork: the squiggly wave animates while playing and flattens when paused,
+        // exactly like SeekBarViewModel drives SquigglyProgress.animate.
+        if (mSquiggly != null) {
+            mSquiggly.setAnimate(mIsPlaying);
+        }
         boolean seekable = state != null
                 && (state.getActions() & PlaybackState.ACTION_SEEK_TO) != 0;
         mSeekBar.setEnabled(seekable && mDuration > 0);
         updateProgressUi();
         scheduleProgressTick();
+        bindCustomActions(state);
+    }
+
+    /** Binds PlaybackState custom actions (heart, shuffle, ...) like bindActionButtons. */
+    private void bindCustomActions(@Nullable PlaybackState state) {
+        java.util.List<PlaybackState.CustomAction> actions = state == null
+                ? java.util.Collections.emptyList() : state.getCustomActions();
+        for (int i = 0; i < mCustomActions.length; i++) {
+            ImageButton button = mCustomActions[i];
+            if (i < actions.size()) {
+                PlaybackState.CustomAction action = actions.get(i);
+                // trebufork: framework CustomAction.getIcon() returns a resource id here
+                // (hidden-API variant); load it through the resources.
+                int iconRes = action.getIcon();
+                if (iconRes != 0) {
+                    try {
+                        button.setImageResource(iconRes);
+                    } catch (android.content.res.Resources.NotFoundException ignored) {
+                        button.setVisibility(GONE);
+                        continue;
+                    }
+                    button.setImageTintList(
+                            android.content.res.ColorStateList.valueOf(getResources()
+                                    .getColor(R.color.scrollable_media_on_background)));
+                }
+                button.setVisibility(VISIBLE);
+                button.setContentDescription(action.getName());
+                button.setOnClickListener(v -> {
+                    performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                    MediaController.TransportControls controls =
+                            mController == null ? null : mController.getTransportControls();
+                    if (controls != null) {
+                        controls.sendCustomAction(action.getAction(), action.getExtras());
+                    }
+                });
+            } else {
+                button.setVisibility(GONE);
+                button.setOnClickListener(null);
+            }
+        }
     }
 
     private void updateProgressUi() {
@@ -645,8 +705,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         if (!mSeekBar.isPressed()) {
             mSeekBar.setProgress((int) position);
         }
-        mPositionText.setText(formatTime(position));
-        mDurationText.setText(formatTime(mDuration));
     }
 
     private void scheduleProgressTick() {
@@ -654,19 +712,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         if (mIsPlaying) {
             postDelayed(mProgressTick, PROGRESS_TICK_MS);
         }
-    }
-
-    private static String formatTime(long ms) {
-        if (ms < 0) {
-            ms = 0;
-        }
-        long totalSeconds = ms / 1000L;
-        long seconds = totalSeconds % 60L;
-        long minutes = totalSeconds / 60L;
-        if (minutes >= 60L) {
-            return String.format("%d:%02d:%02d", minutes / 60L, minutes % 60L, seconds);
-        }
-        return String.format("%d:%02d", minutes, seconds);
     }
 
     @Override

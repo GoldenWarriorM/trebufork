@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Port of SystemUI res/drawable/ic_media_pause_button.xml (static state): the pause
+  ~ icon of the media player play/pause pill, in the same Material shape SystemUI animates
+  ~ between play and pause with.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#ffffff"
+        android:fillType="nonZero"
+        android:pathData="M7,5 L8.94,5 C9.99,5 10.84,5.85 10.84,6.9 L10.84,17.7 C10.84,18.75 9.99,19.6 8.94,19.6 L7,19.6 C5.95,19.6 5.1,18.75 5.1,17.7 L5.1,6.9 C5.1,5.85 5.95,5 7,5 Z M15.06,5 L17,5 C18.05,5 18.9,5.85 18.9,6.9 L18.9,17.7 C18.9,18.75 18.05,19.6 17,19.6 L15.06,19.6 C14.01,19.6 13.16,18.75 13.16,17.7 L13.16,6.9 C13.16,5.85 14.01,5 15.06,5 Z" />
+</vector>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Port of SystemUI res/drawable/ic_media_prev.xml — skip-previous icon of the media player.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="12dp"
+    android:height="12dp"
+    android:viewportWidth="12"
+    android:viewportHeight="12">
+    <path
+        android:pathData="M0,0H2V12H0V0ZM3.5,6L12,12V0L3.5,6ZM6.97,6L10,8.14V3.86L6.97,6Z"
+        android:fillColor="#ffffff"
+        android:fillType="evenOdd"/>
+</vector>
