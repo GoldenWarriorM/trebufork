@@ -75,6 +75,46 @@ public class NotificationListener extends NotificationListenerService {
     /** Maps keys to their corresponding current group key */
     private final Map<String, String> mNotificationGroupKeyMap = new HashMap<>();
 
+    /**
+     * trebufork: media notification small icons per package, consumed by the scrollable-home
+     * media row (same source as the SystemUI shade player's app icon:
+     * {@code sbn.notification.smallIcon}). Updated on the worker thread; read on any.
+     */
+    private static final Map<String, android.graphics.drawable.Drawable>
+            sMediaSmallIcons = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * Returns the small icon of the package's current media-style notification, or null when
+     * the listener is not connected or the package has no such notification.
+     */
+    @Nullable
+    public static android.graphics.drawable.Drawable getMediaSmallIcon(String packageName) {
+        return sMediaSmallIcons.get(packageName);
+    }
+
+    private void rememberSmallIcon(StatusBarNotification sbn) {
+        if (sbn.getNotification().isMediaNotification()) {
+            try {
+                android.graphics.drawable.Icon icon = sbn.getNotification().getSmallIcon();
+                android.graphics.drawable.Drawable drawable =
+                        icon == null ? null : icon.loadDrawable(this);
+                if (drawable != null) {
+                    sMediaSmallIcons.put(sbn.getPackageName(), drawable);
+                } else {
+                    sMediaSmallIcons.remove(sbn.getPackageName());
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "failed to load media small icon", e);
+            }
+        }
+    }
+
+    private void forgetSmallIcon(StatusBarNotification sbn) {
+        if (sbn.getNotification().isMediaNotification()) {
+            sMediaSmallIcons.remove(sbn.getPackageName());
+        }
+    }
+
     private SettingsCache mSettingsCache;
     private SettingsCache.OnChangeListener mNotificationSettingsChangedListener;
 
@@ -126,6 +166,7 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     private void handleNotificationPosted(StatusBarNotification sbn) {
+        rememberSmallIcon(sbn);
         PackageUserKey postedPackageUserKey = PackageUserKey.fromNotification(sbn);
         if (mPackageUserToDotInfos.computeIfAbsent(postedPackageUserKey, DOT_FACTOR)
                 .addOrUpdateNotificationKey(NotificationKeyData.fromNotification(sbn))) {
@@ -134,6 +175,7 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     private void handleNotificationRemoved(StatusBarNotification sbn) {
+        forgetSmallIcon(sbn);
         PackageUserKey removedPackageUserKey = PackageUserKey.fromNotification(sbn);
         DotInfo oldDotInfo = mPackageUserToDotInfos.get(removedPackageUserKey);
         if (oldDotInfo != null
@@ -149,7 +191,9 @@ public class NotificationListener extends NotificationListenerService {
         // This will contain the PackageUserKeys which have updated dots.
         HashMap<PackageUserKey, DotInfo> updatedDots = new HashMap<>(mPackageUserToDotInfos);
         mPackageUserToDotInfos.clear();
+        sMediaSmallIcons.clear();
         for (StatusBarNotification notification : activeNotifications) {
+            rememberSmallIcon(notification);
             PackageUserKey packageUserKey = PackageUserKey.fromNotification(notification);
             mPackageUserToDotInfos.computeIfAbsent(packageUserKey, DOT_FACTOR)
                     .addOrUpdateNotificationKey(NotificationKeyData.fromNotification(notification));

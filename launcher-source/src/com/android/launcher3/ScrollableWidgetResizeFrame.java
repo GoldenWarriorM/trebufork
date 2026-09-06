@@ -86,6 +86,9 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
     private float mStartPositionX;
     private float mMoveDownX;
     private final int mTouchSlop;
+    // trebufork: when set, the top/bottom handles are hidden and vertical resize is disabled
+    // (used for the media row whose height must stay fixed).
+    private boolean mLockVertical;
     // True while a resize/move drag is in progress. The widget menu hides as soon as a drag
     // starts, but its onCloseCallback must not kill the grid mid-drag — the frame closes
     // itself when the drag commits (see the popup's close callback in ScrollableAppsView).
@@ -112,6 +115,13 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         mTopHandle = findViewById(R.id.scroll_widget_resize_top_handle);
         mRightHandle = findViewById(R.id.scroll_widget_resize_right_handle);
         mBottomHandle = findViewById(R.id.scroll_widget_resize_bottom_handle);
+    }
+
+    private void applyLockedHandles() {
+        if (mLockVertical && mTopHandle != null && mBottomHandle != null) {
+            mTopHandle.setVisibility(GONE);
+            mBottomHandle.setVisibility(GONE);
+        }
     }
 
     @Override
@@ -186,6 +196,9 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         frame.mAppsView = appsView;
         frame.mRow = row;
         frame.mItem = item;
+        // trebufork: the media row's height is fixed by its content — lock the vertical
+        // resize so its aspect ratio can never change.
+        frame.mLockVertical = item != null && item.type == ScrollableDesktopStore.TYPE_MEDIA;
         frame.mDragLayer = dragLayer;
         dragLayer.addView(frame);
         BaseDragLayer.LayoutParams lp = (BaseDragLayer.LayoutParams) frame.getLayoutParams();
@@ -226,6 +239,7 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         lp.height = newHeight;
         lp.x = newX;
         lp.y = newY;
+        applyLockedHandles();
         requestLayout();
     }
 
@@ -335,8 +349,8 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
                 R.dimen.resize_frame_background_padding);
         mLeftActive = x < touchTarget;
         mRightActive = x > getWidth() - touchTarget;
-        mTopActive = y < touchTarget;
-        mBottomActive = y > getHeight() - touchTarget;
+        mTopActive = !mLockVertical && y < touchTarget;
+        mBottomActive = !mLockVertical && y > getHeight() - touchTarget;
         if (!isResizing()) {
             // Free drag of the widget body: horizontal move within the row's free space.
             mMoveActive = true;
@@ -437,7 +451,10 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         } else if (mRightActive) {
             widthScale = mStartWidthScale + deltaX / mBaseWidthPx;
         }
-        if (mTopActive) {
+        if (mLockVertical) {
+            // The media row keeps its content height: side handles preserve the gesture-start
+            // pixel height, so nothing to update here.
+        } else if (mTopActive) {
             heightScale = mStartHeightScale - deltaY / mBaseHeightPx;
         } else if (mBottomActive) {
             heightScale = mStartHeightScale + deltaY / mBaseHeightPx;
@@ -446,9 +463,13 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         // trebufork: no aspect-ratio coupling — dragging the left/right handles must not change
         // the widget's vertical size. height = width * aspect * heightScale, so to keep the
         // gesture-start pixel height constant across a width change, the height scale is
-        // re-derived as startHeightScale * startWidthScale / widthScale.
-        if ((mLeftActive || mRightActive) && !mTopActive && !mBottomActive) {
+        // re-derived as startHeightScale * startWidthScale / widthScale. The locked (media)
+        // row skips this entirely: its heightScale stays 1 and the row re-wraps content.
+        if (!mLockVertical && (mLeftActive || mRightActive) && !mTopActive && !mBottomActive) {
             heightScale = mStartHeightScale * mStartWidthScale / widthScale;
+        }
+        if (mLockVertical) {
+            heightScale = mStartHeightScale;
         }
         heightScale = Math.max(MIN_HEIGHT_SCALE, Math.min(MAX_HEIGHT_SCALE, heightScale));
         // Live update the item and the row so the widget visibly grows/shrinks while dragging.

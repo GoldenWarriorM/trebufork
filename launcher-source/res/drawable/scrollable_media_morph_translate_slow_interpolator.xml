@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Slow second stage of the pause->play translate ($$ic_media_pause_button__2__1:
+  ~ "M 0.0,0.0 c0.05,0.7 0.1,1 1.0,1.0").
+  -->
+<pathInterpolator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:pathData="M 0.0,0.0 c0.05,0.7 0.1,1 1.0,1.0" />

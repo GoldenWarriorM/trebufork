@@ -2,9 +2,8 @@
 <!--
   ~ Copyright (C) 2026 The trebufork Project
   ~
-  ~ Static state of SystemUI res/drawable/ic_media_pause_button.xml (the AVD's resting
-  ~ vector): two rounded bars, each a scaled copy of the same glyph path, exactly like the
-  ~ shade player renders before any play/pause morph animation.
+  ~ Verbatim static vector of SystemUI $ic_media_pause_button__4 (the AVD's drawable): the two
+  ~ rounded pause bars, each a scaled copy of the glyph path.
   -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
@@ -15,8 +14,8 @@
         <group
             android:name="_R_G_L_1_G"
             android:pivotX="-12.031"
-            android:scaleX="0.33299999999999996"
-            android:scaleY="0.33299999999999996"
+            android:scaleX="0.333"
+            android:scaleY="0.333"
             android:translateX="19.524"
             android:translateY="12.084">
             <path
@@ -28,8 +27,8 @@
         </group>
         <group
             android:name="_R_G_L_0_G_T_1"
-            android:scaleX="0.33299999999999996"
-            android:scaleY="0.33299999999999996"
+            android:scaleX="0.333"
+            android:scaleY="0.333"
             android:translateX="15.485"
             android:translateY="12.084">
             <group
