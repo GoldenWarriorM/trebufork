@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Verbatim port of SystemUI res/drawable/qs_media_outline_layout_bg.xml: transparent
+  ~ rounded card with the notification corner radius.
+  -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#00000000" />
+    <corners android:radius="@dimen/scrollable_media_corner_radius" />
+</shape>

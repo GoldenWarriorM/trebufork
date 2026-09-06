@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Port of SystemUI res/drawable/qs_media_round_button_background.xml: the circular
+  ~ secondary action button background (used with a ripple for the pressed state).
+  -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/scrollable_media_on_background">
+    <item android:id="@android:id/background">
+        <shape android:shape="oval">
+            <solid android:color="#00000000" />
+            <size android:width="48dp" android:height="48dp" />
+        </shape>
+    </item>
+</ripple>

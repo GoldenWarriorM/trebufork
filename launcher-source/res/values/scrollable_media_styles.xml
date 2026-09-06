@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Verbatim port of the SystemUI media player styles (styles.xml "MediaPlayer.*"),
+  ~ dimensions (qs_media_*) and colors used by the shade/lockscreen media player.
+  ~ Referenced ids are renamed with the scrollable_media_ prefix.
+  -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="ScrollableMediaPlayer" parent="@*android:style/Theme.DeviceDefault.Light">
+        <item name="android:textColor">@color/scrollable_media_on_background</item>
+        <item name="android:backgroundTint">@android:color/system_on_surface_light</item>
+    </style>
+
+    <style name="ScrollableMediaPlayer.ProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:thumb">@drawable/scrollable_media_seekbar_thumb</item>
+        <item name="android:thumbTint">@color/scrollable_media_on_background</item>
+        <item name="android:progressDrawable">@drawable/scrollable_media_squiggly_progress</item>
+        <item name="android:progressTint">@color/scrollable_media_on_background</item>
+        <item name="android:progressBackgroundTint">@android:color/system_primary_dark</item>
+        <item name="android:splitTrack">false</item>
+    </style>
+
+    <style name="ScrollableMediaPlayer.Subtitle">
+        <item name="android:textColor">@color/scrollable_media_on_background</item>
+    </style>
+
+    <style name="ScrollableMediaPlayer.SessionAction"
+        parent="@android:style/Widget.Material.Button.Borderless.Small">
+        <item name="android:background">@drawable/scrollable_media_round_button_background</item>
+        <item name="android:tint">@color/scrollable_media_on_background</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="ScrollableMediaPlayer.SessionAction.Primary"
+        parent="ScrollableMediaPlayer.SessionAction">
+        <item name="android:tint">@android:color/system_on_primary_dark</item>
+        <item name="android:background">@drawable/scrollable_media_solid_button</item>
+    </style>
+
+    <style name="ScrollableMediaPlayer.SessionAction.Secondary"
+        parent="ScrollableMediaPlayer.SessionAction">
+        <item name="android:tint">@color/scrollable_media_on_background</item>
+    </style>
+
+    <!-- Dimensions: verbatim qs_media_* values from SystemUI dims.xml -->
+    <dimen name="scrollable_media_padding">16dp</dimen>
+    <dimen name="scrollable_media_action_spacing">4dp</dimen>
+    <dimen name="scrollable_media_action_play_pause_width">72dp</dimen>
+    <dimen name="scrollable_media_app_icon_size">24dp</dimen>
+    <dimen name="scrollable_media_session_height">184dp</dimen>
+    <dimen name="scrollable_media_enabled_seekbar_height">2dp</dimen>
+    <dimen name="scrollable_media_seekbar_vertical_padding">15dp</dimen>
+    <dimen name="scrollable_media_seekbar_progress_wavelength">20dp</dimen>
+    <dimen name="scrollable_media_seekbar_progress_amplitude">1.5dp</dimen>
+    <dimen name="scrollable_media_seekbar_progress_phase">8dp</dimen>
+    <dimen name="scrollable_media_seekbar_progress_stroke_width">2dp</dimen>
+    <dimen name="scrollable_media_corner_radius">28dp</dimen>
+
+    <!-- Colors: media_on_background is white (tinted by the code with monet on-surface). -->
+    <color name="scrollable_media_on_background">#FFFFFF</color>
+
+</resources>
