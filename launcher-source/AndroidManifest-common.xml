@@ -55,6 +55,10 @@
          controls. Requires the privileged MEDIA_CONTENT_CONTROL permission (whitelisted in
          the Magisk module's privapp-permissions file). -->
     <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <!-- trebufork: the media row shows the media notification's small icon like the SystemUI
+         shade player; requires the privileged ACCESS_NOTIFICATIONS (whitelisted in the Magisk
+         module's privapp-permissions file). -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATIONS" />
 
     <permission
         android:name="${applicationId}.permission.GRID_CONTROL"

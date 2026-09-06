@@ -42,6 +42,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.android.launcher3.notification.NotificationListener;
+
 /**
  * trebufork: the built-in media player row of the scrollable home. A verbatim port of the
  * SystemUI shade/lockscreen media player (media_session_view.xml + MediaControlPanel):
@@ -112,6 +114,9 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     private float mHeightScale = 1f;
     private float mPositionX = 0f;
 
+    // trebufork: false until the play/pause icon is shown once, so the first bind doesn't run
+    // the morph animation.
+    private boolean mPlayPauseShown;
     // trebufork: hidden state (no active session). The row collapses to zero height so the
     // RecyclerView reclaims the gap; while animating, mHeightAnimator drives lp.height.
     private boolean mHidden = true;
@@ -184,7 +189,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
         mPrev.setImageResource(R.drawable.scrollable_media_ic_prev);
         mNext.setImageResource(R.drawable.scrollable_media_ic_next);
-        mPlayPause.setImageResource(R.drawable.scrollable_media_ic_pause);
+        mPlayPause.setImageResource(R.drawable.scrollable_media_ic_pause_vector);
 
         mPrev.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -560,13 +565,18 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mTitle.setText(title == null ? "" : title);
         mArtist.setText(artist == null ? "" : artist);
 
-        // trebufork: the app icon slot shows the app's icon like the shade player's
-        // resume state (MediaControlViewBinder: launcherIcon + grayscale filter). The raw
-        // AdaptiveIconDrawable renders unmasked (square), so shape it through the
-        // LauncherIcons factory (same masking as home icons) and desaturate it — the
-        // masked, grayscale icon matches the shade player's look.
+        // trebufork: the app icon slot mirrors the SystemUI shade player: the app's media
+        // notification small icon when available (MediaControlViewBinder normal path, tinted
+        // with the scheme accent), otherwise the launcher icon shaped through the LauncherIcons
+        // factory with the shade player's grayscale filter (resume-player path).
         Drawable appIcon = mSource == null ? null : mSource.getAppIcon();
-        if (appIcon != null) {
+        Drawable smallIcon = mController == null ? null
+                : NotificationListener.getMediaSmallIcon(mController.getPackageName());
+        if (smallIcon != null) {
+            mAppIcon.setImageDrawable(smallIcon);
+            mAppIcon.clearColorFilter();
+            mAppIcon.setVisibility(VISIBLE);
+        } else if (appIcon != null) {
             Drawable shaped = shapeAppIcon(appIcon);
             mAppIcon.setImageDrawable(shaped);
             mAppIcon.clearColorFilter();
@@ -611,9 +621,9 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mTitle.setTextColor(textPrimary);
         mArtist.setTextColor(textSecondary);
 
-        // The app icon uses a grayscale filter like the shade player's resume players
-        // (MediaControlViewBinder.getGrayscaleFilter), not an accent tint.
-        // mAppIcon color is set in bindContent.
+        // The app icon slot: the media small icon is tinted with the scheme accent (the
+        // SystemUI normal path); the launcher-icon fallback carries its own grayscale filter
+        // set in bindContent.
 
         // Small action icons are always media_on_background (white).
         mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white()));
@@ -694,6 +704,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     }
 
     private void applyPlaybackState(@Nullable PlaybackState state) {
+        boolean wasPlaying = mIsPlaying;
         if (state == null) {
             mIsPlaying = false;
             mPlaybackSpeed = 0f;
@@ -703,8 +714,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             mStatePosition = state.getPosition();
             mStateElapsedRealtime = SystemClock.elapsedRealtime();
         }
-        mPlayPause.setImageResource(mIsPlaying
-                ? R.drawable.scrollable_media_ic_pause : R.drawable.scrollable_media_ic_play);
+        applyPlayPauseIcon(wasPlaying);
         // trebufork: the squiggly wave animates while playing and flattens when paused,
         // exactly like SeekBarViewModel drives SquigglyProgress.animate.
         if (mSquiggly != null) {
@@ -716,6 +726,28 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         updateProgressUi();
         scheduleProgressTick();
         bindCustomActions(state);
+    }
+
+    /**
+     * Shows the play/pause icon with the SystemUI AVD morph: when the state changes the
+     * animated-vector runs its 333ms path/translate morph (ic_media_play_button.xml /
+     * ic_media_pause_button.xml); the first bind just shows the static resting state.
+     */
+    private void applyPlayPauseIcon(boolean wasPlaying) {
+        if (mPlayPauseShown && wasPlaying != mIsPlaying) {
+            mPlayPause.setImageResource(mIsPlaying
+                    ? R.drawable.scrollable_media_ic_play_morph
+                    : R.drawable.scrollable_media_ic_pause_morph);
+            Drawable morph = mPlayPause.getDrawable();
+            if (morph instanceof android.graphics.drawable.AnimatedVectorDrawable) {
+                ((android.graphics.drawable.AnimatedVectorDrawable) morph).start();
+            }
+        } else {
+            mPlayPause.setImageResource(mIsPlaying
+                    ? R.drawable.scrollable_media_ic_pause_vector
+                    : R.drawable.scrollable_media_ic_play_vector);
+        }
+        mPlayPauseShown = true;
     }
 
     /** Binds PlaybackState custom actions (heart, shuffle, ...) like bindActionButtons. */
