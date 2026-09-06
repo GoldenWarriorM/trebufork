@@ -71,6 +71,7 @@
     <string name="scrollable_inset_reset">Reset</string>
 
     <!-- Scrollable home: desktop folders -->
+    <string name="scrollable_add_media_row">Add media player</string>
     <string name="scrollable_new_folder">New folder</string>
     <string name="scrollable_add_to_folder">Add to folder</string>
     <string name="scrollable_add_to_container">Add to folder or group</string>

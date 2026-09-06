@@ -20,6 +20,8 @@ import android.content.SharedPreferences;
 import android.os.UserHandle;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,6 +83,9 @@ public class ScrollableDesktopStore {
     // trebufork: inline group — a top-level entry holding several apps rendered as a single
     // left-aligned row of icons (no popup, no labels). Members are apps only.
     public static final int TYPE_GROUP = 100;
+    // trebufork: built-in media player row (like the SystemUI media controls in the shade / on
+    // the lock screen). Not an AppWidget: the row renders the active MediaSession directly.
+    public static final int TYPE_MEDIA = 101;
 
     /** A single desktop entry. Immutable identity (id/type), mutable payload. */
     public static class DesktopItem {
@@ -186,6 +191,34 @@ public class ScrollableDesktopStore {
         mItems.add(item);
         persist();
         return item;
+    }
+
+    /**
+     * trebufork: adds the built-in media player row to the desktop. Only one exists — the
+     * media row is a singleton (it always shows the currently active media session).
+     * @return the existing entry if one is already present, otherwise the new one.
+     */
+    public DesktopItem addMediaRow() {
+        for (DesktopItem item : mItems) {
+            if (item.type == TYPE_MEDIA) {
+                return item;
+            }
+        }
+        DesktopItem item = new DesktopItem(mNextId++, TYPE_MEDIA);
+        mItems.add(item);
+        persist();
+        return item;
+    }
+
+    /** trebufork: finds the media player row, or null when it has not been added. */
+    @Nullable
+    public DesktopItem findMediaRow() {
+        for (DesktopItem item : mItems) {
+            if (item.type == TYPE_MEDIA) {
+                return item;
+            }
+        }
+        return null;
     }
 
     /** Removes an entry by its stable id. Returns the removed item or null. */
@@ -427,7 +460,10 @@ public class ScrollableDesktopStore {
         JSONObject o = new JSONObject();
         o.put(FIELD_ID, item.id);
         o.put(FIELD_TYPE, item.type);
-        if (item.type == TYPE_APP) {
+        if (item.type == TYPE_MEDIA) {
+            // trebufork: the media row has no payload — it always shows the active session.
+            return o;
+        } else if (item.type == TYPE_APP) {
             o.put(FIELD_PACKAGE, item.packageName);
             o.put(FIELD_USER, item.user == null ? 0 : item.user.getIdentifier());
         } else if (item.type == TYPE_WIDGET) {
@@ -462,7 +498,10 @@ public class ScrollableDesktopStore {
         DesktopItem item = new DesktopItem(id, type);
         int userId = o.optInt(FIELD_USER, 0);
         item.user = UserHandle.of(userId);
-        if (type == TYPE_APP) {
+        if (type == TYPE_MEDIA) {
+            // trebufork: no payload to restore.
+            return item;
+        } else if (type == TYPE_APP) {
             item.packageName = o.optString(FIELD_PACKAGE, null);
             if (item.packageName == null) {
                 return null;

@@ -50,6 +50,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.ACCESS_CONTEXTUAL_SEARCH" />
+    <!-- trebufork: the scrollable-home media row reads the active MediaSession (like the
+         SystemUI shade / lock screen media controls) to show artwork, metadata and transport
+         controls. Requires the privileged MEDIA_CONTENT_CONTROL permission (whitelisted in
+         the Magisk module's privapp-permissions file). -->
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <permission
         android:name="${applicationId}.permission.GRID_CONTROL"

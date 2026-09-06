@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
  * natural aspect ratio, and is laid out at a persisted horizontal position (see
  * {@link #setPositionX(float)}), so a widget that does not fill the row can be moved left/right.
  */
-public class ScrollableWidgetRow extends FrameLayout {
+public class ScrollableWidgetRow extends FrameLayout implements ScrollableResizableRow {
 
     /** Height / width ratio of the widget (from provider min sizes). */
     private float mAspectRatio = 1f;
@@ -62,6 +62,7 @@ public class ScrollableWidgetRow extends FrameLayout {
 
     /** The widget host view child, or null when not yet bound. */
     @Nullable
+    @Override
     public View getWidgetView() {
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
@@ -86,6 +87,7 @@ public class ScrollableWidgetRow extends FrameLayout {
      * trebufork: sets the widget size. {@code widthScale} is relative to the full list width
      * (1f = full width), {@code heightScale} multiplies the natural aspect-ratio height.
      */
+    @Override
     public void setScales(float widthScale, float heightScale) {
         if (widthScale <= 0f) {
             widthScale = 1f;
@@ -101,6 +103,7 @@ public class ScrollableWidgetRow extends FrameLayout {
     }
 
     /** trebufork: sets the horizontal position (0..1 of the free space) and re-lays out. */
+    @Override
     public void setPositionX(float positionX) {
         positionX = Math.max(0f, Math.min(1f, positionX));
         if (mPositionX != positionX) {

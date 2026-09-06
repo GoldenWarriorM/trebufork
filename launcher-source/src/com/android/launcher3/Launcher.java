@@ -2993,6 +2993,19 @@ public class Launcher extends StatefulActivity<LauncherState>
                     }
                     return true;
                 });
+        // trebufork: adds the built-in media player row (shade/lock-screen style media controls)
+        // to the desktop. Singleton: repeated taps are no-ops while the row exists.
+        OptionsPopupView.OptionItem mediaItem = new OptionsPopupView.OptionItem(
+                this,
+                R.string.scrollable_add_media_row,
+                android.R.drawable.ic_media_play,
+                IGNORE,
+                v -> {
+                    if (mScrollableHome != null) {
+                        mScrollableHome.addMediaRow();
+                    }
+                    return true;
+                });
         // trebufork: place "New folder" and "Customize top inset" right above "Home settings",
         // so the configuration entries sit together at the bottom of the menu.
         int insertAt = options.size();
@@ -3004,6 +3017,7 @@ public class Launcher extends StatefulActivity<LauncherState>
         }
         options.add(insertAt, insetItem);
         options.add(insertAt, newFolderItem);
+        options.add(insertAt, mediaItem);
         OptionsPopupView.show(this, getPopupTarget(x, y), options, false);
     }
 

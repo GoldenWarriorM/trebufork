@@ -53,7 +53,7 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
     private final Rect mWidgetRect = new Rect();
 
     private ScrollableAppsView mAppsView;
-    private ScrollableWidgetRow mRow;
+    private ScrollableResizableRow mRow;
     private ScrollableDesktopStore.DesktopItem mItem;
     private DragLayer mDragLayer;
 
@@ -131,8 +131,8 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         if (mAppsView != null) {
             mAppsView.removeOnScrollListener(mScrollListener);
         }
-        if (mRow != null) {
-            mRow.removeOnLayoutChangeListener(mRowLayoutListener);
+        if (mRow != null && mRow instanceof View) {
+            ((View) mRow).removeOnLayoutChangeListener(mRowLayoutListener);
         }
         if (getParent() != null) {
             ((ViewGroup) getParent()).removeView(this);
@@ -172,11 +172,12 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
             };
 
     /**
-     * Shows the resize frame around the given widget row. Closes any previously open frame.
+     * Shows the resize frame around the given widget or media row. Closes any previously open
+     * frame.
      */
     public static ScrollableWidgetResizeFrame show(ScrollableAppsView appsView,
-            ScrollableWidgetRow row, ScrollableDesktopStore.DesktopItem item) {
-        Launcher launcher = Launcher.getLauncher(row.getContext());
+            ScrollableResizableRow row, ScrollableDesktopStore.DesktopItem item) {
+        Launcher launcher = Launcher.getLauncher(((View) row).getContext());
         closeOpenFrame(launcher);
         DragLayer dragLayer = launcher.getDragLayer();
         ScrollableWidgetResizeFrame frame = (ScrollableWidgetResizeFrame) LayoutInflater
@@ -191,7 +192,7 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         lp.customPosition = true;
         frame.mIsOpen = true;
         frame.snapToWidget();
-        row.addOnLayoutChangeListener(frame.mRowLayoutListener);
+        ((View) row).addOnLayoutChangeListener(frame.mRowLayoutListener);
         appsView.addOnScrollListener(frame.mScrollListener);
         return frame;
     }
@@ -360,11 +361,12 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         mStartHeightScale = mItem.heightScale;
         // The widget is full-width at scale 1; use its measured size as reference.
         View widget = mRow.getWidgetView();
+        View rowView = (View) mRow;
         mBaseWidthPx = widget != null
-                ? widget.getWidth() / mStartWidthScale : mRow.getWidth();
+                ? widget.getWidth() / mStartWidthScale : rowView.getWidth();
         mBaseHeightPx = widget != null
-                ? widget.getHeight() / mStartHeightScale : mRow.getHeight();
-        mStartHeightPx = widget != null ? widget.getHeight() : mRow.getHeight();
+                ? widget.getHeight() / mStartHeightScale : rowView.getHeight();
+        mStartHeightPx = widget != null ? widget.getHeight() : rowView.getHeight();
         mStartPositionX = mItem.positionX;
         mMoveDownX = ev.getX();
         mMoveActive = false;
@@ -388,7 +390,7 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         if (widget == null) {
             return;
         }
-        float freeSpace = mRow.getWidth() - widget.getWidth();
+        float freeSpace = ((View) mRow).getWidth() - widget.getWidth();
         if (freeSpace <= 0f) {
             return;
         }
