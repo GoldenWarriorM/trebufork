@@ -2,17 +2,46 @@
 <!--
   ~ Copyright (C) 2026 The trebufork Project
   ~
-  ~ Port of SystemUI res/drawable/ic_media_pause_button.xml (static state): the pause
-  ~ icon of the media player play/pause pill, in the same Material shape SystemUI animates
-  ~ between play and pause with.
+  ~ Static state of SystemUI res/drawable/ic_media_pause_button.xml (the AVD's resting
+  ~ vector): two rounded bars, each a scaled copy of the same glyph path, exactly like the
+  ~ shade player renders before any play/pause morph animation.
   -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="#ffffff"
-        android:fillType="nonZero"
-        android:pathData="M7,5 L8.94,5 C9.99,5 10.84,5.85 10.84,6.9 L10.84,17.7 C10.84,18.75 9.99,19.6 8.94,19.6 L7,19.6 C5.95,19.6 5.1,18.75 5.1,17.7 L5.1,6.9 C5.1,5.85 5.95,5 7,5 Z M15.06,5 L17,5 C18.05,5 18.9,5.85 18.9,6.9 L18.9,17.7 C18.9,18.75 18.05,19.6 17,19.6 L15.06,19.6 C14.01,19.6 13.16,18.75 13.16,17.7 L13.16,6.9 C13.16,5.85 14.01,5 15.06,5 Z" />
+    android:viewportHeight="24"
+    android:viewportWidth="24">
+    <group android:name="_R_G">
+        <group
+            android:name="_R_G_L_1_G"
+            android:pivotX="-12.031"
+            android:scaleX="0.33299999999999996"
+            android:scaleY="0.33299999999999996"
+            android:translateX="19.524"
+            android:translateY="12.084">
+            <path
+                android:name="_R_G_L_1_G_D_0_P_0"
+                android:fillAlpha="1"
+                android:fillColor="#ffffff"
+                android:fillType="nonZero"
+                android:pathData=" M-5.06 -18 C-5.06,-18 -5.06,-1.24 -5.06,-1.24 C-5.06,-1.24 -5.06,17.7 -5.06,17.7 C-5.06,19.36 -6.41,20.7 -8.06,20.7 C-8.06,20.7 -16,20.7 -16,20.7 C-17.66,20.7 -19,19.36 -19,17.7 C-19,17.7 -19,-18 -19,-18 C-19,-19.66 -17.66,-21 -16,-21 C-16,-21 -8.06,-21 -8.06,-21 C-6.41,-21 -5.06,-19.66 -5.06,-18c " />
+        </group>
+        <group
+            android:name="_R_G_L_0_G_T_1"
+            android:scaleX="0.33299999999999996"
+            android:scaleY="0.33299999999999996"
+            android:translateX="15.485"
+            android:translateY="12.084">
+            <group
+                android:name="_R_G_L_0_G"
+                android:translateX="12.031">
+                <path
+                    android:name="_R_G_L_0_G_D_0_P_0"
+                    android:fillAlpha="1"
+                    android:fillColor="#ffffff"
+                    android:fillType="nonZero"
+                    android:pathData=" M-5.06 -18 C-5.06,-18 -5.06,-0.75 -5.06,-0.75 C-5.06,-0.75 -5.06,17.7 -5.06,17.7 C-5.06,19.36 -6.41,20.7 -8.06,20.7 C-8.06,20.7 -16,20.7 -16,20.7 C-17.66,20.7 -19,19.36 -19,17.7 C-19,17.7 -19,-18 -19,-18 C-19,-19.66 -17.66,-21 -16,-21 C-16,-21 -8.06,-21 -8.06,-21 C-6.41,-21 -5.06,-19.66 -5.06,-18c " />
+            </group>
+        </group>
+    </group>
 </vector>

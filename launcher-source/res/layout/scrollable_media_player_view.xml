@@ -134,7 +134,9 @@
         app:layout_constraintEnd_toStartOf="@+id/scrollable_media_action0"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Custom session actions (heart / shuffle etc.), visibility controlled in code. -->
+    <!-- Custom session actions (heart / shuffle etc.), visibility controlled in code.
+         SystemUI binds only two custom actions into the bottom row (action0, action1) —
+         anything beyond is paginated, so the row never overcrowds the seekbar. -->
     <ImageButton
         android:id="@+id/scrollable_media_action0"
         style="@style/ScrollableMediaPlayer.SessionAction.Secondary"
@@ -154,33 +156,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="@dimen/scrollable_media_action_spacing"
-        android:layout_marginEnd="@dimen/scrollable_media_action_spacing"
-        android:layout_marginBottom="@dimen/scrollable_media_padding"
-        android:layout_marginTop="0dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/scrollable_media_action2"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <ImageButton
-        android:id="@+id/scrollable_media_action2"
-        style="@style/ScrollableMediaPlayer.SessionAction.Secondary"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="@dimen/scrollable_media_action_spacing"
-        android:layout_marginEnd="@dimen/scrollable_media_action_spacing"
-        android:layout_marginBottom="@dimen/scrollable_media_padding"
-        android:layout_marginTop="0dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/scrollable_media_action3"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <ImageButton
-        android:id="@+id/scrollable_media_action3"
-        style="@style/ScrollableMediaPlayer.SessionAction.Secondary"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="@dimen/scrollable_media_action_spacing"
-        android:layout_marginEnd="@dimen/scrollable_media_action_spacing"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="@dimen/scrollable_media_padding"
         android:layout_marginTop="0dp"
         android:visibility="gone"

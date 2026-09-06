@@ -156,8 +156,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mCustomActions = new ImageButton[] {
                 findViewById(R.id.scrollable_media_action0),
                 findViewById(R.id.scrollable_media_action1),
-                findViewById(R.id.scrollable_media_action2),
-                findViewById(R.id.scrollable_media_action3),
         };
 
         mSquiggly = mSeekBar.getProgressDrawable() instanceof SquigglyProgress
@@ -168,8 +166,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             mSquiggly.lineAmplitude =
                     dimen(R.dimen.scrollable_media_seekbar_progress_amplitude);
             mSquiggly.phaseSpeed = dimen(R.dimen.scrollable_media_seekbar_progress_phase);
-            mSquiggly.strokeWidth =
-                    dimen(R.dimen.scrollable_media_seekbar_progress_stroke_width);
+            mSquiggly.setStrokeWidth(
+                    dimen(R.dimen.scrollable_media_seekbar_progress_stroke_width));
         }
         // trebufork: media playback is in the direction of tape, not time, so it stays LTR
         // (mirrors MediaViewHolder.create).
@@ -237,6 +235,18 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     private float dimen(int resId) {
         return getResources().getDimension(resId);
+    }
+
+    /**
+     * Shapes a raw app icon (an AdaptiveIconDrawable renders as a solid blob when drawn
+     * small and tinted) into the launcher's masked bitmap, like home-screen icons.
+     */
+    private Drawable shapeAppIcon(Drawable rawIcon) {
+        try (com.android.launcher3.icons.LauncherIcons li =
+                com.android.launcher3.icons.LauncherIcons.obtain(getContext())) {
+            android.graphics.Bitmap bitmap = li.createIconBitmap(rawIcon, 1f);
+            return new com.android.launcher3.icons.FastBitmapDrawable(bitmap);
+        }
     }
 
     private static void applyLabelShadow(TextView view) {
@@ -514,10 +524,14 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mTitle.setText(title == null ? "" : title);
         mArtist.setText(artist == null ? "" : artist);
 
-        // App icon + name in place of the album art when no artwork exists.
+        // trebufork: the app icon slot shows the launcher icon tinted with the scheme
+        // primary (ColorSchemeTransition.getAppIconColor). The raw AdaptiveIconDrawable
+        // renders as a solid blob when tinted, so shape it through the LauncherIcons
+        // factory (same masking as home icons).
         Drawable appIcon = mSource == null ? null : mSource.getAppIcon();
         if (appIcon != null) {
-            mAppIcon.setImageDrawable(appIcon);
+            Drawable shaped = shapeAppIcon(appIcon);
+            mAppIcon.setImageDrawable(shaped);
             mAppIcon.setVisibility(VISIBLE);
         } else {
             mAppIcon.setVisibility(GONE);
@@ -538,39 +552,38 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
      * Applies the monet scheme derived from the artwork to every colored surface. Mirrors
      * the shade/lockscreen player: texts and small icons are always white
      * (media_on_background), the scrim is the scheme's on-surface at 0.65-0.75 alpha, the
-     * play/pause pill is primaryFixed with an onPrimaryFixed icon (light scheme).
+     * play/pause pill uses the scheme's solid button color (media_player_solid_button_bg =
+     * primary tone 40 in the light scheme) with a white icon, and the press glow
+     * (LightSourceDrawable) uses the scheme highlight.
      */
     private void updateColorScheme(@Nullable Bitmap artwork) {
-        // The shade player uses the LIGHT scheme: pastel pill + dark scrim + white text.
+        // The shade player uses the LIGHT scheme: salmon pill + dark scrim + white text.
         MonetColorExtractor scheme = MonetColorExtractor.fromArtwork(artwork, false);
         mColorScheme = scheme;
 
         int scrimColor = scheme.getOnSurface();
         int primary = scheme.getPrimaryFixed();
-        int onPrimary = scheme.getOnPrimaryFixed();
         int white = getResources().getColor(R.color.scrollable_media_on_background);
 
         // Radial scrim over the album art (MediaControlPanel.addGradientToPlayerAlbum).
         applyScrim(scrimColor);
 
-        // All texts and small action icons are always white.
-        mAppIcon.setColorFilter(white);
+        // All small action icons are always white; the app icon uses the primary color
+        // (ColorSchemeTransition.getAppIconColor).
+        mAppIcon.setColorFilter(primary);
         mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white));
         mNext.setImageTintList(android.content.res.ColorStateList.valueOf(white));
-        for (ImageButton action : mCustomActions) {
-            action.setImageTintList(android.content.res.ColorStateList.valueOf(white));
-        }
 
-        // Play/pause pill: primaryFixed background, onPrimaryFixed icon.
+        // Play/pause pill: the rounded background retinted with the scheme's solid button
+        // color (backgroundTint = media_player_solid_button_bg), white icon on top.
         Drawable pill = mPlayPause.getBackground();
-        if (pill instanceof android.graphics.drawable.RippleDrawable) {
-            // Retint the underlying solid layer.
-            GradientDrawable shape = findSolidShape((android.graphics.drawable.RippleDrawable) pill);
-            if (shape != null) {
-                shape.setColor(primary);
-            }
+        if (pill != null) {
+            pill.mutate().setTint(primary);
         }
-        mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(onPrimary));
+        mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(white));
+
+        // LightSourceDrawable glow on every action button (the shade player's tap effect).
+        setHighlightColorOnButtons();
 
         // Seekbar: wave and thumb are white; the flat rest of the bar is dimmed white via
         // the SquigglyProgress DISABLED alpha (same as SystemUI).
@@ -578,8 +591,29 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             mSquiggly.setTintList(android.content.res.ColorStateList.valueOf(white));
         }
         mSeekBar.setThumbTintList(android.content.res.ColorStateList.valueOf(white));
+        // Verbatim ColorSchemeTransition: the un-played rest of the bar is tinted with the
+        // scheme primary (system_primary_dark default in the style), not white.
         mSeekBar.setProgressBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(white));
+                android.content.res.ColorStateList.valueOf(primary));
+    }
+
+    /** Sets the scheme highlight color on every LightSourceDrawable button background. */
+    private void setHighlightColorOnButtons() {
+        ImageButton[] buttons = new ImageButton[mCustomActions.length + 3];
+        buttons[0] = mPrev;
+        buttons[1] = mPlayPause;
+        buttons[2] = mNext;
+        System.arraycopy(mCustomActions, 0, buttons, 3, mCustomActions.length);
+        for (ImageButton button : buttons) {
+            Drawable bg = button.getBackground();
+            if (bg instanceof ScrollableMediaLightSourceDrawable) {
+                ((ScrollableMediaLightSourceDrawable) bg).setHighlightColor(white());
+            }
+        }
+    }
+
+    private int white() {
+        return getResources().getColor(R.color.scrollable_media_on_background);
     }
 
     /**
@@ -612,17 +646,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                         scrimColor, (int) (SCRIM_END_ALPHA * 255f)),
         });
         mAlbumArt.setForeground(new LayerDrawable(new Drawable[] {gradient}));
-    }
-
-    @Nullable
-    private static GradientDrawable findSolidShape(android.graphics.drawable.RippleDrawable ripple) {
-        for (int i = 0; i < ripple.getNumberOfLayers(); i++) {
-            Drawable layer = ripple.getDrawable(i);
-            if (layer instanceof GradientDrawable) {
-                return (GradientDrawable) layer;
-            }
-        }
-        return null;
     }
 
     private void applyPlaybackState(@Nullable PlaybackState state) {
@@ -658,30 +681,40 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             ImageButton button = mCustomActions[i];
             if (i < actions.size()) {
                 PlaybackState.CustomAction action = actions.get(i);
-                // trebufork: framework CustomAction.getIcon() returns a resource id here
-                // (hidden-API variant); load it through the resources.
+                // trebufork: the framework CustomAction.getIcon() returns a resource id in
+                // the *media app's* package — resolve it through that app's resources,
+                // exactly like SystemUI's MediaAction loading does.
                 int iconRes = action.getIcon();
+                Drawable icon = null;
                 if (iconRes != 0) {
                     try {
-                        button.setImageResource(iconRes);
-                    } catch (android.content.res.Resources.NotFoundException ignored) {
-                        button.setVisibility(GONE);
-                        continue;
+                        String pkg = mController.getPackageName();
+                        android.content.Context appContext = getContext()
+                                .createPackageContext(pkg, 0);
+                        icon = appContext.getResources().getDrawable(iconRes,
+                                appContext.getTheme());
+                    } catch (Exception ignored) {
+                        // Package not found or resource missing: hide the button.
                     }
-                    button.setImageTintList(
-                            android.content.res.ColorStateList.valueOf(getResources()
-                                    .getColor(R.color.scrollable_media_on_background)));
                 }
-                button.setVisibility(VISIBLE);
-                button.setContentDescription(action.getName());
-                button.setOnClickListener(v -> {
-                    performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                    MediaController.TransportControls controls =
-                            mController == null ? null : mController.getTransportControls();
-                    if (controls != null) {
-                        controls.sendCustomAction(action.getAction(), action.getExtras());
-                    }
-                });
+                if (icon != null) {
+                    button.setImageDrawable(icon);
+                    // Same as SystemUI: all action icons are tinted media_on_background.
+                    button.setImageTintList(android.content.res.ColorStateList.valueOf(white()));
+                    button.setVisibility(VISIBLE);
+                    button.setContentDescription(action.getName());
+                    button.setOnClickListener(v -> {
+                        performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                        MediaController.TransportControls controls =
+                                mController == null ? null : mController.getTransportControls();
+                        if (controls != null) {
+                            controls.sendCustomAction(action.getAction(), action.getExtras());
+                        }
+                    });
+                } else {
+                    button.setVisibility(GONE);
+                    button.setOnClickListener(null);
+                }
             } else {
                 button.setVisibility(GONE);
                 button.setOnClickListener(null);

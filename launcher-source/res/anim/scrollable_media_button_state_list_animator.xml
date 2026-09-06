@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Verbatim port of SystemUI res/anim/media_button_state_list_animator.xml: media action
+  ~ buttons shrink to 0.9 while pressed and spring back on release. SystemUI's private
+  ~ @interpolator/control_state is replaced with the closest public framework curve.
+  -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <set>
+            <objectAnimator
+                android:interpolator="@android:interpolator/decelerate_quad"
+                android:duration="50"
+                android:propertyName="scaleX"
+                android:valueTo="0.9"
+                android:valueType="floatType" />
+            <objectAnimator
+                android:interpolator="@android:interpolator/decelerate_quad"
+                android:duration="50"
+                android:propertyName="scaleY"
+                android:valueTo="0.9"
+                android:valueType="floatType" />
+        </set>
+    </item>
+    <item>
+        <set>
+            <objectAnimator
+                android:interpolator="@android:interpolator/decelerate_quad"
+                android:duration="250"
+                android:propertyName="scaleX"
+                android:valueTo="1"
+                android:valueType="floatType" />
+            <objectAnimator
+                android:interpolator="@android:interpolator/decelerate_quad"
+                android:duration="250"
+                android:propertyName="scaleY"
+                android:valueTo="1"
+                android:valueType="floatType" />
+        </set>
+    </item>
+</selector>

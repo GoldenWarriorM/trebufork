@@ -15,8 +15,14 @@
  */
 package com.android.launcher3;
 
+import android.app.WallpaperColors;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * trebufork: the Monet dynamic-color engine for the media player row. Generates the exact
@@ -68,10 +74,12 @@ public final class MonetColorExtractor {
     }
 
     /**
-     * Extracts a seed color from the album artwork, mirroring what
-     * {@code ColorScheme(WallpaperColors.fromBitmap(...))} does in SystemUI: the dominant
-     * colors of the bitmap are averaged into a seed. Falls back to a neutral gray-blue seed
-     * if there is no artwork.
+     * Extracts the seed color from the album artwork exactly like SystemUI does for the
+     * media player: {@code new ColorScheme(WallpaperColors.fromBitmap(...), darkTheme=false,
+     * ThemeStyle.CONTENT)} — the seed is the top-scored quantized color of the bitmap
+     * (a faithful port of {@code ColorScheme.getSeedColors(wallpaperColors, filter=false)};
+     * CONTENT passes filter=false). Falls back to a neutral gray-blue seed if there is no
+     * artwork.
      */
     public static MonetColorExtractor fromArtwork(Bitmap artwork, boolean darkTheme) {
         int seed = 0xFF606573; // neutral fallback seed (grayish blue, like monet default)
@@ -81,50 +89,125 @@ public final class MonetColorExtractor {
         return new MonetColorExtractor(seed, darkTheme);
     }
 
+    private static final double ACCENT1_CHROMA = 48.0;
+    private static final int GOOGLE_BLUE = 0xFF1b6ef3;
+
     /**
-     * Averages the bitmap pixels with the most chroma, like WallpaperColors does for its
-     * primary color: samples a downscaled grid, keeps colorful-enough pixels, and blends
-     * them; if the artwork is mostly achromatic, falls back to the overall average.
+     * Faithful port of {@code ColorScheme.getSeedColor(WallpaperColors, filter=false)}:
+     * scores every quantized color by hue population and chroma, then picks the first color
+     * that is hue-distinct from the higher-scored ones, iteratively relaxing the required
+     * hue distance (90° down to 15°).
      */
     private static int extractSeed(Bitmap bitmap) {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        if (w <= 0 || h <= 0) {
-            return 0xFF606573;
+        WallpaperColors colors = WallpaperColors.fromBitmap(scaleDown(bitmap));
+        Map<Integer, Integer> allColors = colors.getAllColors();
+        if (allColors == null || allColors.isEmpty()) {
+            // Population meaningless (colors didn't come from quantization): trust the
+            // ordering of the provided main colors (filter=false: no chroma filter).
+            for (Color mainColor : colors.getMainColors()) {
+                return mainColor.toArgb();
+            }
+            return GOOGLE_BLUE;
         }
-        // Downscale: sample at most 24x24 points.
-        int step = Math.max(1, Math.max(w, h) / 24);
-        long sumR = 0, sumG = 0, sumB = 0, sumWeight = 0;
-        long sumRAll = 0, sumGAll = 0, sumBAll = 0, countAll = 0;
-        for (int y = 0; y < h; y += step) {
-            for (int x = 0; x < w; x += step) {
-                int pixel = bitmap.getPixel(x, y);
-                int r = Color.red(pixel), g = Color.green(pixel), b = Color.blue(pixel);
-                sumRAll += r;
-                sumGAll += g;
-                sumBAll += b;
-                countAll++;
-                // Weight colorful pixels (simple chroma proxy: max-min spread).
-                int max = Math.max(r, Math.max(g, b));
-                int min = Math.min(r, Math.min(g, b));
-                int weight = max - min;
-                if (weight > 24) {
-                    sumR += (long) r * weight;
-                    sumG += (long) g * weight;
-                    sumB += (long) b * weight;
-                    sumWeight += weight;
+        double totalPopulation = 0;
+        for (int population : allColors.values()) {
+            totalPopulation += population;
+        }
+        if (totalPopulation <= 0) {
+            return GOOGLE_BLUE;
+        }
+
+        Map<Integer, double[]> intToHc = new HashMap<>();
+        // Percentage of the image with each hue (360 slots).
+        double[] hueProportions = new double[360];
+        for (Map.Entry<Integer, Integer> entry : allColors.entrySet()) {
+            double[] hc = HctSolverUtils.hctFromInt(entry.getKey());
+            intToHc.put(entry.getKey(), hc);
+            int hue = (int) Math.round(hc[0]) % 360;
+            hueProportions[hue] += entry.getValue() / totalPopulation;
+        }
+        // Map each color to the percentage of the image with hues within ±15° of its own.
+        Map<Integer, Double> intToHueProportion = new HashMap<>();
+        for (Map.Entry<Integer, Integer> entry : allColors.entrySet()) {
+            int hue = (int) Math.round(intToHc.get(entry.getKey())[0]) % 360;
+            double proportion = 0.0;
+            for (int i = hue - 15; i <= hue + 15; i++) {
+                proportion += hueProportions[wrapDegrees(i)];
+            }
+            intToHueProportion.put(entry.getKey(), proportion);
+        }
+        // Sort the colors by score, from high to low.
+        List<Integer> scored = new ArrayList<>(allColors.keySet());
+        scored.sort((a, b) -> Double.compare(
+                score(intToHc.get(b), intToHueProportion.get(b)),
+                score(intToHc.get(a), intToHueProportion.get(a))));
+
+        // Go through the colors, from high score to low, requiring hue distinctness that
+        // iteratively decreases, thus maximizing the difference between the picked colors.
+        int minimumHueDistance = 15;
+        List<Integer> seeds = new ArrayList<>();
+        for (int i = 90; i >= minimumHueDistance; i--) {
+            seeds.clear();
+            for (Integer currentColor : scored) {
+                double currentHue = intToHc.get(currentColor)[0];
+                boolean existingSeedNearby = false;
+                for (int seed : seeds) {
+                    if (hueDiff(currentHue, intToHc.get(seed)[0]) < i) {
+                        existingSeedNearby = true;
+                        break;
+                    }
+                }
+                if (existingSeedNearby) {
+                    continue;
+                }
+                seeds.add(currentColor);
+                if (seeds.size() >= 4) {
+                    break;
                 }
             }
+            if (!seeds.isEmpty()) {
+                break;
+            }
         }
-        if (sumWeight > 0) {
-            return Color.argb(0xFF,
-                    (int) (sumR / sumWeight), (int) (sumG / sumWeight),
-                    (int) (sumB / sumWeight));
+        return seeds.isEmpty() ? GOOGLE_BLUE : seeds.get(0);
+    }
+
+    private static double score(double[] hc, double proportion) {
+        double proportionScore = 0.7 * 100.0 * proportion;
+        double chromaScore = hc[1] < ACCENT1_CHROMA
+                ? 0.1 * (hc[1] - ACCENT1_CHROMA)
+                : 0.3 * (hc[1] - ACCENT1_CHROMA);
+        return chromaScore + proportionScore;
+    }
+
+    private static int wrapDegrees(int degrees) {
+        if (degrees < 0) {
+            return (degrees % 360) + 360;
+        } else if (degrees >= 360) {
+            return degrees % 360;
         }
-        return Color.argb(0xFF,
-                (int) (sumRAll / Math.max(1, countAll)),
-                (int) (sumGAll / Math.max(1, countAll)),
-                (int) (sumBAll / Math.max(1, countAll)));
+        return degrees;
+    }
+
+    private static double hueDiff(double a, double b) {
+        double diff = Math.abs(a - b);
+        if (diff > 180.0) {
+            diff = 360.0 - diff;
+        }
+        return diff;
+    }
+
+    /** Downscales to at most 256px on the long side for fast quantization. */
+    private static Bitmap scaleDown(Bitmap bitmap) {
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        int maxSide = Math.max(w, h);
+        if (maxSide <= 256) {
+            return bitmap;
+        }
+        float scale = 256f / maxSide;
+        return Bitmap.createScaledBitmap(bitmap,
+                Math.max(1, Math.round(w * scale)), Math.max(1, Math.round(h * scale)), true);
     }
 
     public boolean isDark() {
