@@ -122,6 +122,9 @@ public class ScrollableAppsView extends RecyclerView
     private final AppAdapter mAdapter = new AppAdapter();
     private AllAppsStore mAppsStore;
     private ScrollableDesktopStore mDesktopStore;
+    // trebufork: watches the active media session for the built-in media player row.
+    @Nullable
+    private ScrollableMediaController mMediaController;
     // Cache of widget host views keyed by app widget id so widgets survive view recycling.
     private final SparseArray<View> mWidgetViews = new SparseArray<>();
 
@@ -136,6 +139,8 @@ public class ScrollableAppsView extends RecyclerView
     private static final int VIEW_TYPE_FOOTER = 5;
     private static final int VIEW_TYPE_DESKTOP_FOLDER = 6;
     private static final int VIEW_TYPE_DESKTOP_GROUP = 7;
+    // trebufork: built-in media player row (renders the active MediaSession directly).
+    private static final int VIEW_TYPE_DESKTOP_MEDIA = 8;
     private static final long ALPHABET_REVEAL_DURATION_MS = 180L;
     // trebufork: boot/appearance fade-in — duration and per-row stagger for the entrance
     // animation played when the scrollable home first becomes visible.
@@ -1151,6 +1156,18 @@ public class ScrollableAppsView extends RecyclerView
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         startEntranceWhenReady();
+        if (mMediaController == null) {
+            mMediaController = new ScrollableMediaController(getContext());
+        }
+        mMediaController.start();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mMediaController != null) {
+            mMediaController.stop();
+        }
     }
 
     @Override
@@ -1741,6 +1758,8 @@ public class ScrollableAppsView extends RecyclerView
                 mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_FOLDER, null, '\0', item));
             } else if (item.type == ScrollableDesktopStore.TYPE_GROUP) {
                 mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_GROUP, null, '\0', item));
+            } else if (item.type == ScrollableDesktopStore.TYPE_MEDIA) {
+                mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_MEDIA, null, '\0', item));
             } else {
                 mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_WIDGET, null, '\0', item));
             }
@@ -1755,6 +1774,17 @@ public class ScrollableAppsView extends RecyclerView
     public void addToDesktop(AppInfo info) {
         if (mDesktopStore != null) {
             mDesktopStore.addApp(info.getTargetPackage(), info.user);
+            showDesktop();
+        }
+    }
+
+    /**
+     * trebufork: adds the built-in media player row to the desktop (singleton; switches to
+     * desktop mode so the new row is immediately visible).
+     */
+    public void addMediaRow() {
+        if (mDesktopStore != null) {
+            mDesktopStore.addMediaRow();
             showDesktop();
         }
     }
@@ -2413,6 +2443,10 @@ public class ScrollableAppsView extends RecyclerView
                         .inflate(R.layout.scrollable_widget_row, parent, false);
                 return new DesktopWidgetViewHolder(v);
             }
+            if (viewType == VIEW_TYPE_DESKTOP_MEDIA) {
+                // trebufork: the media row is built entirely in code (no RemoteViews).
+                return new DesktopMediaViewHolder(new ScrollableMediaRowView(parent.getContext()));
+            }
             if (viewType == VIEW_TYPE_DESKTOP_FOLDER) {
                 View v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.scrollable_folder_row, parent, false);
@@ -2455,6 +2489,8 @@ public class ScrollableAppsView extends RecyclerView
                 ((DesktopHeaderViewHolder) holder).applyTopInset();
             } else if (holder instanceof DesktopWidgetViewHolder && row.desktopItem != null) {
                 ((DesktopWidgetViewHolder) holder).bind(row.desktopItem);
+            } else if (holder instanceof DesktopMediaViewHolder && row.desktopItem != null) {
+                ((DesktopMediaViewHolder) holder).bind(row.desktopItem);
             } else if (holder instanceof FolderViewHolder && row.desktopItem != null) {
                 ((FolderViewHolder) holder).bind(row.desktopItem);
             } else if (holder instanceof GroupViewHolder && row.desktopItem != null) {
@@ -3311,6 +3347,79 @@ public class ScrollableAppsView extends RecyclerView
             AbstractFloatingView.closeAllOpenViews((Launcher) getContext());
             action.run();
         });
+    }
+
+    /**
+     * trebufork: holder of the built-in media player row. The row renders the active media
+     * session itself; this holder wires the shared {@link ScrollableMediaController}, handles
+     * the long-press context menu (remove / reorder) and reorder-mode dragging.
+     */
+    private class DesktopMediaViewHolder extends RecyclerView.ViewHolder {
+
+        private final ScrollableMediaRowView mRow;
+        private ScrollableDesktopStore.DesktopItem mItem;
+
+        DesktopMediaViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mRow = (ScrollableMediaRowView) itemView;
+            // Long-press opens the same context menu as widget rows (remove / reorder).
+            itemView.setOnLongClickListener(v -> {
+                if (mReorderMode) {
+                    if (mItemTouchHelper != null && !mDragInProgress) {
+                        mItemTouchHelper.startDrag(this);
+                    }
+                } else {
+                    return showMediaContextMenu();
+                }
+                return true;
+            });
+        }
+
+        void bind(ScrollableDesktopStore.DesktopItem item) {
+            mItem = item;
+            if (mMediaController != null) {
+                mRow.setSource(mMediaController);
+            }
+            // trebufork: per-row size and horizontal position persisted by the desktop store;
+            // adjusted with the resize frame (see ScrollableWidgetResizeFrame).
+            mRow.setScales(item.widthScale, item.heightScale);
+            mRow.setPositionX(item.positionX);
+        }
+
+        private boolean showMediaContextMenu() {
+            if (mItem == null || !(getContext() instanceof Launcher launcher)) {
+                return false;
+            }
+            if (PopupContainer.getOpen(launcher) != null) {
+                return false;
+            }
+            PopupContainer<Launcher> container =
+                    PopupContainer.create(launcher, mRow, createWidgetInfo(mItem));
+            container.setSystemShortcutContainer(
+                    container.inflateAndAdd(R.layout.system_shortcut_rows_container, container));
+            addWidgetPopupRow(container, R.drawable.ic_remove_no_shadow,
+                    R.string.scrollable_desktop_remove, () -> {
+                        if (mDesktopStore != null) {
+                            mDesktopStore.remove(mItem.id);
+                        }
+                    });
+            addWidgetPopupRow(container, R.drawable.ic_more_vert_dots,
+                    R.string.scrollable_desktop_reorder,
+                    ScrollableAppsView.this::enterReorderMode);
+            container.show();
+            // trebufork: show the workspace-style resize frame around the media row together
+            // with the menu (same behavior as widget rows).
+            ScrollableWidgetResizeFrame.show(ScrollableAppsView.this, mRow, mItem);
+            container.addOnCloseCallback(() -> {
+                AbstractFloatingView frame = AbstractFloatingView.getOpenView(
+                        launcher, AbstractFloatingView.TYPE_WIDGET_RESIZE_FRAME);
+                if (frame == null || !(frame instanceof ScrollableWidgetResizeFrame)
+                        || !((ScrollableWidgetResizeFrame) frame).isDragActive()) {
+                    ScrollableWidgetResizeFrame.closeOpenFrame(launcher);
+                }
+            });
+            return true;
+        }
     }
 
     private class DesktopHeaderViewHolder extends RecyclerView.ViewHolder {
