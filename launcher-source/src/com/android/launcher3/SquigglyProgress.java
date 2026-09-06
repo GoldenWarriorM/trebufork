@@ -65,8 +65,10 @@ public class SquigglyProgress extends Drawable {
     float lineAmplitude = 0f;
     // Line speed in px per second
     float phaseSpeed = 0f;
-    // Progress stroke width, both for wave and solid line
-    float strokeWidth = 0f;
+    // Progress stroke width, both for wave and solid line.
+    // trebufork: in the Kotlin original this is a var with a custom setter that pushes the
+    // value into both paints — a plain field would leave them at width 0 (invisible wave).
+    private float strokeWidth = 0f;
 
     // Enables a transition region where the amplitude of the wave is reduced linearly.
     boolean transitionEnabled = true;
@@ -79,6 +81,18 @@ public class SquigglyProgress extends Drawable {
         linePaint.setStyle(Paint.Style.STROKE);
         wavePaint.setStyle(Paint.Style.STROKE);
         linePaint.setAlpha(DISABLED_ALPHA);
+        setStrokeWidth(0f);
+    }
+
+    /** Mirrors the Kotlin property setter: applies the width to both paints. */
+    public void setStrokeWidth(float width) {
+        if (this.strokeWidth == width) {
+            return;
+        }
+        this.strokeWidth = width;
+        wavePaint.setStrokeWidth(width);
+        linePaint.setStrokeWidth(width);
+        invalidateSelf();
     }
 
     boolean isAnimating() {

@@ -2,17 +2,46 @@
 <!--
   ~ Copyright (C) 2026 The trebufork Project
   ~
-  ~ Port of SystemUI res/drawable/ic_media_play_button.xml (static state): the play
-  ~ triangle of the media player play/pause pill, in the same Material shape SystemUI
-  ~ animates between play and pause with.
+  ~ Static state of SystemUI res/drawable/ic_media_play_button.xml (the AVD's resting
+  ~ vector): the filled play triangle formed by two scaled glyph copies, exactly like the
+  ~ shade player renders before any play/pause morph animation.
   -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="#ffffff"
-        android:fillType="nonZero"
-        android:pathData="M8.06,4.5 L9.5,4.5 C10.28,4.5 10.91,5.13 10.91,5.91 L10.91,11.51 L19.34,5.72 C20.09,5.2 21.11,5.74 21.11,6.65 L21.11,17.35 C21.11,18.26 20.09,18.8 19.34,18.28 L10.91,12.49 L10.91,18.09 C10.91,18.87 10.28,19.5 9.5,19.5 L8.06,19.5 C7.28,19.5 6.65,18.87 6.65,18.09 L6.65,5.91 C6.65,5.13 7.28,4.5 8.06,4.5 Z" />
+    android:viewportHeight="24"
+    android:viewportWidth="24">
+    <group android:name="_R_G">
+        <group
+            android:name="_R_G_L_1_G"
+            android:pivotX="-12.031"
+            android:scaleX="0.33299999999999996"
+            android:scaleY="0.33299999999999996"
+            android:translateX="19.524"
+            android:translateY="12.084">
+            <path
+                android:name="_R_G_L_1_G_D_0_P_0"
+                android:fillAlpha="1"
+                android:fillColor="#ffffff"
+                android:fillType="nonZero"
+                android:pathData=" M-4.69 -16.69 C-4.69,-16.69 20.25,-1.25 20.31,0.25 C20.38,1.75 -4.88,16.89 -4.88,16.89 C-6.94,18.25 -8.56,19.4 -9.75,19.58 C-10.94,19.75 -12.19,18.94 -12.12,16.14 C-12.09,14.76 -12.12,15.92 -12.12,14.26 C-12.12,14.26 -11.94,-16.44 -11.94,-16.44 C-11.94,-18.09 -12.09,-19.69 -10.44,-19.69 C-10.44,-19.69 -9.5,-19.56 -9.5,-19.56 C-8.62,-19.12 -6.19,-17.44 -4.69,-16.69c " />
+        </group>
+        <group
+            android:name="_R_G_L_0_G_T_1"
+            android:scaleX="0.33299999999999996"
+            android:scaleY="0.33299999999999996"
+            android:translateX="7.576"
+            android:translateY="12.084">
+            <group
+                android:name="_R_G_L_0_G"
+                android:translateX="12.031">
+                <path
+                    android:name="_R_G_L_0_G_D_0_P_0"
+                    android:fillAlpha="1"
+                    android:fillColor="#ffffff"
+                    android:fillType="nonZero"
+                    android:pathData=" M-4.69 -16.69 C-4.69,-16.69 20.25,-1.25 20.31,0.25 C20.38,1.75 -4.88,16.89 -4.88,16.89 C-6.94,18.25 -8.56,19.4 -9.75,19.58 C-10.94,19.75 -12.19,18.94 -12.12,16.14 C-12.09,14.76 -12.12,15.92 -12.12,14.26 C-12.12,14.26 -11.94,-16.44 -11.94,-16.44 C-11.94,-18.09 -12.09,-19.69 -10.44,-19.69 C-10.44,-19.69 -9.5,-19.56 -9.5,-19.56 C-8.62,-19.12 -6.19,-17.44 -4.69,-16.69c " />
+            </group>
+        </group>
+    </group>
 </vector>

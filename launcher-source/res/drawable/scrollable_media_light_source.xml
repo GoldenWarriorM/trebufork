@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Port of SystemUI res/drawable/qs_media_light_source.xml with the LightSourceDrawable
+  ~ (IlluminationDrawable) ported to Java in ScrollableMediaLightSourceDrawable: an
+  ~ invisible background that renders the expanding highlight glow on tap, exactly like
+  ~ the shade player action buttons.
+  -->
+<com.android.launcher3.ScrollableMediaLightSourceDrawable
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:rippleMinSize="25dp"
+    app:rippleMaxSize="135dp" />
