@@ -64,9 +64,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     private static final long PROGRESS_TICK_MS = 500L;
     private static final long COLLAPSE_ANIM_MS = 220L;
-    // trebufork: scrim alphas from MediaControlPanel.MEDIA_PLAYER_SCRIM_*.
-    private static final float SCRIM_START_ALPHA = 0.65f;
-    private static final float SCRIM_END_ALPHA = 0.75f;
+    // trebufork: scrim alphas from MediaControlViewModel.MEDIA_PLAYER_SCRIM_*
+    // (qs_media_scrim: radial gradient from 25% in the center to 100% at the edges).
+    private static final float SCRIM_START_ALPHA = 0.25f;
+    private static final float SCRIM_END_ALPHA = 1.0f;
     // trebufork: same shadow as the app row labels (see scrollable_app_row.xml / sidebar paint).
     private static final int LABEL_SHADOW_COLOR = 0x66000000;
     private static final float LABEL_SHADOW_RADIUS = 3f;
@@ -91,6 +92,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     private final ImageButton[] mCustomActions;
     private final ImageView mAppIcon;
     private final SquigglyProgress mSquiggly;
+    private final ScrollableMediaRippleView mRippleView;
 
     @Nullable
     private MediaController mController;
@@ -107,6 +109,14 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     // trebufork: Monet colors extracted from the current artwork.
     @Nullable
     private MonetColorExtractor mColorScheme;
+    // trebufork: the scheme's accentPrimary (ColorSchemeTransition.accentPrimary =
+    // accent1.s100): the play/pause container tint, the ripple color and the media
+    // small icon color filter all use it. White until the first scheme arrives.
+    private int mAccentPrimary = 0xFFFFFFFF;
+    // trebufork: which app-icon branch is active (accentPrimary tint for the media small
+    // icon, grayscale for the launcher-icon fallback), so scheme updates re-apply the
+    // right filter.
+    private boolean mAppIconUsesSmallIcon;
 
     // trebufork: user-configurable size, persisted in ScrollableDesktopStore (same fields as
     // widget rows): width relative to the list width, height relative to the natural height.
@@ -172,6 +182,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 findViewById(R.id.scrollable_media_action1),
         };
 
+        mRippleView = findViewById(R.id.scrollable_media_touch_ripple);
+
         mSquiggly = mSeekBar.getProgressDrawable() instanceof SquigglyProgress
                 ? (SquigglyProgress) mSeekBar.getProgressDrawable()
                 : null;
@@ -193,6 +205,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
         mPrev.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            playButtonRipple(v);
             MediaController.TransportControls controls =
                     mController == null ? null : mController.getTransportControls();
             if (controls != null) {
@@ -201,6 +214,13 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         });
         mPlayPause.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            playButtonRipple(v);
+            // Same as MediaControlViewBinder.bindButtonCommon: the current container
+            // starts its 250ms morph right on the tap, before the session state updates.
+            Drawable background = mPlayPause.getBackground();
+            if (background instanceof android.graphics.drawable.Animatable) {
+                ((android.graphics.drawable.Animatable) background).start();
+            }
             MediaController.TransportControls controls =
                     mController == null ? null : mController.getTransportControls();
             if (controls != null) {
@@ -213,6 +233,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         });
         mNext.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            playButtonRipple(v);
             MediaController.TransportControls controls =
                     mController == null ? null : mController.getTransportControls();
             if (controls != null) {
@@ -245,8 +266,12 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         // trebufork: wallpaper-surface legibility — same shadow as the app labels.
         applyLabelShadow(mTitle);
         applyLabelShadow(mArtist);
-        applySystemFont(mTitle, /* medium= */ true);
-        applySystemFont(mArtist, /* medium= */ false);
+        // trebufork: the fonts stay exactly what the layout XML requests
+        // (@*android:string/config_headlineFontFamily(Medium) — the ROM's Google Sans
+        // Flex through the framework config, the exact strings/attrs the shade player's
+        // layout uses). No code-side Typeface override: the XML attribute is the same
+        // resolution path the shade uses, while Typeface.create silently falls back to
+        // Roboto when the family is not in the font map.
     }
 
     private float dimen(int resId) {
@@ -269,30 +294,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         view.setShadowLayer(LABEL_SHADOW_RADIUS, 0f, LABEL_SHADOW_DY, LABEL_SHADOW_COLOR);
     }
 
-    /**
-     * Applies the SystemUI headline font (the ROM's Google Sans Flex through the framework
-     * config resource, the exact strings the shade player's layout uses). Done in code so
-     * the family string is resolved at runtime even if the XML attribute is overridden by a
-     * launcher theme text appearance. Falls back to the sans-serif-medium / sans-serif
-     * system families when the config resource is unavailable.
-     */
-    private void applySystemFont(TextView view, boolean medium) {
-        int resId = getResources().getIdentifier(
-                medium ? "config_headlineFontFamilyMedium" : "config_headlineFontFamily",
-                "string", "android");
-        String family = null;
-        if (resId != 0) {
-            try {
-                family = getResources().getString(resId);
-            } catch (Exception ignored) {
-                family = null;
-            }
-        }
-        if (family == null || family.isEmpty()) {
-            family = medium ? "sans-serif-medium" : "sans-serif";
-        }
-        view.setTypeface(android.graphics.Typeface.create(family, android.graphics.Typeface.NORMAL));
-    }
 
     /** Binds the media source (the shared session monitor). Safe to call repeatedly. */
     public void setSource(@Nullable ScrollableMediaController source) {
@@ -589,14 +590,19 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 : NotificationListener.getMediaSmallIcon(mController.getPackageName());
         if (smallIcon != null) {
             mAppIcon.setImageDrawable(smallIcon);
-            mAppIcon.clearColorFilter();
+            // SystemUI normal path: the small icon is tinted with the scheme's
+            // accentPrimary (MediaControlViewBinder.bindArtworkAndColor).
+            mAppIcon.setColorFilter(mAccentPrimary);
             mAppIcon.setVisibility(VISIBLE);
+            mAppIconUsesSmallIcon = true;
         } else if (appIcon != null) {
             Drawable shaped = shapeAppIcon(appIcon);
             mAppIcon.setImageDrawable(shaped);
-            mAppIcon.clearColorFilter();
+            // Resume-player path: the launcher icon carries only the grayscale filter,
+            // no accent tint (MediaControlViewBinder.useGrayColorFilter).
             mAppIcon.setColorFilter(GRAYSCALE_FILTER);
             mAppIcon.setVisibility(VISIBLE);
+            mAppIconUsesSmallIcon = false;
         } else {
             mAppIcon.setVisibility(GONE);
         }
@@ -605,9 +611,9 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     /**
      * Applies the monet scheme derived from the artwork to every colored surface. Faithful
      * port of SystemUI ColorSchemeTransition + MediaColorSchemes: title/seekbar =
-     * neutral1.s50, artist = neutral2.s200, scrim = accent2.s800 (0.65-0.75 alpha),
-     * play/pause pill = accent1.s100 with a neutral1.s900 icon, seekbar rest =
-     * neutral2.s400, press glow = accent1.s100, app icon = accent1.s100.
+     * neutral1.s50, artist = neutral2.s200, scrim = accent2.s800 (0.25-1.0 alpha),
+     * play/pause container = accent1.s100 with a neutral1.s900 icon, seekbar rest =
+     * neutral2.s400, tap ripple + app icon = accent1.s100.
      */
     private void updateColorScheme(@Nullable Bitmap artwork) {
         // The shade player uses the LIGHT scheme (darkTheme=false) with TONAL_SPOT palettes.
@@ -616,12 +622,14 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
         int scrimColor = scheme.getScrim();
         int accent = scheme.getPillBackground();
+        mAccentPrimary = accent;
         int pillIcon = scheme.getPillIcon();
         int textPrimary = scheme.getTextPrimary();
         int textSecondary = scheme.getTextSecondary();
         int seekbarRest = scheme.getSeekbarRest();
 
-        // Radial scrim over the album art (MediaControlPanel.addGradientToPlayerAlbum).
+        // Radial scrim over the album art (addGradientToPlayerAlbum: qs_media_scrim with
+        // MEDIA_PLAYER_SCRIM_START/END_ALPHA = 0.25 / 1.0).
         applyScrim(scrimColor);
 
         // Title = neutral1.s50 (ColorSchemeTransition.textPrimary); artist = neutral2.s200
@@ -629,25 +637,32 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mTitle.setTextColor(textPrimary);
         mArtist.setTextColor(textSecondary);
 
-        // The app icon slot: the media small icon is tinted with the scheme accent (the
-        // SystemUI normal path); the launcher-icon fallback carries its own grayscale filter
-        // set in bindContent.
-
-        // Small action icons are always media_on_background (white).
-        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white()));
-        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(white()));
-
-        // Play/pause pill: backgroundTint = media_player_solid_button_bg (accent1.s100),
-        // imageTint = textPrimaryInverse (neutral1.s900, a dark icon on the pastel pill).
-        Drawable pill = mPlayPause.getBackground();
-        if (pill != null) {
-            pill.mutate().setTint(accent);
+        // The app icon slot follows the branch chosen in bindAppIcon: accentPrimary tint
+        // for the media small icon, grayscale for the launcher-icon fallback.
+        if (mAppIcon.getVisibility() == VISIBLE) {
+            if (mAppIconUsesSmallIcon) {
+                mAppIcon.setColorFilter(mAccentPrimary);
+            } else {
+                mAppIcon.setColorFilter(GRAYSCALE_FILTER);
+            }
         }
+
+        // Small action icons use textPrimary (ColorSchemeTransition.textPrimary applies to
+        // every transparent action button, not a hardcoded white).
+        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(textPrimary));
+        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(textPrimary));
+        for (ImageButton button : mCustomActions) {
+            button.setImageTintList(android.content.res.ColorStateList.valueOf(textPrimary));
+        }
+
+        // Play/pause container: backgroundTint = accentPrimary; imageTint =
+        // textPrimaryInverse (neutral1.s900, a dark icon on the pastel container).
+        tintPlayPauseBackground();
         mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(pillIcon));
 
-        // LightSourceDrawable glow on every action button (the shade player's tap effect):
-        // ColorSchemeTransition feeds it accentPrimary (accent1.s100).
-        setHighlightColorOnButtons(accent);
+        // Tap ripple color = accentPrimary (ColorSchemeTransition feeds the
+        // MultiRippleController the same color).
+        mRippleView.updateColor(accent);
 
         // Seekbar: wave and thumb = neutral1.s50 (textPrimary); the un-played rest of the
         // bar = neutral2.s400 (textTertiary).
@@ -660,19 +675,24 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 android.content.res.ColorStateList.valueOf(seekbarRest));
     }
 
-    /** Sets the scheme highlight color on every LightSourceDrawable button background. */
-    private void setHighlightColorOnButtons(int highlightColor) {
-        ImageButton[] buttons = new ImageButton[mCustomActions.length + 3];
-        buttons[0] = mPrev;
-        buttons[1] = mPlayPause;
-        buttons[2] = mNext;
-        System.arraycopy(mCustomActions, 0, buttons, 3, mCustomActions.length);
-        for (ImageButton button : buttons) {
-            Drawable bg = button.getBackground();
-            if (bg instanceof ScrollableMediaLightSourceDrawable) {
-                ((ScrollableMediaLightSourceDrawable) bg).setHighlightColor(highlightColor);
-            }
+    /** Tints the current play/pause container background with the scheme accent. */
+    private void tintPlayPauseBackground() {
+        Drawable background = mPlayPause.getBackground();
+        if (background != null) {
+            background.mutate().setTint(mAccentPrimary);
         }
+    }
+
+    /**
+     * Plays the tap ripple centered on an action button, like
+     * MediaControlViewBinder.createTouchRippleAnimation: the circle grows from the button
+     * center to cover the whole player. The button's parent (the player card) is the same
+     * view the ripple overlay is constrained to, so card coordinates match directly.
+     */
+    private void playButtonRipple(View button) {
+        mRippleView.playRipple(
+                button.getX() + button.getWidth() / 2f,
+                button.getY() + button.getHeight() / 2f);
     }
 
     private int white() {
@@ -681,7 +701,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     /**
      * Overlays the radial scrim on the album art, tinted with the scheme color at the
-     * MediaControlPanel alphas (0.65 center -> 0.75 edges).
+     * MediaControlViewModel alphas (0.25 center -> 1.0 edges).
      */
     private void applyScrim(int scrimColor) {
         Drawable current = mAlbumArt.getForeground();
@@ -740,25 +760,39 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     }
 
     /**
-     * Shows the play/pause icon with the SystemUI AVD morph: when the state changes the
-     * animated-vector runs its 333ms path/translate morph (ic_media_play_button.xml /
-     * ic_media_pause_button.xml); the first bind just shows the static resting state.
+     * Shows the play/pause icon and container with the SystemUI morphs: on a state change
+     * the icon AVD (ic_media_play/pause.xml, 333ms path morph) and the background container
+     * AVD (ic_media_play/pause_container.xml, 250ms shape morph — rounded square while
+     * playing, organic near-circle while paused) both run; the first bind shows the static
+     * resting states. Same swap logic as MediaActions.getStandardAction + bindButtonCommon.
      */
     private void applyPlayPauseIcon(boolean wasPlaying) {
         if (mPlayPauseShown && wasPlaying != mIsPlaying) {
             mPlayPause.setImageResource(mIsPlaying
                     ? R.drawable.scrollable_media_ic_play_morph
                     : R.drawable.scrollable_media_ic_pause_morph);
-            Drawable morph = mPlayPause.getDrawable();
-            if (morph instanceof android.graphics.drawable.AnimatedVectorDrawable) {
-                ((android.graphics.drawable.AnimatedVectorDrawable) morph).start();
-            }
+            startIfAnimatable(mPlayPause.getDrawable());
+            mPlayPause.setBackgroundResource(mIsPlaying
+                    ? R.drawable.scrollable_media_ic_pause_container
+                    : R.drawable.scrollable_media_ic_play_container);
+            startIfAnimatable(mPlayPause.getBackground());
+            tintPlayPauseBackground();
         } else {
             mPlayPause.setImageResource(mIsPlaying
                     ? R.drawable.scrollable_media_ic_pause_vector
                     : R.drawable.scrollable_media_ic_play_vector);
+            mPlayPause.setBackgroundResource(mIsPlaying
+                    ? R.drawable.scrollable_media_ic_pause_container
+                    : R.drawable.scrollable_media_ic_play_container);
+            tintPlayPauseBackground();
         }
         mPlayPauseShown = true;
+    }
+
+    private static void startIfAnimatable(Drawable drawable) {
+        if (drawable instanceof android.graphics.drawable.Animatable) {
+            ((android.graphics.drawable.Animatable) drawable).start();
+        }
     }
 
     /** Binds PlaybackState custom actions (heart, shuffle, ...) like bindActionButtons. */
@@ -787,12 +821,15 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 }
                 if (icon != null) {
                     button.setImageDrawable(icon);
-                    // Same as SystemUI: all action icons are tinted media_on_background.
-                    button.setImageTintList(android.content.res.ColorStateList.valueOf(white()));
+                    button.setImageTintList(
+                            android.content.res.ColorStateList.valueOf(
+                                    mColorScheme == null
+                                            ? white() : mColorScheme.getTextPrimary()));
                     button.setVisibility(VISIBLE);
                     button.setContentDescription(action.getName());
                     button.setOnClickListener(v -> {
                         performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                        playButtonRipple(v);
                         MediaController.TransportControls controls =
                                 mController == null ? null : mController.getTransportControls();
                         if (controls != null) {

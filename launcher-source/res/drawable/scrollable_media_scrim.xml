@@ -4,8 +4,8 @@
   ~
   ~ Verbatim port of SystemUI res/drawable/qs_media_scrim.xml: radial gradient from 25%
   ~ black in the center to 100% black at the edges, drawn over the album art. The two
-  ~ stops are retinted at runtime from the Monet scheme with the 0.65/0.75 alphas used by
-  ~ MediaControlPanel.addGradientToPlayerAlbum.
+  ~ stops are retinted at runtime from the Monet scheme with the 0.25/1.0 alphas of
+  ~ MediaControlViewModel.MEDIA_PLAYER_SCRIM_START/END_ALPHA.
   -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
