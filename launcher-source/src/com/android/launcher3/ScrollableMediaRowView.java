@@ -565,10 +565,25 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mTitle.setText(title == null ? "" : title);
         mArtist.setText(artist == null ? "" : artist);
 
-        // trebufork: the app icon slot mirrors the SystemUI shade player: the app's media
-        // notification small icon when available (MediaControlViewBinder normal path, tinted
-        // with the scheme accent), otherwise the launcher icon shaped through the LauncherIcons
-        // factory with the shade player's grayscale filter (resume-player path).
+        bindAppIcon();
+
+        if (artworkBitmap != null) {
+            mAlbumArt.setImageBitmap(artworkBitmap);
+        }
+        // trebufork: rebuild the Monet scheme from the artwork and retint the whole player,
+        // exactly like ColorSchemeTransition.updateColorScheme in SystemUI.
+        updateColorScheme(artworkBitmap);
+    }
+
+    /**
+     * trebufork: the app icon slot mirrors the SystemUI shade player: the app's media
+     * notification small icon when available (MediaControlViewBinder normal path), otherwise
+     * the launcher icon shaped through the LauncherIcons factory with the shade player's
+     * grayscale filter (resume-player path). Called from every bind (metadata and playback
+     * state) so the icon picks up as soon as the notification listener delivers it, without
+     * waiting for a metadata change.
+     */
+    private void bindAppIcon() {
         Drawable appIcon = mSource == null ? null : mSource.getAppIcon();
         Drawable smallIcon = mController == null ? null
                 : NotificationListener.getMediaSmallIcon(mController.getPackageName());
@@ -585,13 +600,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         } else {
             mAppIcon.setVisibility(GONE);
         }
-
-        if (artworkBitmap != null) {
-            mAlbumArt.setImageBitmap(artworkBitmap);
-        }
-        // trebufork: rebuild the Monet scheme from the artwork and retint the whole player,
-        // exactly like ColorSchemeTransition.updateColorScheme in SystemUI.
-        updateColorScheme(artworkBitmap);
     }
 
     /**
@@ -715,6 +723,9 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             mStateElapsedRealtime = SystemClock.elapsedRealtime();
         }
         applyPlayPauseIcon(wasPlaying);
+        // trebufork: the small icon may arrive after the first bind (the notification listener
+        // connects asynchronously), so re-check it on every playback state update too.
+        bindAppIcon();
         // trebufork: the squiggly wave animates while playing and flattens when paused,
         // exactly like SeekBarViewModel drives SquigglyProgress.animate.
         if (mSquiggly != null) {
