@@ -118,14 +118,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Seek Bar: forced to LTR in code, as per Material Design on Bidirectionality -->
+    <!-- Seek Bar: forced to LTR in code, as per Material Design on Bidirectionality.
+         Padding 15dp top / 12dp bottom centers the 2dp track in the 48dp view, exactly
+         like the shade's qs_media_session_enabled_seekbar_vertical_padding + 12dp. -->
     <SeekBar
         android:id="@+id/scrollable_media_progress_bar"
         style="@style/ScrollableMediaPlayer.ProgressBar"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:paddingTop="@dimen/scrollable_media_seekbar_vertical_padding"
-        android:paddingBottom="0dp"
+        android:paddingBottom="12dp"
         android:maxHeight="@dimen/scrollable_media_enabled_seekbar_height"
         android:splitTrack="false"
         android:layout_marginBottom="0dp"

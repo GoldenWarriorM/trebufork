@@ -114,6 +114,9 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     // trebufork: user-configurable size, persisted in ScrollableDesktopStore (same fields as
     // widget rows): width relative to the list width, height relative to the natural height.
+    // The width is capped below 1.0 so the card never slides under the alphabet index
+    // strip on the right edge of the desktop.
+    public static final float MAX_WIDTH_SCALE = 0.9f;
     private float mWidthScale = 1f;
     private float mHeightScale = 1f;
     private float mPositionX = 0f;
@@ -356,6 +359,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         if (widthScale <= 0f) {
             widthScale = 1f;
         }
+        // Never let the card cover the alphabet index on the right.
+        widthScale = Math.min(widthScale, MAX_WIDTH_SCALE);
         if (heightScale <= 0f) {
             heightScale = 1f;
         }
