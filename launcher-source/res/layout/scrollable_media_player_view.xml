@@ -92,11 +92,13 @@
         app:layout_constraintBottom_toTopOf="@+id/scrollable_media_actionPrev"
         app:layout_constraintHorizontal_bias="0" />
 
-    <!-- Play/pause sits above the bottom action row, right-aligned (expanded state). -->
+    <!-- Play/pause sits above the bottom action row, right-aligned (expanded state).
+         72x48dp like the shade: qs_media_action_play_pause_width x 48dp; the background
+         is the 88x56dp container AVD scaled down into the 72x48dp frame. -->
     <ImageButton
         android:id="@+id/scrollable_media_actionPlayPause"
         style="@style/ScrollableMediaPlayer.SessionAction.Primary"
-        android:layout_width="48dp"
+        android:layout_width="@dimen/scrollable_media_action_play_pause_width"
         android:layout_height="48dp"
         android:layout_marginStart="@dimen/scrollable_media_padding"
         android:layout_marginEnd="@dimen/scrollable_media_padding"

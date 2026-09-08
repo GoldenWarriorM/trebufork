@@ -15,8 +15,6 @@
  */
 package com.android.launcher3;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -53,25 +51,21 @@ import com.android.launcher3.notification.NotificationListener;
  * MediaColorSchemes.kt does.
  *
  * <p>Unlike an AppWidget this is a plain in-process view, so nothing is constrained by
- * RemoteViews: the seek bar is interactive, the wave animates while playing, and the row
- * hides itself whenever the session goes away (the desktop keeps the row's position
- * reserved). It supports the same user resizing as widget rows (see
+ * RemoteViews: the seek bar is interactive and the wave animates while playing. The row is
+ * always laid out at its natural height — it does NOT hide when the media session goes
+ * away (the earlier hide/show height animation caused relayout storms and rows stuck in a
+ * collapsed "thin strip" state). It supports the same user resizing as widget rows (see
  * {@link ScrollableWidgetResizeFrame}) through width/height scales and a horizontal
- * position persisted in the desktop store. When the media session ends the row animates its
- * height down to zero, and grows back when playback resumes.
+ * position persisted in the desktop store.
  */
 public class ScrollableMediaRowView extends FrameLayout implements ScrollableResizableRow {
 
     private static final long PROGRESS_TICK_MS = 500L;
-    private static final long COLLAPSE_ANIM_MS = 220L;
-    // trebufork: scrim alphas from MediaControlViewModel.MEDIA_PLAYER_SCRIM_*
-    // (qs_media_scrim: radial gradient from 25% in the center to 100% at the edges).
-    private static final float SCRIM_START_ALPHA = 0.25f;
-    private static final float SCRIM_END_ALPHA = 1.0f;
-    // trebufork: same shadow as the app row labels (see scrollable_app_row.xml / sidebar paint).
-    private static final int LABEL_SHADOW_COLOR = 0x66000000;
-    private static final float LABEL_SHADOW_RADIUS = 3f;
-    private static final float LABEL_SHADOW_DY = 1f;
+    // Lineage 23.2 MediaControlPanel.MEDIA_PLAYER_SCRIM_START/END_ALPHA: the scrim is a
+    // radial gradient of the neutral onSurface color from 65% in the center to 75% at
+    // the edges (NOT 0.25/1.0 — that renders as a colored vignette).
+    private static final float SCRIM_START_ALPHA = 0.65f;
+    private static final float SCRIM_END_ALPHA = 0.75f;
     // Desaturation filter for the app icon (MediaControlViewBinder.getGrayscaleFilter).
     private static final android.graphics.ColorMatrixColorFilter GRAYSCALE_FILTER =
             createGrayscaleFilter();
@@ -127,12 +121,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     // trebufork: false until the play/pause icon is shown once, so the first bind doesn't run
     // the morph animation.
     private boolean mPlayPauseShown;
-    // trebufork: hidden state (no active session). The row collapses to zero height so the
-    // RecyclerView reclaims the gap; while animating, mHeightAnimator drives lp.height.
-    private boolean mHidden = true;
-    private boolean mEverShown;
-    @Nullable
-    private ValueAnimator mHeightAnimator;
+
+    // trebufork: the row no longer hides when there is no active media session — the
+    // show/hide height-animation machinery caused layout thrash (stuck "thin strip"
+    // states, list relayout storms) and the empty card is kept visible instead.
 
     private final Runnable mProgressTick = new Runnable() {
         @Override
@@ -201,7 +193,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
         mPrev.setImageResource(R.drawable.scrollable_media_ic_prev);
         mNext.setImageResource(R.drawable.scrollable_media_ic_next);
-        mPlayPause.setImageResource(R.drawable.scrollable_media_ic_pause_vector);
 
         mPrev.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -215,8 +206,12 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mPlayPause.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             playButtonRipple(v);
-            // Same as MediaControlViewBinder.bindButtonCommon: the current container
-            // starts its 250ms morph right on the tap, before the session state updates.
+            // Same as bindButtonCommon: the icon AVD and the current container AVD both
+            // start their morph right on the tap, before the session state updates.
+            Drawable icon = mPlayPause.getDrawable();
+            if (icon instanceof android.graphics.drawable.Animatable) {
+                ((android.graphics.drawable.Animatable) icon).start();
+            }
             Drawable background = mPlayPause.getBackground();
             if (background instanceof android.graphics.drawable.Animatable) {
                 ((android.graphics.drawable.Animatable) background).start();
@@ -263,15 +258,12 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             }
         });
 
-        // trebufork: wallpaper-surface legibility — same shadow as the app labels.
-        applyLabelShadow(mTitle);
-        applyLabelShadow(mArtist);
-        // trebufork: the fonts stay exactly what the layout XML requests
-        // (@*android:string/config_headlineFontFamily(Medium) — the ROM's Google Sans
-        // Flex through the framework config, the exact strings/attrs the shade player's
-        // layout uses). No code-side Typeface override: the XML attribute is the same
-        // resolution path the shade uses, while Typeface.create silently falls back to
-        // Roboto when the family is not in the font map.
+        // trebufork: fonts — exactly what the shade's layouts request:
+        // @*android:string/config_headlineFontFamily(Medium), resolved through the
+        // framework's own config path (the ROM's Google Sans Flex overlay). No code-side
+        // Typeface override: Typeface.create("google-sans") silently falls back to Roboto
+        // when the family is not in the app's font map, which is exactly what made the
+        // text look different from the shade.
     }
 
     private float dimen(int resId) {
@@ -290,9 +282,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         }
     }
 
-    private static void applyLabelShadow(TextView view) {
-        view.setShadowLayer(LABEL_SHADOW_RADIUS, 0f, LABEL_SHADOW_DY, LABEL_SHADOW_COLOR);
-    }
+
 
 
     /** Binds the media source (the shared session monitor). Safe to call repeatedly. */
@@ -344,125 +334,13 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             }
             bindContent();
             applyPlaybackState(mController.getPlaybackState());
-            setHidden(false);
-        } else {
-            setHidden(true);
         }
     }
 
     // ---------------------------------------------------------------------
-    // Show / hide with an animated height collapse
+    // (Show/hide with an animated height collapse removed: the row is always
+    // laid out at its natural height, empty or not — see class javadoc.)
     // ---------------------------------------------------------------------
-
-    /** True while the show/hide height animation is running (used to guard list rebinds). */
-    public boolean isHeightAnimating() {
-        return mHeightAnimator != null;
-    }
-
-    /**
-     * Shows or hides the row. When hiding, the height animates to 0 so the list closes the
-     * gap smoothly. When showing, the height animates from 0 back to the natural content
-     * height. Nothing overlaps: only lp.height changes, so the rows below follow the
-     * shrinking/growing row frame by frame, and the content fades with the same fraction.
-     */
-    private void setHidden(boolean hidden) {
-        if (mHidden == hidden) {
-            return;
-        }
-        mHidden = hidden;
-        if (mHeightAnimator != null) {
-            mHeightAnimator.cancel();
-            mHeightAnimator = null;
-        }
-        if (hidden) {
-            // First bind before anything was ever laid out: collapse instantly, no animation.
-            if (!mEverShown) {
-                setVisibility(GONE);
-                setRowHeight(0);
-                setAlpha(1f);
-                return;
-            }
-            setVisibility(VISIBLE);
-            animateRowHeight(getHeight(), 0, /* expand= */ false);
-        } else {
-            int target = computeContentHeight();
-            setVisibility(VISIBLE);
-            mEverShown = true;
-            // Row not laid out yet (fresh bind at boot): snap, no animation.
-            if (getWidth() == 0 || target <= 0) {
-                setRowHeight(0);
-                setAlpha(1f);
-                requestLayout();
-                return;
-            }
-            animateRowHeight(0, target, /* expand= */ true);
-        }
-    }
-
-    private void animateRowHeight(int from, int to, boolean expand) {
-        ValueAnimator anim = ValueAnimator.ofFloat(0f, 1f);
-        anim.setDuration(COLLAPSE_ANIM_MS);
-        anim.addUpdateListener(animation -> {
-            float fraction = animation.getAnimatedFraction();
-            int height = Math.round(from + (to - from) * fraction);
-            setRowHeight(height);
-            // Content fades out while collapsing and in while expanding; the row frame moves
-            // the rows below/above via requestLayout, so nothing overlaps at any point.
-            setAlpha(expand ? fraction : 1f - fraction);
-        });
-        anim.addListener(new AnimatorListenerAdapter() {
-            private boolean mCancelled;
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mCancelled = true;
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mHeightAnimator = null;
-                if (mCancelled) {
-                    return;
-                }
-                if (expand) {
-                    setAlpha(1f);
-                    // Back to the natural wrap-content sizing once fully shown.
-                    ViewGroup.LayoutParams lp = getLayoutParams();
-                    if (lp != null && lp.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        setLayoutParams(lp);
-                    }
-                } else {
-                    setVisibility(GONE);
-                }
-            }
-        });
-        mHeightAnimator = anim;
-        anim.start();
-    }
-
-    /** Sets the row's layout height (0 collapses the row; WRAP_CONTENT restores natural). */
-    private void setRowHeight(int height) {
-        ViewGroup.LayoutParams lp = getLayoutParams();
-        if (lp == null) {
-            return;
-        }
-        lp.height = height <= 0 ? 0 : height;
-        setLayoutParams(lp);
-    }
-
-    /** Natural (scaled) content height computed by measuring the content at the row width. */
-    private int computeContentHeight() {
-        int width = getWidth();
-        if (width <= 0) {
-            width = getResources().getDisplayMetrics().widthPixels;
-        }
-        int contentWidth = Math.round(width * mWidthScale);
-        measure(
-                MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-        return Math.round(getMeasuredHeight() * mHeightScale);
-    }
 
     // ---------------------------------------------------------------------
     // Scaled row sizing (see ScrollableResizableRow / ScrollableWidgetResizeFrame)
@@ -500,8 +378,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        // Collapsed (hidden) rows report zero height so the list reclaims the gap.
-        if (mHidden || width == 0) {
+        if (width == 0) {
             setMeasuredDimension(width, 0);
             return;
         }
@@ -610,10 +487,11 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     /**
      * Applies the monet scheme derived from the artwork to every colored surface. Faithful
-     * port of SystemUI ColorSchemeTransition + MediaColorSchemes: title/seekbar =
-     * neutral1.s50, artist = neutral2.s200, scrim = accent2.s800 (0.25-1.0 alpha),
-     * play/pause container = accent1.s100 with a neutral1.s900 icon, seekbar rest =
-     * neutral2.s400, tap ripple + app icon = accent1.s100.
+     * port of Lineage 23.2 ColorSchemeTransition + MediaColorSchemes: scrim =
+     * onSurface (neutral1 t10, 0.65/0.75 alpha); title, artist, seekbar wave/thumb,
+     * prev/next and custom action icons = plain white (media_on_background, no runtime
+     * tint); play/pause background = primaryFixed (accent1 t90) with an onPrimaryFixed
+     * icon (accent1 t10); tap ripple + app icon filter = primaryFixed.
      */
     private void updateColorScheme(@Nullable Bitmap artwork) {
         // The shade player uses the LIGHT scheme (darkTheme=false) with TONAL_SPOT palettes.
@@ -624,18 +502,16 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         int accent = scheme.getPillBackground();
         mAccentPrimary = accent;
         int pillIcon = scheme.getPillIcon();
-        int textPrimary = scheme.getTextPrimary();
-        int textSecondary = scheme.getTextSecondary();
-        int seekbarRest = scheme.getSeekbarRest();
 
         // Radial scrim over the album art (addGradientToPlayerAlbum: qs_media_scrim with
         // MEDIA_PLAYER_SCRIM_START/END_ALPHA = 0.25 / 1.0).
         applyScrim(scrimColor);
 
-        // Title = neutral1.s50 (ColorSchemeTransition.textPrimary); artist = neutral2.s200
-        // (textSecondary). Keep the label shadow for wallpaper legibility.
-        mTitle.setTextColor(textPrimary);
-        mArtist.setTextColor(textSecondary);
+        // Title and artist are plain white (media_on_background) — the shade applies no
+        // runtime text tint at all (Lineage removed the textPrimary/textSecondary
+        // transitions; the layouts hardcode @color/media_on_background).
+        mTitle.setTextColor(white());
+        mArtist.setTextColor(white());
 
         // The app icon slot follows the branch chosen in bindAppIcon: accentPrimary tint
         // for the media small icon, grayscale for the launcher-icon fallback.
@@ -647,16 +523,17 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             }
         }
 
-        // Small action icons use textPrimary (ColorSchemeTransition.textPrimary applies to
-        // every transparent action button, not a hardcoded white).
-        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(textPrimary));
-        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(textPrimary));
+        // Small action icons: media_player_action_color = plain white (the shade never
+        // retints the transparent buttons from the scheme).
+        int white = white();
+        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white));
+        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(white));
         for (ImageButton button : mCustomActions) {
-            button.setImageTintList(android.content.res.ColorStateList.valueOf(textPrimary));
+            button.setImageTintList(android.content.res.ColorStateList.valueOf(white));
         }
 
-        // Play/pause container: backgroundTint = accentPrimary; imageTint =
-        // textPrimaryInverse (neutral1.s900, a dark icon on the pastel container).
+        // Play/pause: backgroundTint = primaryFixed (accentPrimary); imageTint =
+        // onPrimaryFixed (a dark tone of the same hue, ColorSchemeTransition.onPrimary).
         tintPlayPauseBackground();
         mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(pillIcon));
 
@@ -664,15 +541,14 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         // MultiRippleController the same color).
         mRippleView.updateColor(accent);
 
-        // Seekbar: wave and thumb = neutral1.s50 (textPrimary); the un-played rest of the
-        // bar = neutral2.s400 (textTertiary).
+        // Seekbar: wave, thumb and rest-of-bar follow the style's media_on_background
+        // (white); Lineage's MediaPlayer.ProgressBar hardcodes the color, no scheme tint.
         if (mSquiggly != null) {
-            mSquiggly.setTintList(
-                    android.content.res.ColorStateList.valueOf(textPrimary));
+            mSquiggly.setTintList(android.content.res.ColorStateList.valueOf(white));
         }
-        mSeekBar.setThumbTintList(android.content.res.ColorStateList.valueOf(textPrimary));
+        mSeekBar.setThumbTintList(android.content.res.ColorStateList.valueOf(white));
         mSeekBar.setProgressBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(seekbarRest));
+                android.content.res.ColorStateList.valueOf(white));
     }
 
     /** Tints the current play/pause container background with the scheme accent. */
@@ -700,8 +576,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     }
 
     /**
-     * Overlays the radial scrim on the album art, tinted with the scheme color at the
-     * MediaControlViewModel alphas (0.25 center -> 1.0 edges).
+     * Radial scrim over the album art (Lineage 23.2 addGradientToPlayerAlbum: qs_media_scrim
+     * with the onSurface color at MEDIA_PLAYER_SCRIM_START/END_ALPHA = 0.65 / 0.75).
      */
     private void applyScrim(int scrimColor) {
         Drawable current = mAlbumArt.getForeground();
@@ -760,30 +636,38 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     }
 
     /**
-     * Shows the play/pause icon and container with the SystemUI morphs: on a state change
-     * the icon AVD (ic_media_play/pause.xml, 333ms path morph) and the background container
-     * AVD (ic_media_play/pause_container.xml, 250ms shape morph — rounded square while
-     * playing, organic near-circle while paused) both run; the first bind shows the static
-     * resting states. Same swap logic as MediaActions.getStandardAction + bindButtonCommon.
+     * Shows the play/pause icon and container with the Lineage 23.2 (Android 16) morphs,
+     * exactly like MediaActions.getStandardAction + bindButtonCommon:
+     * <ul>
+     * <li>playing → pause icon AVD + pause button container (pill blob);</li>
+     * <li>paused → play icon AVD + play button container (rounded rectangle).</li>
+     * </ul>
+     * Both the 24dp icon AVD (333ms path/translate morph) and the 88x56dp container AVD
+     * (two-phase 167ms scale + 333ms path morph) are {@code AnimatedVectorDrawable}s that
+     * run their forward morph when started after the swap; the first bind shows the
+     * static resting states. On tap the click listener also starts the background AVD so
+     * the morph begins immediately, before the session state updates.
      */
     private void applyPlayPauseIcon(boolean wasPlaying) {
         if (mPlayPauseShown && wasPlaying != mIsPlaying) {
+            // State change: swap in the animated variants and run the morph forward.
             mPlayPause.setImageResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_play_morph
-                    : R.drawable.scrollable_media_ic_pause_morph);
+                    ? R.drawable.scrollable_media_ic_pause_button
+                    : R.drawable.scrollable_media_ic_play_button);
             startIfAnimatable(mPlayPause.getDrawable());
             mPlayPause.setBackgroundResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_pause_container
-                    : R.drawable.scrollable_media_ic_play_container);
+                    ? R.drawable.scrollable_media_ic_pause_button_container
+                    : R.drawable.scrollable_media_ic_play_button_container);
             startIfAnimatable(mPlayPause.getBackground());
             tintPlayPauseBackground();
         } else {
+            // First bind (or no state change): the static resting states.
             mPlayPause.setImageResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_pause_vector
-                    : R.drawable.scrollable_media_ic_play_vector);
+                    ? R.drawable.scrollable_media_ic_pause_button
+                    : R.drawable.scrollable_media_ic_play_button);
             mPlayPause.setBackgroundResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_pause_container
-                    : R.drawable.scrollable_media_ic_play_container);
+                    ? R.drawable.scrollable_media_ic_pause_button_container
+                    : R.drawable.scrollable_media_ic_play_button_container);
             tintPlayPauseBackground();
         }
         mPlayPauseShown = true;
@@ -876,10 +760,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeCallbacks(mProgressTick);
-        if (mHeightAnimator != null) {
-            mHeightAnimator.cancel();
-            mHeightAnimator = null;
-        }
         if (mController != null) {
             try {
                 mController.unregisterCallback(mCallback);

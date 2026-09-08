@@ -33,9 +33,10 @@ import java.util.Map;
  *     extraction from the artwork (filter=true: GOOGLE_BLUE when chroma &lt; 5)</li>
  *     <li>TONAL_SPOT palette chromas: accent1 36, accent2 16, neutral1 6, neutral2 8</li>
  *     <li>SystemUI shade mapping: shade N = tone((1000 - N) / 10)</li>
- *     <li>MediaColorSchemes.kt selections: pill bg = accent1.s100, pill icon =
- *     neutral1.s900, scrim = accent2.s800, title/seekbar = neutral1.s50, artist =
- *     neutral2.s200, seekbar rest = neutral2.s400</li>
+ *     <li>Lineage 23.2 MediaColorSchemes.kt selections (material roles): play/pause bg /
+ *     ripple / app icon = primaryFixed (accent1 t90), play/pause icon = onPrimaryFixed
+ *     (accent1 t10), scrim = onSurface (neutral1 t10), seekbar wave/thumb + prev/next =
+ *     media_on_background (white)</li>
  * </ul>
  */
 public final class MonetColorExtractor {
@@ -221,26 +222,30 @@ public final class MonetColorExtractor {
     }
 
     /**
-     * The play/pause pill background: MediaColorSchemes.accentPrimaryFromScheme =
-     * accent1.s100 (a saturated pastel of the artwork hue — NOT the faded CONTENT tone 90).
+     * The play/pause button background / ripple / app-icon color: Lineage 23.2
+     * MediaColorSchemes.primaryFromScheme = materialScheme.getPrimaryFixed() = accent1
+     * tone 90 (fixed, same for the light scheme the player uses).
      */
     public int getPillBackground() {
         return shade(mAccent1, 100);
     }
 
     /**
-     * The icon inside the pill: ColorSchemeTransition.textPrimaryInverse =
-     * neutral1.s900 (a dark, near-black tone of the artwork hue).
+     * The icon inside the play/pause button: Lineage 23.2
+     * onPrimaryFromScheme = materialScheme.getOnPrimaryFixed() = accent1 tone 10
+     * (a dark tone of the SAME hue as the button background).
      */
     public int getPillIcon() {
-        return shade(mNeutral1, 900);
+        return shade(mAccent1, 900);
     }
 
     /**
-     * The album scrim: MediaColorSchemes.surfaceFromScheme = accent2.s800.
+     * The album scrim: Lineage 23.2 MediaColorSchemes.backgroundFromScheme =
+     * materialScheme.getOnSurface() = neutral1 tone 10 — a neutral near-black, NOT an
+     * accent tone (a colored scrim reads as a vignette).
      */
     public int getScrim() {
-        return shade(mAccent2, 800);
+        return shade(mNeutral1, 900);
     }
 
     /**
