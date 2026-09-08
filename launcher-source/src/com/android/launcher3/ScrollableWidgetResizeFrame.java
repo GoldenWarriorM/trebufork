@@ -457,6 +457,10 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
             heightScale = mStartHeightScale + deltaY / mBaseHeightPx;
         }
         widthScale = Math.max(MIN_WIDTH_SCALE, Math.min(MAX_WIDTH_SCALE, widthScale));
+        // trebufork: the media row additionally never grows past the alphabet strip.
+        if (mRow instanceof ScrollableMediaRowView) {
+            widthScale = Math.min(widthScale, ScrollableMediaRowView.MAX_WIDTH_SCALE);
+        }
         // trebufork: no aspect-ratio coupling — dragging the left/right handles must not change
         // the widget's vertical size. height = width * aspect * heightScale, so to keep the
         // gesture-start pixel height constant across a width change, the height scale is
