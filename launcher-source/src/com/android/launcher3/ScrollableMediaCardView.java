@@ -343,6 +343,9 @@ public class ScrollableMediaCardView extends FrameLayout {
     private void bindAppIcon() {
         Drawable smallIcon = mController == null ? null
                 : NotificationListener.getMediaSmallIcon(mController.getPackageName());
+        android.util.Log.d("TrebuforkMedia", "bindAppIcon pkg="
+                + (mController == null ? "null" : mController.getPackageName())
+                + " smallIcon=" + smallIcon);
         if (smallIcon != null) {
             mAppIcon.setImageDrawable(smallIcon);
             // SystemUI normal path: the small icon is tinted with the scheme's
@@ -489,6 +492,9 @@ public class ScrollableMediaCardView extends FrameLayout {
      * view the ripple overlay is constrained to, so card coordinates match directly.
      */
     private void playButtonRipple(View button) {
+        android.util.Log.d("TrebuforkMedia", "playRipple btn=" + button.getId()
+                + " attached=" + mRippleView.isAttachedToWindow()
+                + " size=" + mRippleView.getWidth() + "x" + mRippleView.getHeight());
         mRippleView.playRipple(
                 button.getX() + button.getWidth() / 2f,
                 button.getY() + button.getHeight() / 2f);

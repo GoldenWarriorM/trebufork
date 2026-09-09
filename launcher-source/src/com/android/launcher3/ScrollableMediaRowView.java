@@ -27,6 +27,8 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
+import com.android.launcher3.statemanager.StateManager;
+
 import java.util.List;
 
 /**
@@ -57,6 +59,13 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     private int mCarouselIndex;
     // True while a rebuild is in progress, so listener callbacks don't recurse.
     private boolean mRebuilding;
+    // True while a rebuild is deferred until the launcher leaves its transition.
+    private boolean mDeferredRebuild;
+    // trebufork: the row height measured at the last stable (focused, idle home) moment.
+    // Kept across unfocused measurements so a session appearing/disappearing mid-launch
+    // cannot change the row size and shift the desktop or the animating app window.
+    // -1 until the first stable measurement.
+    private int mLastStableHeight = -1;
 
     // User-configurable size, persisted in ScrollableDesktopStore (same fields as widget
     // rows): width relative to the list width, height relative to the natural height.
@@ -85,6 +94,16 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mCardContent = findViewById(R.id.scrollable_media_carousel_content);
         mPageIndicator = findViewById(R.id.scrollable_media_page_indicator);
         mScrollHandler = new ScrollableMediaCarouselScrollHandler(mScrollView, mPageIndicator);
+        // trebufork: the carousel consumes every touch, so the row's own long-press
+        // listener (remove/reorder menu, resize frame) never fires — same problem widget
+        // rows solve by wiring the menu onto the host view. Forward the carousel's
+        // long-press to the row: a press held still on the card body opens the menu,
+        // while presses on buttons and horizontal drags stay with the card/scroll.
+        mScrollView.setOnLongClickListener(v -> {
+            android.util.Log.d("TrebuforkMedia", "carousel long-press -> row menu, attached="
+                    + isAttachedToWindow() + " listener=" + (getOnLongClickListener() != null));
+            return performLongClick();
+        });
         // A page the user settled on (drag or fling) becomes the active session — the
         // SystemUI "swiped-to player stays visible" behavior (pinSession).
         mScrollHandler.setVisibleCardChangedListener(index -> {
@@ -120,7 +139,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             new ScrollableMediaController.Listener() {
                 @Override
                 public void onActiveControllerChanged() {
-                    post(ScrollableMediaRowView.this::rebuildCarousel);
+                    post(ScrollableMediaRowView.this::rebuildCarouselWhenIdle);
                 }
 
                 @Override
@@ -142,6 +161,41 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             };
 
     /**
+     * trebufork: rebuilding the carousel (a new session's card appearing) changes the row's
+     * measured height, which relayouts the whole desktop. When that happens while an app
+     * launch animation is in flight (the app that just started a session), the relayout
+     * shifts the animating window. So the rebuild is deferred until the launcher is back
+     * in its NORMAL state, exactly what the shade does by not running the media transition
+     * during an app launch.
+     */
+    private void rebuildCarouselWhenIdle() {
+        Launcher launcher;
+        try {
+            launcher = Launcher.getLauncher(getContext());
+        } catch (ClassCastException | IllegalStateException e) {
+            rebuildCarousel();
+            return;
+        }
+        if (launcher.getStateManager().isInTransition()
+                || launcher.getStateManager().getState() != LauncherState.NORMAL) {
+            // Defer: run the rebuild when the launch animation is done.
+            if (!mDeferredRebuild) {
+                mDeferredRebuild = true;
+                launcher.getStateManager().addStateListener(new StateManager.StateListener<LauncherState>() {
+                    @Override
+                    public void onStateTransitionComplete(LauncherState finalState) {
+                        launcher.getStateManager().removeStateListener(this);
+                        mDeferredRebuild = false;
+                        post(ScrollableMediaRowView.this::rebuildCarousel);
+                    }
+                });
+            }
+            return;
+        }
+        rebuildCarousel();
+    }
+
+    /**
      * Rebuilds the carousel page list from the shared monitor. Cards are keyed by session
      * token: sessions that stay keep their card (and the scroll position), removed ones
      * drop out, new ones get a card appended — exactly how the shade's
@@ -155,16 +209,33 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         try {
             List<MediaController> sessions = mSource == null
                     ? java.util.Collections.emptyList() : mSource.getSessionList();
+            // trebufork: stable card order (like the shade's MediaCarouselController): cards
+            // that already exist KEEP their current positions, new sessions are APPENDED at
+            // the end. Iterating the raw session list instead would reshuffle the pages every
+            // time MediaSessionManager's priority order changes — the carousel would visibly
+            // reorder itself (and scroll) while the launcher is active.
             java.util.List<ScrollableMediaCardView> newCards = new java.util.ArrayList<>();
             java.util.List<MediaSession.Token> newTokens = new java.util.ArrayList<>();
-            for (MediaController session : sessions) {
-                ScrollableMediaCardView existing = findCard(session.getSessionToken());
-                if (existing == null) {
-                    existing = new ScrollableMediaCardView(getContext());
-                    existing.setController(mSource, session);
+            // Pass 1: surviving cards, in current carousel order.
+            for (int i = 0; i < mCards.size(); i++) {
+                MediaSession.Token token = mCardTokens.get(i);
+                for (MediaController session : sessions) {
+                    if (session.getSessionToken().equals(token)) {
+                        newCards.add(mCards.get(i));
+                        newTokens.add(token);
+                        break;
+                    }
                 }
-                newCards.add(existing);
-                newTokens.add(session.getSessionToken());
+            }
+            // Pass 2: brand-new sessions, appended.
+            for (MediaController session : sessions) {
+                if (findCard(session.getSessionToken()) == null
+                        && !newTokens.contains(session.getSessionToken())) {
+                    ScrollableMediaCardView card = new ScrollableMediaCardView(getContext());
+                    card.setController(mSource, session);
+                    newCards.add(card);
+                    newTokens.add(session.getSessionToken());
+                }
             }
             // Unregister cards that dropped out (their controller callbacks are cleared
             // inside the card when the binding changes).
@@ -298,7 +369,30 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         // positioned manually in onLayout).
         mPageIndicator.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         int naturalHeight = mScrollView.getMeasuredHeight();
+        // trebufork: a session appearing (or disappearing) while an app-launch animation is in
+        // flight would change this row's height and shift the whole desktop — including the
+        // animating window. So while the launcher is NOT in a stable, focused home state
+        // (launch animation running, another app in the foreground, a state transition active)
+        // the row KEEPS ITS LAST STABLE HEIGHT — no growth, no collapse mid-animation. The new
+        // natural height is adopted only once the user is back at an idle home screen, where a
+        // size change cannot corrupt any animation.
         int height = Math.round(naturalHeight * mHeightScale);
+        boolean launcherStable = false;
+        try {
+            Launcher launcher = Launcher.getLauncher(getContext());
+            launcherStable = (launcher.getActivityFlags()
+                    & BaseActivity.ACTIVITY_STATE_WINDOW_FOCUSED) != 0
+                    && !launcher.getStateManager().isInTransition()
+                    && launcher.getStateManager().getState() == LauncherState.NORMAL;
+        } catch (ClassCastException | IllegalStateException ignored) {
+            // No launcher context (e.g. preview): behave normally.
+            launcherStable = true;
+        }
+        if (launcherStable) {
+            mLastStableHeight = height;
+        } else if (mLastStableHeight >= 0) {
+            height = mLastStableHeight;
+        }
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
             height = MeasureSpec.getSize(heightMeasureSpec);
         }

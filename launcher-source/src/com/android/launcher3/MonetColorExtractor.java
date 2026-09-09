@@ -289,4 +289,12 @@ public final class MonetColorExtractor {
     public int getHighlight() {
         return getPillBackground();
     }
+
+    /**
+     * The carousel page dots: media_paging_indicator =
+     * material_dynamic_neutral_variant80 = neutral-variant palette (0.1666x chroma) tone 80.
+     */
+    public int getPagingIndicator() {
+        return shade(mNeutral2, 200);
+    }
 }
