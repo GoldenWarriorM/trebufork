@@ -64,12 +64,48 @@ public class ScrollableMediaController {
     private String mAppName;
     @Nullable
     private Drawable mAppIcon;
+    // All currently active sessions. Every one of them is observed, so a playback-state
+    // change in a background player (e.g. the user hits play in YouTube while Metrolist's
+    // session is still registered) re-ranks the picker — like SystemUI, which re-ranks on
+    // every media update instead of only when the session set changes.
+    private List<MediaController> mSessions = java.util.Collections.emptyList();
+    // Per-callback owner map: MediaController.Callback has no session reference, so
+    // observeSessions remembers which controller each listener instance is attached to.
+    private final java.util.Map<MediaController.Callback, MediaController> mObserverOwners =
+            new java.util.HashMap<>();
+    // The session that most recently entered STATE_PLAYING (weakly held): the preferred
+    // winner when several sessions still report "playing".
+    @Nullable
+    private java.lang.ref.WeakReference<MediaController> mLastPlayedController;
     // Trebufork: true while the media row controller is actively listening. Kept so duplicate
     // start()/stop() calls are cheap no-ops.
     private boolean mListening;
 
     private final MediaSessionManager.OnActiveSessionsChangedListener mSessionsChangedListener =
-            controllers -> setActiveController(pickController(controllers));
+            controllers -> {
+                observeSessions(controllers);
+                setActiveController(pickController(mSessions));
+            };
+
+    // Registered on EVERY active session: any playback-state change anywhere re-runs the
+    // pick (a no-op if the winner didn't change). A session that just entered STATE_PLAYING
+    // is remembered as the user's latest choice, so it wins over other sessions that
+    // stagnate in STATE_PLAYING (some apps never leave that state when paused).
+    private final MediaController.Callback mSessionObserverCallback =
+            new MediaController.Callback() {
+                @Override
+                public void onPlaybackStateChanged(@Nullable PlaybackState state) {
+                    if (state != null && state.getState() == PlaybackState.STATE_PLAYING) {
+                        // The callback is registered per-controller, so its owner is
+                        // whichever session this listener instance is attached to.
+                        MediaController owner = mObserverOwners.get(this);
+                        if (owner != null) {
+                            mLastPlayedController = new java.lang.ref.WeakReference<>(owner);
+                        }
+                    }
+                    setActiveController(pickController(mSessions));
+                }
+            };
 
     private final MediaController.Callback mControllerCallback = new MediaController.Callback() {
         @Override
@@ -112,6 +148,7 @@ public class ScrollableMediaController {
         if (mListening || mSessionManager == null) {
             return;
         }
+        mListening = true;
         try {
             // The user handle argument is only relevant with a notification listener; the
             // privileged MEDIA_CONTENT_CONTROL permission ignores it (-1 = all users).
@@ -119,10 +156,12 @@ public class ScrollableMediaController {
                     mSessionsChangedListener, new ComponentName(mContext, "none"), mMainHandler);
             List<MediaController> controllers =
                     mSessionManager.getActiveSessions(new ComponentName(mContext, "none"));
-            setActiveController(pickController(controllers));
+            observeSessions(controllers);
+            setActiveController(pickController(mSessions));
         } catch (SecurityException e) {
             // Privileged permission missing (e.g. debug install outside the Magisk module):
             // the row stays empty rather than crashing the launcher.
+            mListening = false;
         }
     }
 
@@ -136,7 +175,53 @@ public class ScrollableMediaController {
             mSessionManager.removeOnActiveSessionsChangedListener(mSessionsChangedListener);
         } catch (SecurityException ignored) {
         }
+        observeSessions(java.util.Collections.emptyList());
         setActiveController(null);
+    }
+
+    /** Swaps the per-session observer callbacks to the new session set. */
+    private void observeSessions(@Nullable List<MediaController> controllers) {
+        for (MediaController old : mSessions) {
+            MediaController.Callback callback = null;
+            for (java.util.Map.Entry<MediaController.Callback, MediaController> entry
+                    : mObserverOwners.entrySet()) {
+                if (old.equals(entry.getValue())) {
+                    callback = entry.getKey();
+                    break;
+                }
+            }
+            if (callback != null) {
+                mObserverOwners.remove(callback);
+                try {
+                    old.unregisterCallback(callback);
+                } catch (IllegalStateException ignored) {
+                }
+            }
+        }
+        mSessions = controllers == null
+                ? java.util.Collections.emptyList() : new java.util.ArrayList<>(controllers);
+        for (MediaController controller : mSessions) {
+            MediaController.Callback callback = new SessionObserver();
+            mObserverOwners.put(callback, controller);
+            try {
+                controller.registerCallback(callback, mMainHandler);
+            } catch (IllegalStateException ignored) {
+            }
+        }
+    }
+
+    /** Per-session playback observer; the owner is tracked in {@link #mObserverOwners}. */
+    private class SessionObserver extends MediaController.Callback {
+        @Override
+        public void onPlaybackStateChanged(@Nullable PlaybackState state) {
+            if (state != null && state.getState() == PlaybackState.STATE_PLAYING) {
+                MediaController owner = mObserverOwners.get(this);
+                if (owner != null) {
+                    mLastPlayedController = new java.lang.ref.WeakReference<>(owner);
+                }
+            }
+            setActiveController(pickController(mSessions));
+        }
     }
 
     /** The active media controller, or null when nothing is playing. */
@@ -171,8 +256,14 @@ public class ScrollableMediaController {
         if (controllers == null || controllers.isEmpty()) {
             return null;
         }
-        // Prefer the session that is actively playing; fall back to the most recent one.
+        MediaController lastPlayed = mLastPlayedController == null
+                ? null : mLastPlayedController.get();
+        // Prefer the session that is actively playing; among several "playing" sessions
+        // (apps that stagnate in STATE_PLAYING) the one the user played last wins, matching
+        // SystemUI which shows the most recently active media. Fall back to the first
+        // session with a known state.
         MediaController best = null;
+        MediaController firstPlaying = null;
         for (MediaController controller : controllers) {
             PlaybackState state = controller.getPlaybackState();
             boolean playing = state != null && (state.getState() == PlaybackState.STATE_PLAYING
@@ -180,11 +271,19 @@ public class ScrollableMediaController {
                     || state.getState() == PlaybackState.STATE_FAST_FORWARDING
                     || state.getState() == PlaybackState.STATE_REWINDING);
             if (playing) {
-                return controller;
+                if (controller.equals(lastPlayed)) {
+                    return controller;
+                }
+                if (firstPlaying == null) {
+                    firstPlaying = controller;
+                }
             }
             if (best == null || state != null) {
                 best = controller;
             }
+        }
+        if (firstPlaying != null) {
+            return firstPlaying;
         }
         return best;
     }
