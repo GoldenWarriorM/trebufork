@@ -92,6 +92,35 @@ public class NotificationListener extends NotificationListenerService {
         return sMediaSmallIcons.get(packageName);
     }
 
+    /** Observers notified whenever a media small icon is added/removed/changed. */
+    public interface MediaSmallIconListener {
+        /** Called on the worker thread; re-post to the main thread if needed. */
+        void onMediaSmallIconsChanged();
+    }
+
+    private static final java.util.List<MediaSmallIconListener> sMediaSmallIconListeners =
+            new java.util.concurrent.CopyOnWriteArrayList<>();
+
+    /** Registers an observer for media small icon changes (no-op if already present). */
+    public static void addMediaSmallIconListener(MediaSmallIconListener listener) {
+        if (!sMediaSmallIconListeners.contains(listener)) {
+            sMediaSmallIconListeners.add(listener);
+        }
+        // Catch up: the media notifications may have arrived before registration.
+        listener.onMediaSmallIconsChanged();
+    }
+
+    /** Removes a previously registered observer. */
+    public static void removeMediaSmallIconListener(MediaSmallIconListener listener) {
+        sMediaSmallIconListeners.remove(listener);
+    }
+
+    private static void notifyMediaSmallIconListeners() {
+        for (MediaSmallIconListener listener : sMediaSmallIconListeners) {
+            listener.onMediaSmallIconsChanged();
+        }
+    }
+
     private void rememberSmallIcon(StatusBarNotification sbn) {
         if (sbn.getNotification().isMediaNotification()) {
             try {
@@ -103,6 +132,7 @@ public class NotificationListener extends NotificationListenerService {
                 } else {
                     sMediaSmallIcons.remove(sbn.getPackageName());
                 }
+                notifyMediaSmallIconListeners();
             } catch (Exception e) {
                 Log.w(TAG, "failed to load media small icon", e);
             }
@@ -112,6 +142,7 @@ public class NotificationListener extends NotificationListenerService {
     private void forgetSmallIcon(StatusBarNotification sbn) {
         if (sbn.getNotification().isMediaNotification()) {
             sMediaSmallIcons.remove(sbn.getPackageName());
+            notifyMediaSmallIconListeners();
         }
     }
 

@@ -714,23 +714,34 @@ public class ScrollableMediaCardView extends FrameLayout {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        removeCallbacks(mProgressTick);
-        if (mController != null) {
-            try {
-                mController.unregisterCallback(mCallback);
-            } catch (IllegalStateException ignored) {
-            }
-        }
-    }
-
-    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (mController != null) {
             try {
                 mController.registerCallback(mCallback);
+            } catch (IllegalStateException ignored) {
+            }
+        }
+        // The media small icon may arrive after the first bind (the notification listener
+        // connects asynchronously) — re-check the icon slot whenever the icon map changes.
+        NotificationListener.addMediaSmallIconListener(mSmallIconListener);
+    }
+
+    private final NotificationListener.MediaSmallIconListener mSmallIconListener =
+            () -> post(() -> {
+                if (mController != null) {
+                    bindAppIcon();
+                }
+            });
+
+    @Override
+    protected void onDetachedFromWindow() {
+        NotificationListener.removeMediaSmallIconListener(mSmallIconListener);
+        super.onDetachedFromWindow();
+        removeCallbacks(mProgressTick);
+        if (mController != null) {
+            try {
+                mController.unregisterCallback(mCallback);
             } catch (IllegalStateException ignored) {
             }
         }
