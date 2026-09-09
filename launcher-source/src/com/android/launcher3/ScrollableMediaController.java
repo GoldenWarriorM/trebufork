@@ -69,6 +69,10 @@ public class ScrollableMediaController {
     // session is still registered) re-ranks the picker — like SystemUI, which re-ranks on
     // every media update instead of only when the session set changes.
     private List<MediaController> mSessions = java.util.Collections.emptyList();
+    // The session the user pinned by swiping the carousel to it; preferred over the
+    // auto-pick while its session stays alive (SystemUI keeps the swiped-to page visible).
+    @Nullable
+    private MediaSession.Token mPinnedToken;
     // Per-callback owner map: MediaController.Callback has no session reference, so
     // observeSessions remembers which controller each listener instance is attached to.
     private final java.util.Map<MediaController.Callback, MediaController> mObserverOwners =
@@ -84,6 +88,7 @@ public class ScrollableMediaController {
     private final MediaSessionManager.OnActiveSessionsChangedListener mSessionsChangedListener =
             controllers -> {
                 observeSessions(controllers);
+                clearPinIfDead();
                 setActiveController(pickController(mSessions));
             };
 
@@ -230,6 +235,51 @@ public class ScrollableMediaController {
         return mController;
     }
 
+    /**
+     * The carousel sessions in stable system order (NO active-first reordering): the
+     * carousel is a real HorizontalScrollView, so the page set must not shuffle while the
+     * user is looking at it — the active session is just highlighted by scrolling to its
+     * page instead.
+     */
+    public List<MediaController> getSessionList() {
+        return new java.util.ArrayList<>(mSessions);
+    }
+
+    /**
+     * The ordered list of media sessions for the player carousel: the active one first,
+     * the rest in system order. Stable across playback-state changes (unlike the pick).
+     */
+    public List<MediaController> getCarouselSessions() {
+        List<MediaController> result = new java.util.ArrayList<>(mSessions);
+        if (mController != null) {
+            result.remove(mController);
+            result.add(0, mController);
+        }
+        return result;
+    }
+
+    /**
+     * Pins the carousel to the given session (a swipe): it stays active while alive, even
+     * if another session starts playing (the user explicitly chose it).
+     */
+    public void pinSession(@Nullable MediaController controller) {
+        mPinnedToken = controller == null ? null : controller.getSessionToken();
+        setActiveController(controller);
+    }
+
+    /** Drops the carousel pin if the pinned session died. */
+    private void clearPinIfDead() {
+        if (mPinnedToken == null) {
+            return;
+        }
+        for (MediaController controller : mSessions) {
+            if (controller.getSessionToken().equals(mPinnedToken)) {
+                return;
+            }
+        }
+        mPinnedToken = null;
+    }
+
     /** Human-readable name of the app that owns the active session, or null. */
     @Nullable
     public String getAppName() {
@@ -251,10 +301,21 @@ public class ScrollableMediaController {
         return state.getPosition();
     }
 
+    /**
+     * The pinned carousel session wins over the auto-pick while it is alive (the user
+     * swiped to it explicitly).
+     */
     @Nullable
     private MediaController pickController(@Nullable List<MediaController> controllers) {
         if (controllers == null || controllers.isEmpty()) {
             return null;
+        }
+        if (mPinnedToken != null) {
+            for (MediaController controller : controllers) {
+                if (controller.getSessionToken().equals(mPinnedToken)) {
+                    return controller;
+                }
+            }
         }
         MediaController lastPlayed = mLastPlayedController == null
                 ? null : mLastPlayedController.get();
