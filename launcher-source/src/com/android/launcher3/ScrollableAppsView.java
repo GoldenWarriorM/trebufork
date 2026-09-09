@@ -312,6 +312,11 @@ public class ScrollableAppsView extends RecyclerView
         }
     }
 
+    /** trebufork: px reserved on the right for the alphabet strip (see setRowEndMarginPx). */
+    public int getRowEndMarginPx() {
+        return mRowEndMarginPx;
+    }
+
     /** Toggles the privacy mode that hides app labels and fills icons with a pastel color. */
     public void setHideLabels(boolean hide) {
         if (mHideLabels != hide) {
@@ -1816,6 +1821,57 @@ public class ScrollableAppsView extends RecyclerView
         }
     }
 
+    /**
+     * trebufork: clamps the stored widget width scale and horizontal position to the
+     * alphabet-strip boundary, persisting the healed values. A widget added at the default
+     * full-row width (widthScale = 1 is relative to the FULL row width) pokes under the
+     * strip; without this clamp the first resize attempt would visibly snap it smaller
+     * (the resize frame caps the scale at the strip). Runs at bind time, so legacy items
+     * saved before the strip-aware cap self-heal too.
+     */
+    private void clampWidgetScalesToStrip(ScrollableDesktopStore.DesktopItem item,
+            boolean mediaRow) {
+        int width = getWidth();
+        if (width <= 0) {
+            return;
+        }
+        float maxScale = (width - getRowEndMarginPx()) / (float) width;
+        if (mediaRow) {
+            maxScale = Math.min(maxScale, ScrollableMediaRowView.MAX_WIDTH_SCALE);
+        }
+        maxScale = Math.max(0.1f, maxScale);
+        boolean changed = false;
+        if (item.widthScale > maxScale) {
+            item.widthScale = maxScale;
+            changed = true;
+        }
+        // The content's right edge must stay short of the strip: offset <=
+        // (width - margin) - contentWidth, expressed as a fraction of the free space.
+        float contentWidth = width * item.widthScale;
+        float freeSpace = width - contentWidth;
+        float maxPositionX = freeSpace > 0f
+                ? Math.min(1f, Math.max(0f, width - getRowEndMarginPx() - contentWidth)
+                        / freeSpace)
+                : 0f;
+        if (item.positionX > maxPositionX) {
+            item.positionX = maxPositionX;
+            changed = true;
+        }
+        if (changed) {
+            // Persist OUTSIDE the current layout pass: the store fires a change notification
+            // (notifyDataSetChanged), which is illegal while RecyclerView is binding. On the
+            // next bind the item is already clamped, so this runs at most once per item.
+            long id = item.id;
+            float widthScale = item.widthScale;
+            float heightScale = item.heightScale;
+            float positionX = item.positionX;
+            post(() -> {
+                setWidgetSize(id, widthScale, heightScale);
+                setWidgetPositionX(id, positionX);
+            });
+        }
+    }
+
     /** Removes a desktop widget entry and frees its app widget id. */
     private void removeDesktopWidget(ScrollableDesktopStore.DesktopItem item) {
         if (item.type == ScrollableDesktopStore.TYPE_WIDGET
@@ -3242,7 +3298,9 @@ public class ScrollableAppsView extends RecyclerView
             mRow.setAspectRatio(getWidgetAspectRatio(item));
             // trebufork: per-widget size (width/height scale) and horizontal position persisted
             // by the desktop store; adjusted with the resize frame (see
-            // ScrollableWidgetResizeFrame).
+            // ScrollableWidgetResizeFrame). Clamped to the alphabet-strip boundary first so a
+            // just-added full-width widget never pokes under the strip.
+            clampWidgetScalesToStrip(item, /* mediaRow= */ false);
             mRow.setScales(item.widthScale, item.heightScale);
             mRow.setPositionX(item.positionX);
             // trebufork: the 3-dot reorder handle is intentionally never shown; reordering is
@@ -3381,7 +3439,9 @@ public class ScrollableAppsView extends RecyclerView
                 mRow.setSource(mMediaController);
             }
             // trebufork: per-row size and horizontal position persisted by the desktop store;
-            // adjusted with the resize frame (see ScrollableWidgetResizeFrame).
+            // adjusted with the resize frame (see ScrollableWidgetResizeFrame). Clamped to the
+            // alphabet-strip boundary first (see clampWidgetScalesToStrip).
+            clampWidgetScalesToStrip(item, /* mediaRow= */ true);
             mRow.setScales(item.widthScale, item.heightScale);
             mRow.setPositionX(item.positionX);
         }
