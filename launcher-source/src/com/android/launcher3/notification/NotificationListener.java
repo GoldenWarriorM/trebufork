@@ -92,6 +92,26 @@ public class NotificationListener extends NotificationListenerService {
         return sMediaSmallIcons.get(packageName);
     }
 
+    /**
+     * trebufork: whether the package currently has a live media notification. The shade only
+     * shows players backed by a media notification (MediaDataManager builds media data from
+     * notifications), so the media row uses the same gate to hide phantom sessions that apps
+     * register without ever posting one (no artwork, dead buttons).
+     */
+    public static boolean hasMediaNotification(String packageName) {
+        return packageName != null && sMediaSmallIcons.containsKey(packageName);
+    }
+
+    /**
+     * trebufork: whether the icon map holds any entries at all — i.e. the notification
+     * listener is connected and has processed at least one refresh/post. While false (e.g.
+     * right after boot, before onListenerConnected), the media row must not filter sessions
+     * against an empty map or it would hide every real player.
+     */
+    public static boolean isListenerPopulated() {
+        return !sMediaSmallIcons.isEmpty();
+    }
+
     /** Observers notified whenever a media small icon is added/removed/changed. */
     public interface MediaSmallIconListener {
         /** Called on the worker thread; re-post to the main thread if needed. */
