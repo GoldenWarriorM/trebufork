@@ -450,9 +450,23 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         if (freeSpace <= 0f) {
             return;
         }
-        float positionX = Math.max(0f, Math.min(1f, mStartPositionX + deltaX / freeSpace));
+        // The content's right edge must stop before the alphabet strip (same margin as every
+        // other desktop row): offset <= availableWidth - widgetWidth.
+        float maxOffset = Math.max(0f, getAvailableRowWidth() - widget.getWidth());
+        float maxPositionX = Math.min(1f, maxOffset / freeSpace);
+        float positionX = Math.max(0f, Math.min(maxPositionX,
+                mStartPositionX + deltaX / freeSpace));
         mItem.positionX = positionX;
         mRow.setPositionX(positionX);
+    }
+
+    /**
+     * trebufork: row width available to the widget content, i.e. the full row width minus the
+     * alphabet-strip margin every other desktop row respects. Widget content must never slide
+     * under the strip, exactly like app/group rows that end at this margin.
+     */
+    private float getAvailableRowWidth() {
+        return ((View) mRow).getWidth() - mAppsView.getRowEndMarginPx();
     }
 
     private void commitMove() {
@@ -499,10 +513,15 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
             heightScale = mStartHeightScale + deltaY / mBaseHeightPx;
         }
         widthScale = Math.max(MIN_WIDTH_SCALE, Math.min(MAX_WIDTH_SCALE, widthScale));
-        // trebufork: the media row additionally never grows past the alphabet strip.
+        // trebufork: the content must never grow (or be moved) past the alphabet strip —
+        // the same right margin every other desktop row stops at. Cap the scale against the
+        // available (margin-adjusted) row width instead of the full width.
+        float availableWidth = getAvailableRowWidth();
+        float maxWidthScale = availableWidth / mBaseWidthPx;
         if (mRow instanceof ScrollableMediaRowView) {
-            widthScale = Math.min(widthScale, ScrollableMediaRowView.MAX_WIDTH_SCALE);
+            maxWidthScale = Math.min(maxWidthScale, ScrollableMediaRowView.MAX_WIDTH_SCALE);
         }
+        widthScale = Math.min(widthScale, Math.max(MIN_WIDTH_SCALE, maxWidthScale));
         // trebufork: no aspect-ratio coupling — dragging the left/right handles must not change
         // the widget's vertical size. height = width * aspect * heightScale, so to keep the
         // gesture-start pixel height constant across a width change, the height scale is
