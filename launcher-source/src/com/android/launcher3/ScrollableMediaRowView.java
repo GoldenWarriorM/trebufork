@@ -61,11 +61,11 @@ import com.android.launcher3.notification.NotificationListener;
 public class ScrollableMediaRowView extends FrameLayout implements ScrollableResizableRow {
 
     private static final long PROGRESS_TICK_MS = 500L;
-    // Lineage 23.2 MediaControlPanel.MEDIA_PLAYER_SCRIM_START/END_ALPHA: the scrim is a
-    // radial gradient of the neutral onSurface color from 65% in the center to 75% at
-    // the edges (NOT 0.25/1.0 — that renders as a colored vignette).
-    private static final float SCRIM_START_ALPHA = 0.65f;
-    private static final float SCRIM_END_ALPHA = 0.75f;
+    // Lineage 23.2 MediaControlPanel.MEDIA_PLAYER_SCRIM_START/END_ALPHA is 0.65/0.75 for
+    // the shade player; trebufork lightens it for the home-screen widget so the artwork
+    // stays clearly visible (text remains readable over the radial gradient).
+    private static final float SCRIM_START_ALPHA = 0.45f;
+    private static final float SCRIM_END_ALPHA = 0.60f;
     // Desaturation filter for the app icon (MediaControlViewBinder.getGrayscaleFilter).
     private static final android.graphics.ColorMatrixColorFilter GRAYSCALE_FILTER =
             createGrayscaleFilter();
@@ -495,11 +495,13 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
      * port of Lineage 23.2 ColorSchemeTransition + MediaColorSchemes: scrim =
      * onSurface (neutral1 t10, 0.65/0.75 alpha); title, artist, seekbar wave/thumb,
      * prev/next and custom action icons = plain white (media_on_background, no runtime
-     * tint); play/pause background = primaryFixed (accent1 t90) with an onPrimaryFixed
-     * icon (accent1 t10); tap ripple + app icon filter = primaryFixed.
+     * tint); play/pause background = primaryFixed (accent1 tone tracking the seed) with
+     * an onPrimaryFixed icon (accent1 t10, near-black); tap ripple + app icon filter =
+     * primaryFixed.
      */
     private void updateColorScheme(@Nullable Bitmap artwork) {
-        // The shade player uses the LIGHT scheme (darkTheme=false) with TONAL_SPOT palettes.
+        // The shade player uses the LIGHT scheme (darkTheme=false) with CONTENT palettes
+        // (MediaControlPanel: new ColorScheme(wallpaperColors, darkTheme, ThemeStyle.CONTENT)).
         MonetColorExtractor scheme = MonetColorExtractor.fromArtwork(artwork, false);
         mColorScheme = scheme;
 
@@ -582,7 +584,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     /**
      * Radial scrim over the album art (Lineage 23.2 addGradientToPlayerAlbum: qs_media_scrim
-     * with the onSurface color at MEDIA_PLAYER_SCRIM_START/END_ALPHA = 0.65 / 0.75).
+     * with the onSurface color at trebufork's lightened 0.45 / 0.60 alphas).
      */
     private void applyScrim(int scrimColor) {
         Drawable current = mAlbumArt.getForeground();

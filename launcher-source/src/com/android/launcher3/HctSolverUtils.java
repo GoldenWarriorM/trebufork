@@ -722,6 +722,11 @@ final class HctSolverUtils {
         return new double[] {cam[0], cam[1]};
     }
 
+    /** L* tone of an ARGB color — {@code Hct.fromInt(argb).getTone()} from libmonet. */
+    static double toneFromInt(int argb) {
+        return hctTone(argb);
+    }
+
     /**
      * A CAM16-based tonal palette, matching libmonet's
      * {@code TonalPalette.fromHueAndChroma(hue, chroma)}: every tone maps through the HCT

@@ -21,6 +21,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -44,6 +46,15 @@ public class ScrollableMediaRippleView extends View {
     private static final int RIPPLE_OPACITY = 100;
     private static final float MAX_SIZE_FACTOR = 2f;
 
+    // RippleShader fade curves (RawProgress-driven, STANDARD easing applied to the size):
+    // - base ring: fades in over the first 10% and out from 30%..100%
+    // - center fill (the "inside" disc at 1.25x radius): only visible in the first
+    //   frames (fadeInEnd=0 → immediately fading out), so the tap flashes a filled circle
+    //   that quickly dissolves while the ring keeps expanding — not a uniform fading disc.
+    private static final float BASE_RING_FADE_IN_END = 0.1f;
+    private static final float BASE_RING_FADE_OUT_START = 0.3f;
+    private static final float CENTER_FILL_FADE_OUT_START = 0f;
+
     private static final class Ripple {
         float x;
         float y;
@@ -54,7 +65,9 @@ public class ScrollableMediaRippleView extends View {
     private final List<Ripple> mRipples = new ArrayList<>();
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private int mColor = 0xFFFFFFFF;
-    private Interpolator mInterpolator;
+    // RippleShader.STANDARD — applied to the size progress inside the shader.
+    private final android.view.animation.Interpolator mStandardInterpolator =
+            new android.view.animation.PathInterpolator(0.2f, 0f, 0f, 1f);
 
     public ScrollableMediaRippleView(Context context) {
         super(context);
@@ -85,9 +98,10 @@ public class ScrollableMediaRippleView extends View {
         Ripple ripple = new Ripple();
         ripple.x = x;
         ripple.y = y;
+        // Linear animator, like RippleAnimation.play: rawProgress stays linear and the
+        // STANDARD curve is applied exactly once, inside onDraw (RippleShader.progress).
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
         animator.setDuration(RIPPLE_DURATION_MS);
-        animator.setInterpolator(getInterpolator());
         animator.addUpdateListener(animation -> {
             ripple.progress = (float) animation.getAnimatedValue();
             invalidate();
@@ -119,18 +133,88 @@ public class ScrollableMediaRippleView extends View {
         float maxSize = getWidth() * MAX_SIZE_FACTOR;
         for (int i = 0; i < mRipples.size(); i++) {
             Ripple ripple = mRipples.get(i);
-            float progress = ripple.progress;
-            if (progress <= 0f) {
+            float raw = ripple.progress;
+            if (raw <= 0f) {
                 continue;
             }
-            float radius = progress * maxSize;
-            // The ripple fades out as it expands; alpha ramps up only in the first
-            // frames so the circle grows from nothing under the finger.
-            float fade = progress < 0.1f ? progress / 0.1f : (1f - progress) / 0.9f;
-            int alpha = Math.round(RIPPLE_OPACITY * Math.max(0f, fade));
-            mPaint.setColor(ColorUtils.setAlphaComponent(mColor, alpha));
-            canvas.drawCircle(ripple.x, ripple.y, radius, mPaint);
+            // STANDARD easing on the size (RippleShader.progress = STANDARD(raw)).
+            float eased = mStandardInterpolator.getInterpolation(raw);
+            float radius = eased * maxSize / 2f;
+            if (radius <= 0f) {
+                continue;
+            }
+
+            // RippleShader softens every edge with soften() = smoothstep(-blur/2, blur/2, d)
+            // where d is the circle SDF normalized by the radius and blur = lerp(1.25, 0.5,
+            // eased) — so the soft half-width in pixels is blur * radius / 2: wide and
+            // diffuse at the start, sharpening as the ripple expands.
+            float blur = 1.25f - 0.75f * eased;
+            float edge = blur * radius * 0.5f;
+
+            // Ring: fades in 0..0.1 and out 0.3..1 (baseRingFadeParams).
+            float ringFade = Math.min(
+                    subProgress(0f, BASE_RING_FADE_IN_END, raw),
+                    1f - subProgress(BASE_RING_FADE_OUT_START, 1f, raw));
+            // Center fill: a filled disc at 1.25x the ring radius, gone almost
+            // immediately (centerFillFadeParams fadeInEnd=0, fadeOutStart=0).
+            float fillFade = 1f - subProgress(0f, CENTER_FILL_FADE_OUT_START, raw);
+            if (fillFade > 0f && fillFade < 1f) {
+                // fadeInEnd == fadeOutStart == 0: subProgress(0,0)=step; emulate the
+                // shader's single-frame flash with a fast 6% decay.
+                fillFade = Math.max(0f, 1f - raw / 0.06f);
+            }
+
+            // Stock ring geometry (SdfShaderLibrary.circleRing): a band between radius and
+            // radius * 1.25 — the same outer edge as the center fill disc.
+            float outer = radius * 1.25f;
+            float gradientRadius = outer + edge;
+
+            if (ringFade > 0f) {
+                // Emulate the shader's smoothstep edges with a radial gradient: transparent
+                // up to radius-edge, ramping to full over the soft edge, flat across the
+                // band, then ramping back to transparent at outer+edge.
+                int ringColor = ColorUtils.setAlphaComponent(mColor,
+                        Math.round(RIPPLE_OPACITY * ringFade));
+                int transparent = ColorUtils.setAlphaComponent(mColor, 0);
+                float inner0 = clamp01((radius - edge) / gradientRadius);
+                float inner1 = Math.max(inner0, clamp01((radius + edge) / gradientRadius));
+                float outer0 = Math.max(inner1, clamp01((outer - edge) / gradientRadius));
+                RadialGradient gradient = new RadialGradient(ripple.x, ripple.y,
+                        gradientRadius,
+                        new int[]{transparent, transparent, ringColor, ringColor, transparent},
+                        new float[]{0f, inner0, inner1, outer0, 1f},
+                        Shader.TileMode.CLAMP);
+                mPaint.setShader(gradient);
+                canvas.drawCircle(ripple.x, ripple.y, gradientRadius, mPaint);
+            }
+
+            if (fillFade > 0f) {
+                int fillAlpha = Math.round(RIPPLE_OPACITY * fillFade);
+                int fillColor = ColorUtils.setAlphaComponent(mColor, fillAlpha);
+                int transparent = ColorUtils.setAlphaComponent(mColor, 0);
+                float outer0 = clamp01((outer - edge) / gradientRadius);
+                RadialGradient gradient = new RadialGradient(ripple.x, ripple.y,
+                        gradientRadius,
+                        new int[]{fillColor, fillColor, transparent},
+                        new float[]{0f, outer0, 1f},
+                        Shader.TileMode.CLAMP);
+                mPaint.setShader(gradient);
+                canvas.drawCircle(ripple.x, ripple.y, gradientRadius, mPaint);
+            }
         }
+        mPaint.setShader(null);
+    }
+
+    private static float clamp01(float value) {
+        return Math.min(Math.max(value, 0f), 1f);
+    }
+
+    private static float subProgress(float start, float end, float progress) {
+        if (start == end) {
+            return progress > start ? 1f : 0f;
+        }
+        float sub = Math.min(Math.max(progress, Math.min(start, end)), Math.max(start, end));
+        return (sub - start) / (end - start);
     }
 
     @Override
@@ -142,13 +226,5 @@ public class ScrollableMediaRippleView extends View {
             }
         }
         mRipples.clear();
-    }
-
-    /** The linear_out_slow_in curve, like the rest of the shade player's animations. */
-    private Interpolator getInterpolator() {
-        if (mInterpolator == null) {
-            mInterpolator = new android.view.animation.PathInterpolator(0.2f, 0f, 0f, 1f);
-        }
-        return mInterpolator;
     }
 }
