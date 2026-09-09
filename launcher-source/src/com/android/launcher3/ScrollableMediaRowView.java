@@ -24,6 +24,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.animation.ValueAnimator;
+import android.view.animation.AnimationUtils;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 
 import androidx.annotation.Nullable;
 
@@ -66,6 +70,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     // cannot change the row size and shift the desktop or the animating app window.
     // -1 until the first stable measurement.
     private int mLastStableHeight = -1;
+    // trebufork: in-flight height animation (expand/collapse at idle home). While running,
+    // onMeasure reports the animated value instead of jumping to the new height in one frame.
+    @Nullable
+    private ValueAnimator mHeightAnimator;
 
     // User-configurable size, persisted in ScrollableDesktopStore (same fields as widget
     // rows): width relative to the list width, height relative to the natural height.
@@ -393,7 +401,19 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             launcherStable = true;
         }
         if (launcherStable) {
-            mLastStableHeight = height;
+            if (mLastStableHeight >= 0 && height != mLastStableHeight
+                    && mHeightAnimator == null) {
+                // trebufork: the row grew (player appeared) or collapsed (sessions gone) at
+                // idle home — animate the change instead of snapping, so the desktop rows
+                // below glide instead of jumping in a single frame.
+                startHeightAnimation(mLastStableHeight, height);
+                height = mLastStableHeight;
+            } else if (mHeightAnimator != null) {
+                // Report the animated intermediate height while the transition runs.
+                height = (int) mHeightAnimator.getAnimatedValue();
+            } else {
+                mLastStableHeight = height;
+            }
         } else if (mLastStableHeight >= 0) {
             if (height != mLastStableHeight) {
                 android.util.Log.d("TrebuforkMedia", "row pinned: natural=" + height
@@ -405,6 +425,50 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             height = MeasureSpec.getSize(heightMeasureSpec);
         }
         setMeasuredDimension(width, height);
+    }
+
+    /**
+     * trebufork: animates the row between its previous stable height and the new natural
+     * height (expand when a player appears, collapse when the last session ends). The
+     * animator drives onMeasure through mHeightAnimator until it completes; the pinning
+     * machinery is untouched, since the animation only ever runs at idle home.
+     */
+    private void startHeightAnimation(int from, int to) {
+        if (mHeightAnimator != null) {
+            mHeightAnimator.cancel();
+            mHeightAnimator = null;
+        }
+        ValueAnimator anim = ValueAnimator.ofInt(from, to);
+        anim.setDuration(220);
+        anim.setInterpolator(AnimationUtils.loadInterpolator(getContext(),
+                android.R.interpolator.fast_out_slow_in));
+        anim.addUpdateListener(a -> {
+            requestLayout();
+            // The parent RecyclerView positions rows from its own layout pass; keep the
+            // desktop consistent during the height change.
+            if (getParent() instanceof View parent) {
+                parent.requestLayout();
+            }
+        });
+        anim.addListener(new AnimatorListenerAdapter() {
+            private boolean mCancelled;
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                mCancelled = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mHeightAnimator = null;
+                if (!mCancelled) {
+                    mLastStableHeight = to;
+                }
+                requestLayout();
+            }
+        });
+        mHeightAnimator = anim;
+        anim.start();
     }
 
     @Override
