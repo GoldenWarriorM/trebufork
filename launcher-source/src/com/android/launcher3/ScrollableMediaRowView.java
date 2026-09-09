@@ -15,145 +15,59 @@
  */
 package com.android.launcher3;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Animatable2;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.media.MediaMetadata;
 import android.media.session.MediaController;
-import android.media.session.PlaybackState;
-import android.os.SystemClock;
+import android.media.session.MediaSession;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import com.android.launcher3.notification.NotificationListener;
+import java.util.List;
 
 /**
- * trebufork: the built-in media player row of the scrollable home. A verbatim port of the
- * SystemUI shade/lockscreen media player (media_session_view.xml + MediaControlPanel):
- * full-bleed album art with a Monet-tinted radial scrim, app icon, title/artist, a squiggly
- * seek bar (see {@link SquigglyProgress}) and prev / play-pause / next actions, colored at
- * runtime from the album artwork through {@link MonetColorExtractor} exactly like
- * MediaColorSchemes.kt does.
- *
- * <p>Unlike an AppWidget this is a plain in-process view, so nothing is constrained by
- * RemoteViews: the seek bar is interactive and the wave animates while playing. The row is
- * always laid out at its natural height — it does NOT hide when the media session goes
- * away (the earlier hide/show height animation caused relayout storms and rows stuck in a
- * collapsed "thin strip" state). It supports the same user resizing as widget rows (see
- * {@link ScrollableWidgetResizeFrame}) through width/height scales and a horizontal
- * position persisted in the desktop store.
+ * trebufork: the built-in media player row of the scrollable home — the carousel of the
+ * SystemUI shade/lockscreen media controls (MediaScrollView + MediaCarouselScrollHandler,
+ * lineage-23.2) hosting ONE REAL PLAYER CARD PER MEDIA SESSION
+ * ({@link ScrollableMediaCardView}, the media_session_view.xml + MediaControlPanel port):
+ * the cards slide as real views when the user swipes, with the shade's fling-to-page,
+ * snap-to-nearest, rubber-band at the ends, rounded-corner clipping mid-swipe and the
+ * animated page dots (the PageIndicator port) tracking the fractional position.
  */
 public class ScrollableMediaRowView extends FrameLayout implements ScrollableResizableRow {
 
-    private static final long PROGRESS_TICK_MS = 500L;
-    // Lineage 23.2 MediaControlPanel.MEDIA_PLAYER_SCRIM_START/END_ALPHA is 0.65/0.75 for
-    // the shade player; trebufork lightens it for the home-screen widget so the artwork
-    // stays clearly visible (text remains readable over the radial gradient).
-    private static final float SCRIM_START_ALPHA = 0.45f;
-    private static final float SCRIM_END_ALPHA = 0.60f;
-    // Desaturation filter for the app icon (MediaControlViewBinder.getGrayscaleFilter).
-    private static final android.graphics.ColorMatrixColorFilter GRAYSCALE_FILTER =
-            createGrayscaleFilter();
+    // The card carousel (a HorizontalScrollView; the touch/fling/snap logic lives in
+    // ScrollableMediaCarouselScrollHandler — the MediaCarouselScrollHandler port).
+    private final ScrollableMediaScrollView mScrollView;
+    private final LinearLayout mCardContent;
+    private final ScrollableMediaPageIndicator mPageIndicator;
+    private final ScrollableMediaCarouselScrollHandler mScrollHandler;
 
-    private static android.graphics.ColorMatrixColorFilter createGrayscaleFilter() {
-        android.graphics.ColorMatrix matrix = new android.graphics.ColorMatrix();
-        matrix.setSaturation(0f);
-        return new android.graphics.ColorMatrixColorFilter(matrix);
-    }
-
-    private final ImageView mAlbumArt;
-    private final TextView mTitle;
-    private final TextView mArtist;
-    private final SeekBar mSeekBar;
-    private final ImageButton mPrev;
-    private final ImageButton mPlayPause;
-    private final ImageButton mNext;
-    private final ImageButton[] mCustomActions;
-    private final ImageView mAppIcon;
-    private final SquigglyProgress mSquiggly;
-    private final ScrollableMediaRippleView mRippleView;
-
-    @Nullable
-    private MediaController mController;
     @Nullable
     private ScrollableMediaController mSource;
-    // Trebufork: elapsedRealtime anchor of the last playback state + extrapolated position, so
-    // the seek bar advances smoothly between state updates.
-    private long mStateElapsedRealtime;
-    private long mStatePosition;
-    private float mPlaybackSpeed;
-    private boolean mIsPlaying;
-    private long mDuration;
+    // Cards currently in the carousel, parallel to the carousel sessions.
+    private final java.util.List<ScrollableMediaCardView> mCards = new java.util.ArrayList<>();
+    // The sessions backing the cards (by token), so reorders keep pages anchored.
+    private final java.util.List<MediaSession.Token> mCardTokens = new java.util.ArrayList<>();
+    // Index of the card currently shown (kept in sync with the scroll handler).
+    private int mCarouselIndex;
+    // True while a rebuild is in progress, so listener callbacks don't recurse.
+    private boolean mRebuilding;
 
-    // trebufork: Monet colors extracted from the current artwork.
-    @Nullable
-    private MonetColorExtractor mColorScheme;
-    // Guards against applying a stale background-extracted scheme after a newer bind.
-    private int mSchemeRequestToken;
-    // trebufork: the scheme's accentPrimary (ColorSchemeTransition.accentPrimary =
-    // accent1.s100): the play/pause container tint, the ripple color and the media
-    // small icon color filter all use it. White until the first scheme arrives.
-    private int mAccentPrimary = 0xFFFFFFFF;
-    // trebufork: which app-icon branch is active (accentPrimary tint for the media small
-    // icon, grayscale for the launcher-icon fallback), so scheme updates re-apply the
-    // right filter.
-    private boolean mAppIconUsesSmallIcon;
-
-    // trebufork: user-configurable size, persisted in ScrollableDesktopStore (same fields as
-    // widget rows): width relative to the list width, height relative to the natural height.
+    // User-configurable size, persisted in ScrollableDesktopStore (same fields as widget
+    // rows): width relative to the list width, height relative to the natural height.
     // The width is capped below 1.0 so the card never slides under the alphabet index
     // strip on the right edge of the desktop.
     public static final float MAX_WIDTH_SCALE = 0.9f;
     private float mWidthScale = 1f;
     private float mHeightScale = 1f;
     private float mPositionX = 0f;
-
-    // trebufork: false until the play/pause icon is shown once, so the first bind doesn't run
-    // the morph animation.
-    private boolean mPlayPauseShown;
-
-    // trebufork: the row no longer hides when there is no active media session — the
-    // show/hide height-animation machinery caused layout thrash (stuck "thin strip"
-    // states, list relayout storms) and the empty card is kept visible instead.
-
-    private final Runnable mProgressTick = new Runnable() {
-        @Override
-        public void run() {
-            if (mIsPlaying) {
-                updateProgressUi();
-                postDelayed(this, PROGRESS_TICK_MS);
-            }
-        }
-    };
-
-    private final MediaController.Callback mCallback = new MediaController.Callback() {
-        @Override
-        public void onMetadataChanged(@Nullable MediaMetadata metadata) {
-            post(() -> bindContent());
-        }
-
-        @Override
-        public void onPlaybackStateChanged(@Nullable PlaybackState state) {
-            post(() -> applyPlaybackState(state));
-        }
-    };
+    // Last measured card width (contentWidth), for the explicit card sizing above.
+    private int mLastContentWidth;
 
     public ScrollableMediaRowView(Context context) {
         this(context, null);
@@ -165,133 +79,27 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
 
     public ScrollableMediaRowView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        // trebufork: inflate the verbatim port of SystemUI media_session_view.xml.
-        LayoutInflater.from(context).inflate(R.layout.scrollable_media_player_view, this, true);
 
-        mAlbumArt = findViewById(R.id.scrollable_media_album_art);
-        mAppIcon = findViewById(R.id.scrollable_media_icon);
-        mTitle = findViewById(R.id.scrollable_media_header_title);
-        mArtist = findViewById(R.id.scrollable_media_header_artist);
-        mSeekBar = findViewById(R.id.scrollable_media_progress_bar);
-        mPrev = findViewById(R.id.scrollable_media_actionPrev);
-        mPlayPause = findViewById(R.id.scrollable_media_actionPlayPause);
-        mNext = findViewById(R.id.scrollable_media_actionNext);
-        mCustomActions = new ImageButton[] {
-                findViewById(R.id.scrollable_media_action0),
-                findViewById(R.id.scrollable_media_action1),
-        };
-
-        mRippleView = findViewById(R.id.scrollable_media_touch_ripple);
-
-        mSquiggly = mSeekBar.getProgressDrawable() instanceof SquigglyProgress
-                ? (SquigglyProgress) mSeekBar.getProgressDrawable()
-                : null;
-        if (mSquiggly != null) {
-            mSquiggly.waveLength = dimen(R.dimen.scrollable_media_seekbar_progress_wavelength);
-            mSquiggly.lineAmplitude =
-                    dimen(R.dimen.scrollable_media_seekbar_progress_amplitude);
-            mSquiggly.phaseSpeed = dimen(R.dimen.scrollable_media_seekbar_progress_phase);
-            mSquiggly.setStrokeWidth(
-                    dimen(R.dimen.scrollable_media_seekbar_progress_stroke_width));
-        }
-        // trebufork: media playback is in the direction of tape, not time, so it stays LTR
-        // (mirrors MediaViewHolder.create).
-        mSeekBar.setLayoutDirection(LAYOUT_DIRECTION_LTR);
-
-        mPrev.setImageResource(R.drawable.scrollable_media_ic_prev);
-        mNext.setImageResource(R.drawable.scrollable_media_ic_next);
-
-        mPrev.setOnClickListener(v -> {
-            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            playButtonRipple(v);
-            MediaController.TransportControls controls =
-                    mController == null ? null : mController.getTransportControls();
-            if (controls != null) {
-                controls.skipToPrevious();
-            }
-        });
-        mPlayPause.setOnClickListener(v -> {
-            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            playButtonRipple(v);
-            // Same as bindButtonCommon: the icon AVD and the current container AVD both
-            // start their morph right on the tap, before the session state updates. The
-            // rebind that lands the new resting pose is deferred until the morph ends.
-            Drawable icon = mPlayPause.getDrawable();
-            if (icon instanceof android.graphics.drawable.Animatable) {
-                ((android.graphics.drawable.Animatable) icon).start();
-            }
-            Drawable background = mPlayPause.getBackground();
-            if (background instanceof android.graphics.drawable.Animatable) {
-                ((android.graphics.drawable.Animatable) background).start();
-            }
-            MediaController.TransportControls controls =
-                    mController == null ? null : mController.getTransportControls();
-            if (controls != null) {
-                if (mIsPlaying) {
-                    controls.pause();
-                } else {
-                    controls.play();
+        inflate(getContext(), R.layout.scrollable_media_carousel_row, this);
+        mScrollView = findViewById(R.id.scrollable_media_carousel_scroll);
+        mCardContent = findViewById(R.id.scrollable_media_carousel_content);
+        mPageIndicator = findViewById(R.id.scrollable_media_page_indicator);
+        mScrollHandler = new ScrollableMediaCarouselScrollHandler(mScrollView, mPageIndicator);
+        // A page the user settled on (drag or fling) becomes the active session — the
+        // SystemUI "swiped-to player stays visible" behavior (pinSession).
+        mScrollHandler.setVisibleCardChangedListener(index -> {
+            if (index != mCarouselIndex && index < mCardTokens.size() && mSource != null) {
+                mCarouselIndex = index;
+                List<MediaController> sessions = mSource.getSessionList();
+                for (MediaController session : sessions) {
+                    if (session.getSessionToken().equals(mCardTokens.get(index))) {
+                        mSource.pinSession(session);
+                        break;
+                    }
                 }
             }
         });
-        mNext.setOnClickListener(v -> {
-            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-            playButtonRipple(v);
-            MediaController.TransportControls controls =
-                    mController == null ? null : mController.getTransportControls();
-            if (controls != null) {
-                controls.skipToNext();
-            }
-        });
-
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                removeCallbacks(mProgressTick);
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                MediaController.TransportControls controls =
-                        mController == null ? null : mController.getTransportControls();
-                if (controls != null) {
-                    controls.seekTo(seekBar.getProgress());
-                }
-                updateProgressUi();
-                scheduleProgressTick();
-            }
-        });
-
-        // trebufork: fonts — exactly what the shade's layouts request:
-        // @*android:string/config_headlineFontFamily(Medium), resolved through the
-        // framework's own config path (the ROM's Google Sans Flex overlay). No code-side
-        // Typeface override: Typeface.create("google-sans") silently falls back to Roboto
-        // when the family is not in the app's font map, which is exactly what made the
-        // text look different from the shade.
     }
-
-    private float dimen(int resId) {
-        return getResources().getDimension(resId);
-    }
-
-    /**
-     * Shapes a raw app icon (an AdaptiveIconDrawable renders as a solid blob when drawn
-     * small and tinted) into the launcher's masked bitmap, like home-screen icons.
-     */
-    private Drawable shapeAppIcon(Drawable rawIcon) {
-        try (com.android.launcher3.icons.LauncherIcons li =
-                com.android.launcher3.icons.LauncherIcons.obtain(getContext())) {
-            android.graphics.Bitmap bitmap = li.createIconBitmap(rawIcon, 1f);
-            return new com.android.launcher3.icons.FastBitmapDrawable(bitmap);
-        }
-    }
-
-
-
 
     /** Binds the media source (the shared session monitor). Safe to call repeatedly. */
     public void setSource(@Nullable ScrollableMediaController source) {
@@ -305,54 +113,121 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         if (mSource != null) {
             mSource.addListener(mSourceListener);
         }
-        refresh();
+        rebuildCarousel();
     }
 
     private final ScrollableMediaController.Listener mSourceListener =
             new ScrollableMediaController.Listener() {
                 @Override
                 public void onActiveControllerChanged() {
-                    post(ScrollableMediaRowView.this::refresh);
+                    post(ScrollableMediaRowView.this::rebuildCarousel);
                 }
 
                 @Override
                 public void onMediaChanged() {
                     post(() -> {
-                        bindContent();
-                        applyPlaybackState(
-                                mController == null ? null : mController.getPlaybackState());
+                        // Metadata/playback changes do not alter the page set: rebind the
+                        // card of the changed session only (a full rebuild would reset the
+                        // scroll position mid-gesture).
+                        MediaController active = mSource == null
+                                ? null : mSource.getController();
+                        for (ScrollableMediaCardView card : mCards) {
+                            MediaController bound = card.getBoundController();
+                            if (bound != null && bound.equals(active)) {
+                                card.setController(mSource, active);
+                            }
+                        }
                     });
                 }
             };
 
-    /** Re-resolves the active controller and rebinds everything (with show/hide animation). */
-    private void refresh() {
-        MediaController next = mSource == null ? null : mSource.getController();
-        if (mController != null && mController != next) {
-            try {
-                mController.unregisterCallback(mCallback);
-            } catch (IllegalStateException ignored) {
-            }
+    /**
+     * Rebuilds the carousel page list from the shared monitor. Cards are keyed by session
+     * token: sessions that stay keep their card (and the scroll position), removed ones
+     * drop out, new ones get a card appended — exactly how the shade's
+     * MediaCarouselController diffs the player set.
+     */
+    private void rebuildCarousel() {
+        if (mRebuilding) {
+            return;
         }
-        mController = next;
-        if (mController != null) {
-            try {
-                mController.registerCallback(mCallback);
-            } catch (IllegalStateException ignored) {
+        mRebuilding = true;
+        try {
+            List<MediaController> sessions = mSource == null
+                    ? java.util.Collections.emptyList() : mSource.getSessionList();
+            java.util.List<ScrollableMediaCardView> newCards = new java.util.ArrayList<>();
+            java.util.List<MediaSession.Token> newTokens = new java.util.ArrayList<>();
+            for (MediaController session : sessions) {
+                ScrollableMediaCardView existing = findCard(session.getSessionToken());
+                if (existing == null) {
+                    existing = new ScrollableMediaCardView(getContext());
+                    existing.setController(mSource, session);
+                }
+                newCards.add(existing);
+                newTokens.add(session.getSessionToken());
             }
-            bindContent();
-            applyPlaybackState(mController.getPlaybackState());
+            // Unregister cards that dropped out (their controller callbacks are cleared
+            // inside the card when the binding changes).
+            for (ScrollableMediaCardView card : mCards) {
+                if (!newCards.contains(card)) {
+                    MediaController bound = card.getBoundController();
+                    card.setController(null, null);
+                }
+            }
+            mCards.clear();
+            mCards.addAll(newCards);
+            mCardTokens.clear();
+            mCardTokens.addAll(newTokens);
+
+            mCardContent.removeAllViews();
+            int padding = getResources().getDimensionPixelSize(
+                    R.dimen.scrollable_media_padding);
+            for (int i = 0; i < mCards.size(); i++) {
+                ScrollableMediaCardView card = mCards.get(i);
+                // updateMediaPaddings: every card except the last carries the end margin
+                // (qs_media_padding) that makes one page exactly one card width. The width
+                // is set explicitly during onMeasure (below) — like the shade, where the
+                // carousel measures each player at exactly its own width.
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        mLastContentWidth > 0 ? mLastContentWidth
+                                : ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.rightMargin = i == mCards.size() - 1 ? 0 : padding;
+                mCardContent.addView(card, lp);
+            }
+
+            mPageIndicator.setNumPages(mCards.size());
+            if (mScrollHandler != null) {
+                mScrollHandler.onPlayersChanged(
+                        mScrollView.getWidth() > 0 ? mScrollView.getWidth() + padding : 0);
+            }
+            // Keep the pinned/active session's page on screen when the set changes.
+            MediaController active = mSource == null ? null : mSource.getController();
+            if (active != null) {
+                int index = mCardTokens.indexOf(active.getSessionToken());
+                if (index >= 0 && index != mCarouselIndex) {
+                    mCarouselIndex = index;
+                    mScrollHandler.setVisibleMediaIndex(index);
+                }
+            }
+        } finally {
+            mRebuilding = false;
         }
     }
 
-    // ---------------------------------------------------------------------
-    // (Show/hide with an animated height collapse removed: the row is always
-    // laid out at its natural height, empty or not — see class javadoc.)
-    // ---------------------------------------------------------------------
+    @Nullable
+    private ScrollableMediaCardView findCard(MediaSession.Token token) {
+        for (int i = 0; i < mCardTokens.size(); i++) {
+            if (mCardTokens.get(i).equals(token)) {
+                return mCards.get(i);
+            }
+        }
+        return null;
+    }
 
-    // ---------------------------------------------------------------------
+    // ----------------------------------------------------------------------
     // Scaled row sizing (see ScrollableResizableRow / ScrollableWidgetResizeFrame)
-    // ---------------------------------------------------------------------
+    // ----------------------------------------------------------------------
 
     @Override
     public View getWidgetView() {
@@ -372,6 +247,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         if (mWidthScale != widthScale || mHeightScale != heightScale) {
             mWidthScale = widthScale;
             mHeightScale = heightScale;
+            mScrollView.setHeightScale(heightScale);
             requestLayout();
         }
     }
@@ -392,19 +268,40 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             setMeasuredDimension(width, 0);
             return;
         }
-        // The player card is the single child; measure it at the scaled width so the
-        // ConstraintLayout inside resolves all its constraints at the final size.
+        // The carousel is the single child; measure it at the scaled width so the
+        // ConstraintLayout inside each card resolves all its constraints at the final
+        // size. Each card is measured at EXACTLY this width (the shade measures every
+        // player at the carousel width too — MediaCarouselController.setCarouselBounds +
+        // the media_player width WRAP_CONTENT on the TransitionLayout).
         int contentWidth = Math.round(width * mWidthScale);
-        super.onMeasure(
+        int padding = getResources().getDimensionPixelSize(R.dimen.scrollable_media_padding);
+        if (contentWidth != mLastContentWidth) {
+            mLastContentWidth = contentWidth;
+            for (int i = 0; i < mCards.size(); i++) {
+                LinearLayout.LayoutParams lp =
+                        (LinearLayout.LayoutParams) mCards.get(i).getLayoutParams();
+                lp.width = contentWidth;
+                lp.rightMargin = i == mCards.size() - 1 ? 0 : padding;
+            }
+            if (mScrollHandler != null && contentWidth > 0) {
+                // One page = one card width + its end margin.
+                mScrollHandler.onPlayersChanged(contentWidth + padding);
+            }
+        }
+        // Measure the scroll view exactly at the card width: this is the carousel
+        // viewport. Height is UNSPECIFIED so it takes the card's natural height; the
+        // user height scale is applied inside the scroll view itself.
+        mScrollView.measure(
                 MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-        int naturalHeight = getMeasuredHeight();
+        // The page indicator overlays the card's bottom edge; measure it too (it is
+        // positioned manually in onLayout).
+        mPageIndicator.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        int naturalHeight = mScrollView.getMeasuredHeight();
         int height = Math.round(naturalHeight * mHeightScale);
-        // During the show/hide animation the layout params carry the exact animated height.
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
             height = MeasureSpec.getSize(heightMeasureSpec);
         }
-        // Report the full row width: the card itself is laid out offset below.
         setMeasuredDimension(width, height);
     }
 
@@ -415,440 +312,17 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         int contentWidth = Math.round(rowWidth * mWidthScale);
         int freeSpace = Math.max(0, rowWidth - contentWidth);
         int offsetX = Math.round(freeSpace * mPositionX);
-        if (getChildCount() > 0) {
-            View child = getChildAt(0);
-            // Lay the card out at the size it was measured with, positioned by mPositionX;
-            // ConstraintLayout positions its own children within this frame.
-            int childWidth = Math.min(contentWidth, child.getMeasuredWidth());
-            int childHeight = Math.min(rowHeight, child.getMeasuredHeight());
-            child.layout(offsetX, 0, offsetX + childWidth, childHeight);
+        if (mScrollView.getVisibility() != GONE) {
+            int childWidth = Math.min(contentWidth, mScrollView.getMeasuredWidth());
+            int childHeight = Math.min(rowHeight, mScrollView.getMeasuredHeight());
+            mScrollView.layout(offsetX, 0, offsetX + childWidth, childHeight);
         }
-    }
-
-    // ---------------------------------------------------------------------
-    // Media content binding (the MediaControlPanel.bindPlayer port)
-    // ---------------------------------------------------------------------
-
-    private void bindContent() {
-        if (mController == null) {
-            return;
-        }
-        MediaMetadata metadata = mController.getMetadata();
-        CharSequence title = null;
-        CharSequence artist = null;
-        mDuration = 0L;
-        Bitmap artworkBitmap = null;
-        if (metadata != null) {
-            title = metadata.getText(MediaMetadata.METADATA_KEY_TITLE);
-            artist = metadata.getText(MediaMetadata.METADATA_KEY_ARTIST);
-            if (artist == null || artist.length() == 0) {
-                artist = metadata.getText(MediaMetadata.METADATA_KEY_ALBUM_ARTIST);
-            }
-            mDuration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION);
-            artworkBitmap = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
-            if (artworkBitmap == null) {
-                artworkBitmap = metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
-            }
-        }
-        mTitle.setText(title == null ? "" : title);
-        mArtist.setText(artist == null ? "" : artist);
-
-        bindAppIcon();
-
-        if (artworkBitmap != null) {
-            mAlbumArt.setImageBitmap(artworkBitmap);
-        }
-        // trebufork: rebuild the Monet scheme from the artwork and retint the whole player,
-        // exactly like ColorSchemeTransition.updateColorScheme in SystemUI.
-        updateColorScheme(artworkBitmap);
-    }
-
-    /**
-     * trebufork: the app icon slot mirrors the SystemUI shade player: the app's media
-     * notification small icon when available (MediaControlViewBinder normal path), otherwise
-     * the launcher icon shaped through the LauncherIcons factory with the shade player's
-     * grayscale filter (resume-player path). Called from every bind (metadata and playback
-     * state) so the icon picks up as soon as the notification listener delivers it, without
-     * waiting for a metadata change.
-     */
-    private void bindAppIcon() {
-        Drawable appIcon = mSource == null ? null : mSource.getAppIcon();
-        Drawable smallIcon = mController == null ? null
-                : NotificationListener.getMediaSmallIcon(mController.getPackageName());
-        if (smallIcon != null) {
-            mAppIcon.setImageDrawable(smallIcon);
-            // SystemUI normal path: the small icon is tinted with the scheme's
-            // accentPrimary (MediaControlViewBinder.bindArtworkAndColor).
-            mAppIcon.setColorFilter(mAccentPrimary);
-            mAppIcon.setVisibility(VISIBLE);
-            mAppIconUsesSmallIcon = true;
-        } else if (appIcon != null) {
-            Drawable shaped = shapeAppIcon(appIcon);
-            mAppIcon.setImageDrawable(shaped);
-            // Resume-player path: the launcher icon carries only the grayscale filter,
-            // no accent tint (MediaControlViewBinder.useGrayColorFilter).
-            mAppIcon.setColorFilter(GRAYSCALE_FILTER);
-            mAppIcon.setVisibility(VISIBLE);
-            mAppIconUsesSmallIcon = false;
-        } else {
-            mAppIcon.setVisibility(GONE);
-        }
-    }
-
-    /**
-     * Applies the monet scheme derived from the artwork to every colored surface. Faithful
-     * port of Lineage 23.2 ColorSchemeTransition + MediaColorSchemes: scrim =
-     * onSurface (neutral1 t10, 0.65/0.75 alpha); title, artist, seekbar wave/thumb,
-     * prev/next and custom action icons = plain white (media_on_background, no runtime
-     * tint); play/pause background = primaryFixed (accent1 tone tracking the seed) with
-     * an onPrimaryFixed icon (accent1 t10, near-black); tap ripple + app icon filter =
-     * primaryFixed.
-     */
-    private void updateColorScheme(@Nullable Bitmap artwork) {
-        // The scheme extraction (WallpaperColors quantization, seed scoring and four HCT
-        // tonal palettes — dozens of CAM16 solver runs) is expensive; SystemUI runs exactly
-        // this on mBackgroundExecutor in MediaControlPanel and only applies the result on
-        // the main thread. Running it synchronously in bind() janks the launcher right
-        // when the player appears during a scroll.
-        //
-        // Note: WallpaperColors.fromBitmap only reads the bitmap, and the scaled-down copy
-        // it creates is local to the extraction, so a background pass is safe. The bitmap
-        // itself is also being shown via setImageBitmap — it is only read here.
-        final Bitmap art = (artwork != null && !artwork.isRecycled())
-                ? artwork : null;
-        final int requestToken = ++mSchemeRequestToken;
-        if (art == null && mColorScheme != null) {
-            // No artwork: keep the previous tinting rather than recomputing the fallback.
-            return;
-        }
-        Executors.SINGLE.execute(() -> {
-            final MonetColorExtractor scheme = MonetColorExtractor.fromArtwork(art, false);
-            post(() -> {
-                if (requestToken != mSchemeRequestToken || !isAttachedToWindow()) {
-                    return; // a newer bind superseded this one
-                }
-                applyColorScheme(scheme);
-            });
-        });
-    }
-
-    /** Main-thread half of {@link #updateColorScheme}: tints every surface. */
-    private void applyColorScheme(MonetColorExtractor scheme) {
-        mColorScheme = scheme;
-
-        int scrimColor = scheme.getScrim();
-        int accent = scheme.getPillBackground();
-        mAccentPrimary = accent;
-        int pillIcon = scheme.getPillIcon();
-
-        // Radial scrim over the album art (addGradientToPlayerAlbum: qs_media_scrim with
-        // MEDIA_PLAYER_SCRIM_START/END_ALPHA = 0.25 / 1.0).
-        applyScrim(scrimColor);
-
-        // Title and artist are plain white (media_on_background) — the shade applies no
-        // runtime text tint at all (Lineage removed the textPrimary/textSecondary
-        // transitions; the layouts hardcode @color/media_on_background).
-        mTitle.setTextColor(white());
-        mArtist.setTextColor(white());
-
-        // The app icon slot follows the branch chosen in bindAppIcon: accentPrimary tint
-        // for the media small icon, grayscale for the launcher-icon fallback.
-        if (mAppIcon.getVisibility() == VISIBLE) {
-            if (mAppIconUsesSmallIcon) {
-                mAppIcon.setColorFilter(mAccentPrimary);
-            } else {
-                mAppIcon.setColorFilter(GRAYSCALE_FILTER);
-            }
-        }
-
-        // Small action icons: media_player_action_color = plain white (the shade never
-        // retints the transparent buttons from the scheme).
-        int white = white();
-        mPrev.setImageTintList(android.content.res.ColorStateList.valueOf(white));
-        mNext.setImageTintList(android.content.res.ColorStateList.valueOf(white));
-        for (ImageButton button : mCustomActions) {
-            button.setImageTintList(android.content.res.ColorStateList.valueOf(white));
-        }
-
-        // Play/pause: backgroundTint = primaryFixed (accentPrimary); imageTint =
-        // onPrimaryFixed (a dark tone of the same hue, ColorSchemeTransition.onPrimary).
-        tintPlayPauseBackground();
-        mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(pillIcon));
-
-        // Tap ripple color = accentPrimary (ColorSchemeTransition feeds the
-        // MultiRippleController the same color).
-        mRippleView.updateColor(accent);
-
-        // Seekbar: wave, thumb and rest-of-bar follow the style's media_on_background
-        // (white); Lineage's MediaPlayer.ProgressBar hardcodes the color, no scheme tint.
-        if (mSquiggly != null) {
-            mSquiggly.setTintList(android.content.res.ColorStateList.valueOf(white));
-        }
-        mSeekBar.setThumbTintList(android.content.res.ColorStateList.valueOf(white));
-        mSeekBar.setProgressBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(white));
-    }
-
-    /** Tints the current play/pause container background with the scheme accent. */
-    private void tintPlayPauseBackground() {
-        Drawable background = mPlayPause.getBackground();
-        if (background != null) {
-            background.mutate().setTint(mAccentPrimary);
-        }
-    }
-
-    /**
-     * Plays the tap ripple centered on an action button, like
-     * MediaControlViewBinder.createTouchRippleAnimation: the circle grows from the button
-     * center to cover the whole player. The button's parent (the player card) is the same
-     * view the ripple overlay is constrained to, so card coordinates match directly.
-     */
-    private void playButtonRipple(View button) {
-        mRippleView.playRipple(
-                button.getX() + button.getWidth() / 2f,
-                button.getY() + button.getHeight() / 2f);
-    }
-
-    private int white() {
-        return getResources().getColor(R.color.scrollable_media_on_background);
-    }
-
-    /**
-     * Radial scrim over the album art (Lineage 23.2 addGradientToPlayerAlbum: qs_media_scrim
-     * with the onSurface color at trebufork's lightened 0.45 / 0.60 alphas).
-     */
-    private void applyScrim(int scrimColor) {
-        Drawable current = mAlbumArt.getForeground();
-        if (current instanceof LayerDrawable) {
-            current.mutate();
-            GradientDrawable gradient = (GradientDrawable)
-                    ((LayerDrawable) current).getDrawable(0);
-            if (gradient != null) {
-                gradient.setColors(new int[] {
-                        com.android.internal.graphics.ColorUtils.setAlphaComponent(
-                                scrimColor, (int) (SCRIM_START_ALPHA * 255f)),
-                        com.android.internal.graphics.ColorUtils.setAlphaComponent(
-                                scrimColor, (int) (SCRIM_END_ALPHA * 255f)),
-                });
-            }
-            return;
-        }
-        Drawable scrim = getResources().getDrawable(
-                R.drawable.scrollable_media_scrim, getContext().getTheme()).mutate();
-        GradientDrawable gradient = (GradientDrawable) scrim;
-        gradient.setColors(new int[] {
-                com.android.internal.graphics.ColorUtils.setAlphaComponent(
-                        scrimColor, (int) (SCRIM_START_ALPHA * 255f)),
-                com.android.internal.graphics.ColorUtils.setAlphaComponent(
-                        scrimColor, (int) (SCRIM_END_ALPHA * 255f)),
-        });
-        mAlbumArt.setForeground(new LayerDrawable(new Drawable[] {gradient}));
-    }
-
-    private void applyPlaybackState(@Nullable PlaybackState state) {
-        boolean wasPlaying = mIsPlaying;
-        if (state == null) {
-            mIsPlaying = false;
-            mPlaybackSpeed = 0f;
-        } else {
-            mIsPlaying = state.getState() == PlaybackState.STATE_PLAYING;
-            mPlaybackSpeed = state.getPlaybackSpeed();
-            mStatePosition = state.getPosition();
-            mStateElapsedRealtime = SystemClock.elapsedRealtime();
-        }
-        applyPlayPauseIcon(wasPlaying);
-        // trebufork: the small icon may arrive after the first bind (the notification listener
-        // connects asynchronously), so re-check it on every playback state update too.
-        bindAppIcon();
-        // trebufork: the squiggly wave animates while playing and flattens when paused,
-        // exactly like SeekBarViewModel drives SquigglyProgress.animate.
-        if (mSquiggly != null) {
-            mSquiggly.setAnimate(mIsPlaying);
-        }
-        boolean seekable = state != null
-                && (state.getActions() & PlaybackState.ACTION_SEEK_TO) != 0;
-        mSeekBar.setEnabled(seekable && mDuration > 0);
-        updateProgressUi();
-        scheduleProgressTick();
-        bindCustomActions(state);
-    }
-
-    // Trebufork port of SystemUI's AnimationBindHandler for the play/pause morphs: while
-    // a tap-triggered AVD morph is running, session-state rebinds are QUEUED and only
-    // applied when the morph ends — otherwise setImageResource would cut the animation
-    // mid-flight (bindButtonCommon starts the AVDs only on click, never on rebind).
-    @Nullable
-    private Runnable mQueuedPlayPauseRebind;
-    private final Animatable2.AnimationCallback mMorphEndCallback =
-            new Animatable2.AnimationCallback() {
-                @Override
-                public void onAnimationEnd(Drawable drawable) {
-                    Runnable rebind = mQueuedPlayPauseRebind;
-                    if (rebind != null && !isPlayPauseMorphRunning()) {
-                        mQueuedPlayPauseRebind = null;
-                        rebind.run();
-                    }
-                }
-            };
-
-    /** True while the play/pause icon or container AVD morph is running. */
-    private boolean isPlayPauseMorphRunning() {
-        return isRunning(mPlayPause.getDrawable()) || isRunning(mPlayPause.getBackground());
-    }
-
-    private static boolean isRunning(@Nullable Drawable drawable) {
-        return drawable instanceof Animatable && ((Animatable) drawable).isRunning();
-    }
-
-    private void registerMorphEndCallback(@Nullable Drawable drawable) {
-        if (drawable instanceof Animatable2) {
-            // registerAnimationCallback adds — clear first to avoid stacking duplicate
-            // callbacks across rebinds.
-            ((Animatable2) drawable).clearAnimationCallbacks();
-            ((Animatable2) drawable).registerAnimationCallback(mMorphEndCallback);
-        }
-    }
-
-    /**
-     * Shows the play/pause icon and container with the Lineage 23.2 (Android 16) morphs,
-     * exactly like MediaActions.getStandardAction + bindButtonCommon + AnimationBindHandler:
-     * <ul>
-     * <li>playing → pause icon AVD + pause button container (pill blob), resting pose;</li>
-     * <li>paused → play icon AVD + play button container (rounded rectangle), resting pose;</li>
-     * <li>the AVDs are started ONLY by the click listener (the tap plays the 333ms morph
-     * toward the next state); state-driven rebinds never start them;</li>
-     * <li>rebinds arriving while a morph is running are delayed until it ends, so the tap
-     * animation is never cut off mid-flight.</li>
-     * </ul>
-     */
-    private void applyPlayPauseIcon(boolean wasPlaying) {
-        final int iconRes = mIsPlaying
-                ? R.drawable.scrollable_media_ic_pause_button
-                : R.drawable.scrollable_media_ic_play_button;
-        final int bgRes = mIsPlaying
-                ? R.drawable.scrollable_media_ic_pause_button_container
-                : R.drawable.scrollable_media_ic_play_button_container;
-        Runnable rebind = () -> {
-            mPlayPause.setImageResource(iconRes);
-            mPlayPause.setBackgroundResource(bgRes);
-            tintPlayPauseBackground();
-            // Track the morph end so a queued rebind fires exactly when the AVD finishes
-            // (AnimationBindHandler registers itself as an Animatable2 callback).
-            registerMorphEndCallback(mPlayPause.getDrawable());
-            registerMorphEndCallback(mPlayPause.getBackground());
-        };
-        if (mPlayPauseShown && isPlayPauseMorphRunning()) {
-            // A tap morph is in flight: defer the bind until it completes, exactly like
-            // AnimationBindHandler.tryExecute.
-            mQueuedPlayPauseRebind = rebind;
-            return;
-        }
-        mQueuedPlayPauseRebind = null;
-        // First bind and state changes land on the static resting poses; the morph only
-        // plays on tap (bindButtonCommon never starts the AVDs during a rebind).
-        rebind.run();
-        mPlayPauseShown = true;
-    }
-
-    /** Binds PlaybackState custom actions (heart, shuffle, ...) like bindActionButtons. */
-    private void bindCustomActions(@Nullable PlaybackState state) {
-        java.util.List<PlaybackState.CustomAction> actions = state == null
-                ? java.util.Collections.emptyList() : state.getCustomActions();
-        for (int i = 0; i < mCustomActions.length; i++) {
-            ImageButton button = mCustomActions[i];
-            if (i < actions.size()) {
-                PlaybackState.CustomAction action = actions.get(i);
-                // trebufork: the framework CustomAction.getIcon() returns a resource id in
-                // the *media app's* package — resolve it through that app's resources,
-                // exactly like SystemUI's MediaAction loading does.
-                int iconRes = action.getIcon();
-                Drawable icon = null;
-                if (iconRes != 0) {
-                    try {
-                        String pkg = mController.getPackageName();
-                        android.content.Context appContext = getContext()
-                                .createPackageContext(pkg, 0);
-                        icon = appContext.getResources().getDrawable(iconRes,
-                                appContext.getTheme());
-                    } catch (Exception ignored) {
-                        // Package not found or resource missing: hide the button.
-                    }
-                }
-                if (icon != null) {
-                    button.setImageDrawable(icon);
-                    button.setImageTintList(
-                            android.content.res.ColorStateList.valueOf(
-                                    mColorScheme == null
-                                            ? white() : mColorScheme.getTextPrimary()));
-                    button.setVisibility(VISIBLE);
-                    button.setContentDescription(action.getName());
-                    button.setOnClickListener(v -> {
-                        performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                        playButtonRipple(v);
-                        MediaController.TransportControls controls =
-                                mController == null ? null : mController.getTransportControls();
-                        if (controls != null) {
-                            controls.sendCustomAction(action.getAction(), action.getExtras());
-                        }
-                    });
-                } else {
-                    button.setVisibility(GONE);
-                    button.setOnClickListener(null);
-                }
-            } else {
-                button.setVisibility(GONE);
-                button.setOnClickListener(null);
-            }
-        }
-    }
-
-    private void updateProgressUi() {
-        if (mController == null) {
-            return;
-        }
-        long position = mStatePosition;
-        if (mIsPlaying && mPlaybackSpeed != 0f) {
-            position += (long) ((SystemClock.elapsedRealtime() - mStateElapsedRealtime)
-                    * mPlaybackSpeed);
-        }
-        if (mDuration > 0 && position > mDuration) {
-            position = mDuration;
-        }
-        mSeekBar.setMax(mDuration > 0 ? (int) mDuration : 0);
-        if (!mSeekBar.isPressed()) {
-            mSeekBar.setProgress((int) position);
-        }
-    }
-
-    private void scheduleProgressTick() {
-        removeCallbacks(mProgressTick);
-        if (mIsPlaying) {
-            postDelayed(mProgressTick, PROGRESS_TICK_MS);
-        }
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        removeCallbacks(mProgressTick);
-        if (mController != null) {
-            try {
-                mController.unregisterCallback(mCallback);
-            } catch (IllegalStateException ignored) {
-            }
-        }
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (mController != null) {
-            try {
-                mController.registerCallback(mCallback);
-            } catch (IllegalStateException ignored) {
-            }
-        }
-        refresh();
+        // The page indicator overlays the carousel's bottom edge, inside the row bounds.
+        int indicatorWidth = mPageIndicator.getMeasuredWidth();
+        int indicatorHeight = mPageIndicator.getMeasuredHeight();
+        int indicatorX = offsetX + (contentWidth - indicatorWidth) / 2;
+        mPageIndicator.layout(indicatorX, rowHeight - indicatorHeight - 4,
+                indicatorX + indicatorWidth, rowHeight - 4);
     }
 
     /** Single background thread for the Monet scheme extraction (like mBackgroundExecutor). */

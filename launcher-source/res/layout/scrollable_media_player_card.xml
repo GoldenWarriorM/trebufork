@@ -2,16 +2,17 @@
 <!--
   ~ Copyright (C) 2026 The trebufork Project
   ~
-  ~ Verbatim adaptation of the SystemUI media player layout
-  ~ (packages/SystemUI/res/layout/media_session_view.xml) with the expanded-state
-  ~ constraints from res/xml/media_session_expanded.xml inlined: the play/pause pill sits
-  ~ above the bottom action row, and the bottom row is prev | seekbar | next | custom
-  ~ actions spread across the card, exactly like the shade player.
+  ~ One player card of the media carousel: verbatim adaptation of the SystemUI media
+  ~ player layout (packages/SystemUI/res/layout/media_session_view.xml) with the
+  ~ expanded-state constraints from res/xml/media_session_expanded.xml inlined — the same
+  ~ content as scrollable_media_player_view.xml, minus the carousel page indicator
+  ~ (which lives on the carousel row, not inside a card) and with card_* resource ids so
+  ~ ScrollableMediaCardView can bind it independently of the row.
   -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scrollable_media_player"
+    android:id="@+id/card_media_player"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal|fill_vertical"
@@ -20,7 +21,7 @@
     android:clipToOutline="true">
 
     <ImageView
-        android:id="@+id/scrollable_media_album_art"
+        android:id="@+id/card_media_album_art"
         android:layout_width="match_parent"
         android:layout_height="@dimen/scrollable_media_session_height"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +38,7 @@
     <!-- Tap ripple overlay (MultiRippleView in the shade player): the circle expands
          from the pressed action button across the whole card and is clipped to it. -->
     <com.android.launcher3.ScrollableMediaRippleView
-        android:id="@+id/scrollable_media_touch_ripple"
+        android:id="@+id/card_media_touch_ripple"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +50,7 @@
 
     <!-- App icon -->
     <com.android.internal.widget.CachingIconView
-        android:id="@+id/scrollable_media_icon"
+        android:id="@+id/card_media_icon"
         android:layout_width="@dimen/scrollable_media_app_icon_size"
         android:layout_height="@dimen/scrollable_media_app_icon_size"
         android:layout_marginStart="@dimen/scrollable_media_padding"
@@ -59,7 +60,7 @@
 
     <!-- Song name -->
     <TextView
-        android:id="@+id/scrollable_media_header_title"
+        android:id="@+id/card_media_header_title"
         android:fontFamily="@*android:string/config_headlineFontFamilyMedium"
         android:singleLine="true"
         android:textSize="16sp"
@@ -70,13 +71,13 @@
         android:layout_marginEnd="@dimen/scrollable_media_padding"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/scrollable_media_actionPlayPause"
-        app:layout_constraintBottom_toTopOf="@+id/scrollable_media_header_artist"
+        app:layout_constraintEnd_toStartOf="@+id/card_media_actionPlayPause"
+        app:layout_constraintBottom_toTopOf="@+id/card_media_header_artist"
         app:layout_constraintHorizontal_bias="0" />
 
     <!-- Artist name -->
     <TextView
-        android:id="@+id/scrollable_media_header_artist"
+        android:id="@+id/card_media_header_artist"
         android:fontFamily="@*android:string/config_headlineFontFamily"
         android:singleLine="true"
         android:textSize="14sp"
@@ -88,15 +89,15 @@
         android:layout_marginBottom="12dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/scrollable_media_actionPlayPause"
-        app:layout_constraintBottom_toTopOf="@+id/scrollable_media_actionPrev"
+        app:layout_constraintEnd_toStartOf="@id/card_media_actionPlayPause"
+        app:layout_constraintBottom_toTopOf="@+id/card_media_actionPrev"
         app:layout_constraintHorizontal_bias="0" />
 
     <!-- Play/pause sits above the bottom action row, right-aligned (expanded state).
          72x48dp like the shade: qs_media_action_play_pause_width x 48dp; the background
          is the 88x56dp container AVD scaled down into the 72x48dp frame. -->
     <ImageButton
-        android:id="@+id/scrollable_media_actionPlayPause"
+        android:id="@+id/card_media_actionPlayPause"
         style="@style/ScrollableMediaPlayer.SessionAction.Primary"
         android:layout_width="@dimen/scrollable_media_action_play_pause_width"
         android:layout_height="48dp"
@@ -104,10 +105,10 @@
         android:layout_marginEnd="@dimen/scrollable_media_padding"
         android:layout_marginBottom="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/scrollable_media_actionNext" />
+        app:layout_constraintBottom_toTopOf="@+id/card_media_actionNext" />
 
     <ImageButton
-        android:id="@+id/scrollable_media_actionPrev"
+        android:id="@+id/card_media_actionPrev"
         style="@style/ScrollableMediaPlayer.SessionAction.Secondary"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -122,7 +123,7 @@
          Padding 15dp top / 12dp bottom centers the 2dp track in the 48dp view, exactly
          like the shade's qs_media_session_enabled_seekbar_vertical_padding + 12dp. -->
     <SeekBar
-        android:id="@+id/scrollable_media_progress_bar"
+        android:id="@+id/card_media_progress_bar"
         style="@style/ScrollableMediaPlayer.ProgressBar"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -134,13 +135,13 @@
         android:layout_marginTop="0dp"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        app:layout_constraintStart_toEndOf="@id/scrollable_media_actionPrev"
-        app:layout_constraintEnd_toStartOf="@+id/scrollable_media_actionNext"
+        app:layout_constraintStart_toEndOf="@id/card_media_actionPrev"
+        app:layout_constraintEnd_toStartOf="@+id/card_media_actionNext"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1" />
 
     <ImageButton
-        android:id="@+id/scrollable_media_actionNext"
+        android:id="@+id/card_media_actionNext"
         style="@style/ScrollableMediaPlayer.SessionAction.Secondary"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -148,14 +149,14 @@
         android:layout_marginEnd="@dimen/scrollable_media_action_spacing"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/scrollable_media_action0"
+        app:layout_constraintEnd_toStartOf="@+id/card_media_action0"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <!-- Custom session actions (heart / shuffle etc.), visibility controlled in code.
          SystemUI binds only two custom actions into the bottom row (action0, action1) —
          anything beyond is paginated, so the row never overcrowds the seekbar. -->
     <ImageButton
-        android:id="@+id/scrollable_media_action0"
+        android:id="@+id/card_media_action0"
         style="@style/ScrollableMediaPlayer.SessionAction.Secondary"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -164,11 +165,11 @@
         android:layout_marginBottom="0dp"
         android:layout_marginTop="0dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/scrollable_media_action1"
+        app:layout_constraintEnd_toStartOf="@+id/card_media_action1"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageButton
-        android:id="@+id/scrollable_media_action1"
+        android:id="@+id/card_media_action1"
         style="@style/ScrollableMediaPlayer.SessionAction.Secondary"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -179,17 +180,5 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <!-- Carousel page indicator (SystemUI media_page_indicator): animated dots shown
-         only when more than one player is active; overlaid at the card's bottom edge
-         (must stay INSIDE the card bounds, which clip their outline). -->
-    <com.android.launcher3.ScrollableMediaPageIndicator
-        android:id="@+id/scrollable_media_page_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
