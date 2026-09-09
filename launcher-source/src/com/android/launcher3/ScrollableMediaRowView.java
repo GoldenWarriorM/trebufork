@@ -94,6 +94,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mCardContent = findViewById(R.id.scrollable_media_carousel_content);
         mPageIndicator = findViewById(R.id.scrollable_media_page_indicator);
         mScrollHandler = new ScrollableMediaCarouselScrollHandler(mScrollView, mPageIndicator);
+        // trebufork: re-measure after every completed launcher transition — covers paths
+        // where window focus never left the launcher window (e.g. closing a player from
+        // recents), so the row can grow/collapse once back at idle home.
+        registerStableHeightTrigger();
         // trebufork: the carousel consumes every touch, so the row's own long-press
         // listener (remove/reorder menu, resize frame) never fires — same problem widget
         // rows solve by wiring the menu onto the host view. Forward the carousel's
@@ -391,12 +395,60 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         if (launcherStable) {
             mLastStableHeight = height;
         } else if (mLastStableHeight >= 0) {
+            if (height != mLastStableHeight) {
+                android.util.Log.d("TrebuforkMedia", "row pinned: natural=" + height
+                        + " lastStable=" + mLastStableHeight + " cards=" + mCards.size());
+            }
             height = mLastStableHeight;
         }
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
             height = MeasureSpec.getSize(heightMeasureSpec);
         }
         setMeasuredDimension(width, height);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        // trebufork: while the launcher was unfocused (app launch/foreground) the row kept its
+        // last stable measured height, so sessions appearing/disappearing in that window did
+        // NOT change the row size and could not shift the launch animation. But a pinned height
+        // is only a snapshot: once home becomes interactive again the row must re-measure to
+        // adopt the new natural height — otherwise a player registered during the launch never
+        // shows up (row still pinned at 0) and closed players leave a permanent blank slot
+        // (row still pinned at full height).
+        // POST the re-measure: the view tree receives window-focus change BEFORE
+        // BaseActivity.onWindowFocusChanged updates ACTIVITY_STATE_WINDOW_FOCUSED, so a
+        // synchronous measure here would still read the stale flag and re-pin forever.
+        android.util.Log.d("TrebuforkMedia", "row focus changed=" + hasWindowFocus
+                + " lastStable=" + mLastStableHeight);
+        if (hasWindowFocus) {
+            post(this::requestLayout);
+        }
+    }
+
+    /** trebufork: registers once; every completed launcher transition re-checks the height. */
+    private void registerStableHeightTrigger() {
+        Launcher launcher;
+        try {
+            launcher = Launcher.getLauncher(getContext());
+        } catch (ClassCastException | IllegalStateException e) {
+            return;
+        }
+        launcher.getStateManager().addStateListener(
+                new StateManager.StateListener<LauncherState>() {
+                    @Override
+                    public void onStateTransitionComplete(LauncherState finalState) {
+                        // Covers paths where window focus never changed (e.g. a player killed
+                        // from the launcher's own recents): when the launcher settles back into
+                        // NORMAL, the row must re-measure to grow (player registered mid-launch)
+                        // or collapse (all sessions gone) — at idle home this cannot disturb
+                        // any animation.
+                        if (finalState == LauncherState.NORMAL) {
+                            post(ScrollableMediaRowView.this::requestLayout);
+                        }
+                    }
+                });
     }
 
     @Override
