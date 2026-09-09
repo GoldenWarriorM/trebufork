@@ -19,6 +19,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -210,7 +212,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             playButtonRipple(v);
             // Same as bindButtonCommon: the icon AVD and the current container AVD both
-            // start their morph right on the tap, before the session state updates.
+            // start their morph right on the tap, before the session state updates. The
+            // rebind that lands the new resting pose is deferred until the morph ends.
             Drawable icon = mPlayPause.getDrawable();
             if (icon instanceof android.graphics.drawable.Animatable) {
                 ((android.graphics.drawable.Animatable) icon).start();
@@ -642,48 +645,81 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         bindCustomActions(state);
     }
 
-    /**
-     * Shows the play/pause icon and container with the Lineage 23.2 (Android 16) morphs,
-     * exactly like MediaActions.getStandardAction + bindButtonCommon:
-     * <ul>
-     * <li>playing → pause icon AVD + pause button container (pill blob);</li>
-     * <li>paused → play icon AVD + play button container (rounded rectangle).</li>
-     * </ul>
-     * Both the 24dp icon AVD (333ms path/translate morph) and the 88x56dp container AVD
-     * (two-phase 167ms scale + 333ms path morph) are {@code AnimatedVectorDrawable}s that
-     * run their forward morph when started after the swap; the first bind shows the
-     * static resting states. On tap the click listener also starts the background AVD so
-     * the morph begins immediately, before the session state updates.
-     */
-    private void applyPlayPauseIcon(boolean wasPlaying) {
-        if (mPlayPauseShown && wasPlaying != mIsPlaying) {
-            // State change: swap in the animated variants and run the morph forward.
-            mPlayPause.setImageResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_pause_button
-                    : R.drawable.scrollable_media_ic_play_button);
-            startIfAnimatable(mPlayPause.getDrawable());
-            mPlayPause.setBackgroundResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_pause_button_container
-                    : R.drawable.scrollable_media_ic_play_button_container);
-            startIfAnimatable(mPlayPause.getBackground());
-            tintPlayPauseBackground();
-        } else {
-            // First bind (or no state change): the static resting states.
-            mPlayPause.setImageResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_pause_button
-                    : R.drawable.scrollable_media_ic_play_button);
-            mPlayPause.setBackgroundResource(mIsPlaying
-                    ? R.drawable.scrollable_media_ic_pause_button_container
-                    : R.drawable.scrollable_media_ic_play_button_container);
-            tintPlayPauseBackground();
-        }
-        mPlayPauseShown = true;
+    // Trebufork port of SystemUI's AnimationBindHandler for the play/pause morphs: while
+    // a tap-triggered AVD morph is running, session-state rebinds are QUEUED and only
+    // applied when the morph ends — otherwise setImageResource would cut the animation
+    // mid-flight (bindButtonCommon starts the AVDs only on click, never on rebind).
+    @Nullable
+    private Runnable mQueuedPlayPauseRebind;
+    private final Animatable2.AnimationCallback mMorphEndCallback =
+            new Animatable2.AnimationCallback() {
+                @Override
+                public void onAnimationEnd(Drawable drawable) {
+                    Runnable rebind = mQueuedPlayPauseRebind;
+                    if (rebind != null && !isPlayPauseMorphRunning()) {
+                        mQueuedPlayPauseRebind = null;
+                        rebind.run();
+                    }
+                }
+            };
+
+    /** True while the play/pause icon or container AVD morph is running. */
+    private boolean isPlayPauseMorphRunning() {
+        return isRunning(mPlayPause.getDrawable()) || isRunning(mPlayPause.getBackground());
     }
 
-    private static void startIfAnimatable(Drawable drawable) {
-        if (drawable instanceof android.graphics.drawable.Animatable) {
-            ((android.graphics.drawable.Animatable) drawable).start();
+    private static boolean isRunning(@Nullable Drawable drawable) {
+        return drawable instanceof Animatable && ((Animatable) drawable).isRunning();
+    }
+
+    private void registerMorphEndCallback(@Nullable Drawable drawable) {
+        if (drawable instanceof Animatable2) {
+            // registerAnimationCallback adds — clear first to avoid stacking duplicate
+            // callbacks across rebinds.
+            ((Animatable2) drawable).clearAnimationCallbacks();
+            ((Animatable2) drawable).registerAnimationCallback(mMorphEndCallback);
         }
+    }
+
+    /**
+     * Shows the play/pause icon and container with the Lineage 23.2 (Android 16) morphs,
+     * exactly like MediaActions.getStandardAction + bindButtonCommon + AnimationBindHandler:
+     * <ul>
+     * <li>playing → pause icon AVD + pause button container (pill blob), resting pose;</li>
+     * <li>paused → play icon AVD + play button container (rounded rectangle), resting pose;</li>
+     * <li>the AVDs are started ONLY by the click listener (the tap plays the 333ms morph
+     * toward the next state); state-driven rebinds never start them;</li>
+     * <li>rebinds arriving while a morph is running are delayed until it ends, so the tap
+     * animation is never cut off mid-flight.</li>
+     * </ul>
+     */
+    private void applyPlayPauseIcon(boolean wasPlaying) {
+        final int iconRes = mIsPlaying
+                ? R.drawable.scrollable_media_ic_pause_button
+                : R.drawable.scrollable_media_ic_play_button;
+        final int bgRes = mIsPlaying
+                ? R.drawable.scrollable_media_ic_pause_button_container
+                : R.drawable.scrollable_media_ic_play_button_container;
+        Runnable rebind = () -> {
+            mPlayPause.setImageResource(iconRes);
+            mPlayPause.setBackgroundResource(bgRes);
+            tintPlayPauseBackground();
+            // Track the morph end so a queued rebind fires exactly when the AVD finishes
+            // (AnimationBindHandler registers itself as an Animatable2 callback).
+            registerMorphEndCallback(mPlayPause.getDrawable());
+            registerMorphEndCallback(mPlayPause.getBackground());
+        };
+        if (mPlayPauseShown && isPlayPauseMorphRunning()) {
+            // A tap morph is in flight: defer the bind until it completes, exactly like
+            // AnimationBindHandler.tryExecute.
+            mQueuedPlayPauseRebind = rebind;
+            return;
+        }
+        mQueuedPlayPauseRebind = null;
+        // First bind and state changes land on the static resting poses; the morph only
+        // plays on tap (bindButtonCommon never starts the AVDs during a rebind).
+        rebind.run();
+        mPlayPauseShown = true;
     }
 
     /** Binds PlaybackState custom actions (heart, shuffle, ...) like bindActionButtons. */
