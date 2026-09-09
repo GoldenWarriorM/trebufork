@@ -38,7 +38,19 @@ done
 if [ -f "$SRC_APK" ]; then
     APK_SIG="$(stat -c '%s-%Y' "$SRC_APK" 2>/dev/null)"
     INSTALL_MARKER="$MODDIR/.apk_installed"
-    if [ -n "$APK_SIG" ] && [ "$(cat "$INSTALL_MARKER" 2>/dev/null)" = "$APK_SIG" ]; then
+    # The marker alone is not enough: after a disable/re-enable cycle the
+    # cleanup watchdog has REMOVED the /data/app update while the marker
+    # (and the mounted APK) stayed identical — the reinstall must run again.
+    # So skip only when the marker matches AND the package manager still
+    # resolves the package into /data/app (i.e. the update is registered).
+    pm_path="$(pm path com.android.launcher3 2>/dev/null | head -1)"
+    pm_path="${pm_path#package:}"
+    case "$pm_path" in
+        /data/app/*) update_present=1 ;;
+        *) update_present=0 ;;
+    esac
+    if [ -n "$APK_SIG" ] && [ "$update_present" = 1 ] && \
+            [ "$(cat "$INSTALL_MARKER" 2>/dev/null)" = "$APK_SIG" ]; then
         : # same APK already registered, skip the kill-triggering reinstall
     else
         tries=0
@@ -71,5 +83,21 @@ if [ ! -f "$MARKER" ]; then
         android.app.role.HOME com.android.launcher3 2>/dev/null
     touch "$MARKER"
 fi
+
+# 5. Install the disable/remove watchdog into /data/adb/service.d. It lives
+#    OUTSIDE the module directory, so it still runs at boot when the module is
+#    disabled (no module scripts execute then) or has just been removed, and
+#    undoes the `pm install -r` update + wipes the launcher caches. While the
+#    module is active it is a no-op; uninstall.sh removes it on full removal.
+#    Keeping the copy fresh on every active boot also survives template updates.
+WATCHDOG_DST=/data/adb/service.d/trebufork-cleanup-watchdog.sh
+mkdir -p /data/adb/service.d 2>/dev/null
+cp "$MODDIR/trebufork-cleanup-watchdog.sh" "$WATCHDOG_DST" 2>/dev/null
+chmod 755 "$WATCHDOG_DST" 2>/dev/null
+chown 0:0 "$WATCHDOG_DST" 2>/dev/null
+restorecon "$WATCHDOG_DST" 2>/dev/null
+# Drop a stale lock left by an interrupted older watchdog run: the module is
+# obviously active right now, so the next service.d pass must not skip.
+rm -f "$WATCHDOG_DST.lock" 2>/dev/null
 
 exit 0
