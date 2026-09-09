@@ -56,6 +56,13 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
     private ScrollableResizableRow mRow;
     private ScrollableDesktopStore.DesktopItem mItem;
     private DragLayer mDragLayer;
+    // trebufork: the view whose bounds track the widget content on screen. For widget rows
+    // this is the widget host view child; for the media row (whose getWidgetView() returns
+    // the row itself, always full-width) it is the row's first child — the player card.
+    // The frame snaps to and tracks THIS view: the row's own bounds never change during a
+    // horizontal resize (its height is pixel-constant), so listening to the row would leave
+    // the frame hanging in place while the card resizes under it.
+    private View mContentView;
 
     private ImageView mLeftHandle;
     private ImageView mTopHandle;
@@ -135,8 +142,9 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         if (mRow != null && mRow instanceof View) {
             ((View) mRow).removeOnLayoutChangeListener(mRowLayoutListener);
         }
-        if (mRow != null && mRow.getWidgetView() != null) {
-            mRow.getWidgetView().removeOnLayoutChangeListener(mWidgetLayoutListener);
+        if (mContentView != null) {
+            mContentView.removeOnLayoutChangeListener(mWidgetLayoutListener);
+            mContentView = null;
         }
         if (getParent() != null) {
             ((ViewGroup) getParent()).removeView(this);
@@ -158,10 +166,29 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
 
     // trebufork: during a side-handle resize the row's own bounds stay the same (the row spans
     // the full list width and the pixel height is preserved), so the row listener above never
-    // fires and the frame hangs at a stale position. Track the widget/content view itself — its
-    // width changes with every drag step, keeping the wire and the handles on the widget.
+    // fires and the frame hangs at a stale position. Track the CONTENT view itself (see
+    // mContentView) — its width/offset change with every drag step, keeping the wire and the
+    // handles on the widget.
     private final View.OnLayoutChangeListener mWidgetLayoutListener =
             (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> snapToWidget();
+
+    /**
+     * trebufork: resolves the view whose bounds track the on-screen widget content.
+     * Widget rows: the host view child (getWidgetView()). Media rows: the row reports
+     * itself, but it always spans the full list width — the actually resized/moved view
+     * is its first child (the player card), so track that instead.
+     */
+    private static View findContentView(ScrollableResizableRow row) {
+        View rowView = (View) row;
+        View widget = row.getWidgetView();
+        if (widget != null && widget != rowView) {
+            return widget;
+        }
+        if (rowView instanceof ViewGroup && ((ViewGroup) rowView).getChildCount() > 0) {
+            return ((ViewGroup) rowView).getChildAt(0);
+        }
+        return rowView;
+    }
 
     /**
      * trebufork: when the list scrolls the widget moves out from under the frame, so the grid
@@ -202,10 +229,11 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         BaseDragLayer.LayoutParams lp = (BaseDragLayer.LayoutParams) frame.getLayoutParams();
         lp.customPosition = true;
         frame.mIsOpen = true;
+        frame.mContentView = findContentView(row);
         frame.snapToWidget();
         ((View) row).addOnLayoutChangeListener(frame.mRowLayoutListener);
-        if (row.getWidgetView() != null) {
-            row.getWidgetView().addOnLayoutChangeListener(frame.mWidgetLayoutListener);
+        if (frame.mContentView != null) {
+            frame.mContentView.addOnLayoutChangeListener(frame.mWidgetLayoutListener);
         }
         appsView.addOnScrollListener(frame.mScrollListener);
         return frame;
@@ -225,7 +253,15 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         if (mRow == null || mDragLayer == null) {
             return;
         }
-        View widget = mRow.getWidgetView();
+        // Track the content view (the widget child, or the media row's player card) — not
+        // the row, which always spans the full list width (see mContentView).
+        if (mContentView == null) {
+            mContentView = findContentView(mRow);
+            if (mContentView != null) {
+                mContentView.addOnLayoutChangeListener(mWidgetLayoutListener);
+            }
+        }
+        View widget = mContentView;
         if (widget == null || widget.getWidth() == 0 || widget.getHeight() == 0) {
             return;
         }
@@ -373,14 +409,18 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         mDownY = ev.getY();
         mStartWidthScale = mItem.widthScale;
         mStartHeightScale = mItem.heightScale;
-        // The widget is full-width at scale 1; use its measured size as reference.
-        View widget = mRow.getWidgetView();
+        // The content is full-list-width at scale 1; use its measured size as reference.
+        // For the media row the content view is the player card (its width is the scaled
+        // width), for widget rows the widget host view — either way width / widthScale
+        // recovers the scale-1 width the finger delta is measured against.
+        View widget = mContentView != null ? mContentView : findContentView(mRow);
         View rowView = (View) mRow;
-        mBaseWidthPx = widget != null
+        mBaseWidthPx = widget != null && widget != rowView
                 ? widget.getWidth() / mStartWidthScale : rowView.getWidth();
-        mBaseHeightPx = widget != null
+        mBaseHeightPx = widget != null && widget != rowView
                 ? widget.getHeight() / mStartHeightScale : rowView.getHeight();
-        mStartHeightPx = widget != null ? widget.getHeight() : rowView.getHeight();
+        mStartHeightPx = widget != null && widget != rowView
+                ? widget.getHeight() : rowView.getHeight();
         mStartPositionX = mItem.positionX;
         mMoveDownX = ev.getX();
         mMoveActive = false;
@@ -400,10 +440,12 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
             }
             mMoveActive = true;
         }
-        View widget = mRow.getWidgetView();
+        View widget = mContentView != null ? mContentView : mRow.getWidgetView();
         if (widget == null) {
             return;
         }
+        // Free space is measured against the CONTENT width (the player card for media rows
+        // — the row itself is always full-width, which would make the space always 0).
         float freeSpace = ((View) mRow).getWidth() - widget.getWidth();
         if (freeSpace <= 0f) {
             return;
@@ -465,7 +507,12 @@ public class ScrollableWidgetResizeFrame extends AbstractFloatingView {
         // the widget's vertical size. height = width * aspect * heightScale, so to keep the
         // gesture-start pixel height constant across a width change, the height scale is
         // re-derived as startHeightScale * startWidthScale / widthScale.
-        if ((mLeftActive || mRightActive) && !mTopActive && !mBottomActive) {
+        // NB: this only applies to widget rows, whose height is derived from their width.
+        // The media row's card height is content-driven (independent of width), so the same
+        // compensation would INFLATE the row height while the card stays small — visible as
+        // empty space below the card. There the height scale is simply left untouched.
+        if ((mLeftActive || mRightActive) && !mTopActive && !mBottomActive
+                && !(mRow instanceof ScrollableMediaRowView)) {
             heightScale = mStartHeightScale * mStartWidthScale / widthScale;
         }
         heightScale = Math.max(MIN_HEIGHT_SCALE, Math.min(MAX_HEIGHT_SCALE, heightScale));
