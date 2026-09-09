@@ -191,8 +191,15 @@ public class ScrollableMediaController {
                     mSessionsChangedListener, new ComponentName(mContext, "none"), mMainHandler);
             List<MediaController> controllers =
                     mSessionManager.getActiveSessions(new ComponentName(mContext, "none"));
-            observeSessions(controllers);
+            observeSessions(filterPhantomSessions(controllers));
             setActiveController(pickController(mSessions));
+            // trebufork: the first full-refresh of the notification listener populates the
+            // media-notification map — at boot the session set is usually known BEFORE that,
+            // so phantom sessions (e.g. Boosty registering a session with no media
+            // notification) survived the empty-map skip. Re-filter as soon as the listener
+            // has data.
+            com.android.launcher3.notification.NotificationListener.addMediaSmallIconListener(
+                    mSmallIconListener);
         } catch (SecurityException e) {
             // Privileged permission missing (e.g. debug install outside the Magisk module):
             // the row stays empty rather than crashing the launcher.
@@ -210,8 +217,31 @@ public class ScrollableMediaController {
             mSessionManager.removeOnActiveSessionsChangedListener(mSessionsChangedListener);
         } catch (SecurityException ignored) {
         }
+        com.android.launcher3.notification.NotificationListener
+                .removeMediaSmallIconListener(mSmallIconListener);
         observeSessions(java.util.Collections.emptyList());
         setActiveController(null);
+    }
+
+    // trebufork: fired when the notification listener's media map changes (first populate,
+    // notification posted/removed). Re-runs the phantom filter on the CURRENT session set —
+    // the boot-time phantom that survived the empty-map skip is dropped the moment the
+    // listener reports it has no media notification for its package.
+    private final com.android.launcher3.notification.NotificationListener.MediaSmallIconListener
+            mSmallIconListener = this::refilterSessions;
+
+    private void refilterSessions() {
+        if (!mListening || mSessions.isEmpty()) {
+            return;
+        }
+        List<MediaController> filtered =
+                filterPhantomSessions(new java.util.ArrayList<>(mSessions));
+        if (filtered.size() != mSessions.size()) {
+            observeSessions(filtered);
+            clearPinIfDead();
+            setActiveController(pickController(mSessions));
+            notifyControllerChanged();
+        }
     }
 
     /** Swaps the per-session observer callbacks to the new session set. */
