@@ -166,6 +166,12 @@ class ScrollableMediaCarouselScrollHandler {
     }
 
     private boolean onTouch(MotionEvent motionEvent) {
+        // trebufork: track here as well as in onInterceptTouch — touches that land on the
+        // scroll view itself (not a child) never go through onInterceptTouchEvent, and a
+        // gesture stolen by an ancestor (vertical desktop scroll) delivers its ACTION_CANCEL
+        // to onTouchEvent, which MUST disarm the pending long-press or the timer fires
+        // mid-swipe and opens the menu.
+        trackLongPress(motionEvent);
         int action = motionEvent.getActionMasked();
         boolean isUp = action == MotionEvent.ACTION_UP;
         if (mGestureDetector.onTouchEvent(motionEvent)) {
@@ -229,6 +235,11 @@ class ScrollableMediaCarouselScrollHandler {
     private void trackLongPress(MotionEvent motionEvent) {
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                if (mLongPressArmed) {
+                    // Already armed by the intercept path for this gesture — never schedule
+                    // the runnable twice.
+                    break;
+                }
                 mLongPressDownX = motionEvent.getX();
                 mLongPressDownY = motionEvent.getY();
                 mLongPressArmed = mLongPressAction != null;
