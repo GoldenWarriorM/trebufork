@@ -106,15 +106,14 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         // where window focus never left the launcher window (e.g. closing a player from
         // recents), so the row can grow/collapse once back at idle home.
         registerStableHeightTrigger();
-        // trebufork: the carousel consumes every touch, so the row's own long-press
-        // listener (remove/reorder menu, resize frame) never fires — same problem widget
-        // rows solve by wiring the menu onto the host view. Forward the carousel's
-        // long-press to the row: a press held still on the card body opens the menu,
-        // while presses on buttons and horizontal drags stay with the card/scroll.
-        mScrollView.setOnLongClickListener(v -> {
-            android.util.Log.d("TrebuforkMedia", "carousel long-press -> row menu, attached="
-                    + isAttachedToWindow() + " listener=" + (getOnLongClickListener() != null));
-            return performLongClick();
+        // trebufork: HorizontalScrollView runs its own onTouchEvent and never reaches the
+        // framework long-press detection, so a long-click listener on it is unreachable from
+        // a real touch. The scroll handler detects a stationary press in its touch pipeline
+        // (which sees every event) and fires this action — a press held still on the card
+        // body opens the remove/reorder menu, exactly like long-pressing a widget row.
+        mScrollHandler.setOnLongPressAction(() -> {
+            android.util.Log.d("TrebuforkMedia", "carousel long-press -> row menu");
+            performLongClick();
         });
         // A page the user settled on (drag or fling) becomes the active session — the
         // SystemUI "swiped-to player stays visible" behavior (pinSession).
