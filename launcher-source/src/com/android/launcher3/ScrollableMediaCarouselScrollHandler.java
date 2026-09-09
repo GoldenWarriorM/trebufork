@@ -158,19 +158,26 @@ class ScrollableMediaCarouselScrollHandler {
                 return false;
             }
             // It's an up and the fling didn't take it above: snap to the nearest page.
-            int relativePos = mScrollView.getRelativeScrollX() % playerWidthPlusPadding;
-            int scrollXAmount;
-            if (relativePos > playerWidthPlusPadding / 2) {
-                scrollXAmount = playerWidthPlusPadding - relativePos;
-            } else {
-                scrollXAmount = -relativePos;
-            }
-            if (scrollXAmount != 0) {
-                // Delay the scrolling since scrollView calls springback which cancels
-                // the animation again (original mainExecutor.execute).
-                mSnapTargetX = mScrollView.getScrollX() + scrollXAmount;
-                mSnapPending = true;
-                mScrollView.post(this::runSnap);
+            if (action == MotionEvent.ACTION_UP && playerWidthPlusPadding > 0) {
+                int relativePos = mScrollView.getRelativeScrollX() % playerWidthPlusPadding;
+                int scrollXAmount;
+                if (relativePos > playerWidthPlusPadding / 2) {
+                    scrollXAmount = playerWidthPlusPadding - relativePos;
+                } else {
+                    scrollXAmount = -relativePos;
+                }
+                if (scrollXAmount != 0) {
+                    // Delay the scrolling since scrollView calls springback which cancels
+                    // the animation again (original mainExecutor.execute).
+                    mSnapTargetX = mScrollView.getScrollX() + scrollXAmount;
+                    mSnapPending = true;
+                    // trebufork: cancel the native scroll before snapping. Without this,
+                    // HorizontalScrollView's own springback/fling on this UP races the
+                    // posted snap and the carousel parks between pages mid-swipe.
+                    mScrollView.cancelCurrentScroll();
+                    mScrollView.post(this::runSnap);
+                    return true;
+                }
             }
         }
         // Always pass touches to the scrollView.

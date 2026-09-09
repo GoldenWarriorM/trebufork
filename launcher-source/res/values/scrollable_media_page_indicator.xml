@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ trebufork: dimens for the ported SystemUI media page indicator
+  ~ (qs_page_indicator_* in packages/SystemUI/res/values/dimens.xml).
+  -->
+<resources>
+    <dimen name="scrollable_media_page_indicator_width">16dp</dimen>
+    <dimen name="scrollable_media_page_indicator_height">8dp</dimen>
+    <dimen name="scrollable_media_page_indicator_dot_width">6.4dp</dimen>
+</resources>

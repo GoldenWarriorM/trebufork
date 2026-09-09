@@ -127,6 +127,8 @@ public class NotificationListener extends NotificationListenerService {
                 android.graphics.drawable.Icon icon = sbn.getNotification().getSmallIcon();
                 android.graphics.drawable.Drawable drawable =
                         icon == null ? null : icon.loadDrawable(this);
+                Log.d(TAG, "rememberSmallIcon pkg=" + sbn.getPackageName()
+                        + " icon=" + (drawable != null));
                 if (drawable != null) {
                     sMediaSmallIcons.put(sbn.getPackageName(), drawable);
                 } else {
@@ -157,15 +159,19 @@ public class NotificationListener extends NotificationListenerService {
         switch (message.what) {
             case MSG_NOTIFICATION_POSTED: {
                 StatusBarNotification sbn = (StatusBarNotification) message.obj;
+                // trebufork: remember the media small icon before the badge/UI filters —
+                // the media row needs it for every media session, dot-valid or not.
+                rememberSmallIcon(sbn);
                 if (notificationIsValidForUI(sbn)) {
                     handleNotificationPosted(sbn);
                 } else {
-                    handleNotificationRemoved(sbn);
+                    removeNotificationKeys(sbn);
                 }
                 return true;
             }
             case MSG_NOTIFICATION_REMOVED: {
                 StatusBarNotification sbn = (StatusBarNotification) message.obj;
+                forgetSmallIcon(sbn);
                 NotificationGroup notificationGroup = mNotificationGroupMap.get(sbn.getGroupKey());
                 String key = sbn.getKey();
                 if (notificationGroup != null) {
@@ -179,6 +185,7 @@ public class NotificationListener extends NotificationListenerService {
                 return true;
             }
             case MSG_NOTIFICATION_FULL_REFRESH:
+                Log.d(TAG, "full refresh connected=" + mIsConnected);
                 handleNotificationFullRefresh(mIsConnected
                         ? Arrays.stream(getActiveNotificationsSafely(null))
                             .filter(this::notificationIsValidForUI)
@@ -197,7 +204,6 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     private void handleNotificationPosted(StatusBarNotification sbn) {
-        rememberSmallIcon(sbn);
         PackageUserKey postedPackageUserKey = PackageUserKey.fromNotification(sbn);
         if (mPackageUserToDotInfos.computeIfAbsent(postedPackageUserKey, DOT_FACTOR)
                 .addOrUpdateNotificationKey(NotificationKeyData.fromNotification(sbn))) {
@@ -205,8 +211,20 @@ public class NotificationListener extends NotificationListenerService {
         }
     }
 
+    /** trebufork: dot bookkeeping without touching the media small icon map. */
+    private void removeNotificationKeys(StatusBarNotification sbn) {
+        PackageUserKey removedPackageUserKey = PackageUserKey.fromNotification(sbn);
+        DotInfo oldDotInfo = mPackageUserToDotInfos.get(removedPackageUserKey);
+        if (oldDotInfo != null
+                && oldDotInfo.removeNotificationKey(NotificationKeyData.fromNotification(sbn))) {
+            if (oldDotInfo.getNotificationKeys().isEmpty()) {
+                mPackageUserToDotInfos.remove(removedPackageUserKey);
+            }
+            dispatchUpdate(removedPackageUserKey::equals);
+        }
+    }
+
     private void handleNotificationRemoved(StatusBarNotification sbn) {
-        forgetSmallIcon(sbn);
         PackageUserKey removedPackageUserKey = PackageUserKey.fromNotification(sbn);
         DotInfo oldDotInfo = mPackageUserToDotInfos.get(removedPackageUserKey);
         if (oldDotInfo != null
@@ -223,12 +241,21 @@ public class NotificationListener extends NotificationListenerService {
         HashMap<PackageUserKey, DotInfo> updatedDots = new HashMap<>(mPackageUserToDotInfos);
         mPackageUserToDotInfos.clear();
         sMediaSmallIcons.clear();
+        // trebufork: media small icons must be remembered for ALL active media
+        // notifications, not only the ones that pass the badge/UI filters —
+        // SystemUI's shade shows every media session regardless of the
+        // title/channel filters the launcher applies to notification dots.
+        for (StatusBarNotification sbn : getActiveNotificationsSafely(null)) {
+            rememberSmallIcon(sbn);
+        }
         for (StatusBarNotification notification : activeNotifications) {
             rememberSmallIcon(notification);
             PackageUserKey packageUserKey = PackageUserKey.fromNotification(notification);
             mPackageUserToDotInfos.computeIfAbsent(packageUserKey, DOT_FACTOR)
                     .addOrUpdateNotificationKey(NotificationKeyData.fromNotification(notification));
         }
+        // The full refresh rebuilt the icon map: let the media row pick up the icons.
+        notifyMediaSmallIconListeners();
 
         // Add and remove from updatedDots so it contains the PackageUserKeys of updated dots.
         for (PackageUserKey packageUserKey : mPackageUserToDotInfos.keySet()) {

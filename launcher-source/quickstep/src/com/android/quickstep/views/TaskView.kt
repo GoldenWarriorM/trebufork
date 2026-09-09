@@ -56,6 +56,7 @@ import com.android.launcher3.Flags.enableRefactorTaskContentView
 import com.android.launcher3.Flags.enableRefactorTaskThumbnail
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
+import com.android.launcher3.util.TrebuforkDebugLog
 import com.android.launcher3.anim.AnimatedFloat
 import com.android.launcher3.logging.StatsLogManager.LauncherEvent
 import com.android.launcher3.model.data.ItemInfo
@@ -1465,6 +1466,20 @@ constructor(
 
     private fun onClick() {
         if (confirmSecondSplitSelectApp()) {
+            return
+        }
+        // trebufork: guard against "ghost taps" — the home-gesture can end with the overview
+        // layer still attached but visually transparent, so a tap the user intends for the
+        // workspace/launcher lands here and relaunches the running task. When the recents
+        // container is not actually visible to the user, drop the tap and log the incident
+        // with a full stack trace for later diagnosis (adb pull .../trebufork_events.log).
+        val rv = recentsView
+        if (rv != null && (rv.contentAlpha <= 0f || !isShown)) {
+            TrebuforkDebugLog.logEvent(
+                context,
+                "TaskView ghost tap suppressed: contentAlpha=${rv.contentAlpha} " +
+                    "isShown=$isShown taskId=${taskIds.contentToString()}",
+            )
             return
         }
         launchWithAnimation()

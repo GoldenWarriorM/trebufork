@@ -95,6 +95,17 @@ public class ScrollableMediaRippleView extends View {
      * the button center in SystemUI) to cover the whole player.
      */
     public void playRipple(float x, float y) {
+        // trebufork: a card rebuilt right before the tap (widget/session switch) may not
+        // be laid out yet — getWidth() == 0 would make the ripple radius 0 and invisible.
+        // Replay once the view has a size.
+        if (getWidth() == 0 || getHeight() == 0) {
+            post(() -> {
+                if (getWidth() > 0 && getHeight() > 0) {
+                    playRipple(x, y);
+                }
+            });
+            return;
+        }
         Ripple ripple = new Ripple();
         ripple.x = x;
         ripple.y = y;
@@ -104,7 +115,11 @@ public class ScrollableMediaRippleView extends View {
         animator.setDuration(RIPPLE_DURATION_MS);
         animator.addUpdateListener(animation -> {
             ripple.progress = (float) animation.getAnimatedValue();
-            invalidate();
+            // trebufork: postInvalidateOnAnimation instead of invalidate. After the card
+            // was swiped out of the carousel viewport and back, a plain invalidate from a
+            // re-attached view can be coalesced away and the ripple never appears —
+            // scheduling with the animation callback guarantees a frame every tick.
+            postInvalidateOnAnimation();
         });
         animator.addListener(new AnimatorListenerAdapter() {
             private boolean mCancelled;
