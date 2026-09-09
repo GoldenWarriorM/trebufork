@@ -105,6 +105,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     // trebufork: Monet colors extracted from the current artwork.
     @Nullable
     private MonetColorExtractor mColorScheme;
+    // Guards against applying a stale background-extracted scheme after a newer bind.
+    private int mSchemeRequestToken;
     // trebufork: the scheme's accentPrimary (ColorSchemeTransition.accentPrimary =
     // accent1.s100): the play/pause container tint, the ripple color and the media
     // small icon color filter all use it. White until the first scheme arrives.
@@ -503,9 +505,35 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
      * primaryFixed.
      */
     private void updateColorScheme(@Nullable Bitmap artwork) {
-        // The shade player uses the LIGHT scheme (darkTheme=false) with CONTENT palettes
-        // (MediaControlPanel: new ColorScheme(wallpaperColors, darkTheme, ThemeStyle.CONTENT)).
-        MonetColorExtractor scheme = MonetColorExtractor.fromArtwork(artwork, false);
+        // The scheme extraction (WallpaperColors quantization, seed scoring and four HCT
+        // tonal palettes — dozens of CAM16 solver runs) is expensive; SystemUI runs exactly
+        // this on mBackgroundExecutor in MediaControlPanel and only applies the result on
+        // the main thread. Running it synchronously in bind() janks the launcher right
+        // when the player appears during a scroll.
+        //
+        // Note: WallpaperColors.fromBitmap only reads the bitmap, and the scaled-down copy
+        // it creates is local to the extraction, so a background pass is safe. The bitmap
+        // itself is also being shown via setImageBitmap — it is only read here.
+        final Bitmap art = (artwork != null && !artwork.isRecycled())
+                ? artwork : null;
+        final int requestToken = ++mSchemeRequestToken;
+        if (art == null && mColorScheme != null) {
+            // No artwork: keep the previous tinting rather than recomputing the fallback.
+            return;
+        }
+        Executors.SINGLE.execute(() -> {
+            final MonetColorExtractor scheme = MonetColorExtractor.fromArtwork(art, false);
+            post(() -> {
+                if (requestToken != mSchemeRequestToken || !isAttachedToWindow()) {
+                    return; // a newer bind superseded this one
+                }
+                applyColorScheme(scheme);
+            });
+        });
+    }
+
+    /** Main-thread half of {@link #updateColorScheme}: tints every surface. */
+    private void applyColorScheme(MonetColorExtractor scheme) {
         mColorScheme = scheme;
 
         int scrimColor = scheme.getScrim();
@@ -821,5 +849,16 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             }
         }
         refresh();
+    }
+
+    /** Single background thread for the Monet scheme extraction (like mBackgroundExecutor). */
+    private static final class Executors {
+        static final java.util.concurrent.ExecutorService SINGLE =
+                java.util.concurrent.Executors.newSingleThreadExecutor(
+                        r -> {
+                            Thread t = new Thread(r, "trebufork-monet");
+                            t.setPriority(Thread.NORM_PRIORITY - 1);
+                            return t;
+                        });
     }
 }
