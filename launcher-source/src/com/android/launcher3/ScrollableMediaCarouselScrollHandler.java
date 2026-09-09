@@ -18,6 +18,7 @@ package com.android.launcher3;
 
 import android.animation.ValueAnimator;
 import android.view.GestureDetector;
+import android.view.ViewConfiguration;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,6 +114,37 @@ class ScrollableMediaCarouselScrollHandler {
         mVisibleCardChangedListener = listener;
     }
 
+    /**
+     * trebufork: the action fired when the user presses and holds still on the carousel.
+     * HorizontalScrollView overrides onTouchEvent entirely, so the framework long-press
+     * detection (View.onTouchEvent's CheckForLongPress) NEVER runs for it — a long-click
+     * listener set on the scroll view is unreachable from a real touch. The shade solves
+     * this in its own touch pipeline; here the stationary-press detection runs in
+     * {@link #onInterceptTouch}, which sees every event of the gesture.
+     */
+    void setOnLongPressAction(@Nullable Runnable action) {
+        mLongPressAction = action;
+    }
+
+    @Nullable
+    private Runnable mLongPressAction;
+    private final Runnable mLongPressRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mLongPressAction == null) {
+                return;
+            }
+            // A long-press means a menu/resize, not a scroll: kill the touch stream the
+            // children (and the scroll view) are tracking, then fire the action.
+            mScrollView.cancelCurrentScroll();
+            mLongPressAction.run();
+            mLongPressArmed = false;
+        }
+    };
+    private boolean mLongPressArmed;
+    private float mLongPressDownX;
+    private float mLongPressDownY;
+
     private OnVisibleCardChangedListener mVisibleCardChangedListener;
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -185,7 +217,46 @@ class ScrollableMediaCarouselScrollHandler {
     }
 
     private boolean onInterceptTouch(MotionEvent motionEvent) {
+        trackLongPress(motionEvent);
         return mGestureDetector.onTouchEvent(motionEvent);
+    }
+
+    /**
+     * trebufork: stationary-press detection. Down arms the check; moving beyond the touch
+     * slop (a scroll starting) or lifting the finger disarms it. Holding still for the
+     * system long-press timeout fires {@link #mLongPressRunnable}.
+     */
+    private void trackLongPress(MotionEvent motionEvent) {
+        switch (motionEvent.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                mLongPressDownX = motionEvent.getX();
+                mLongPressDownY = motionEvent.getY();
+                mLongPressArmed = mLongPressAction != null;
+                if (mLongPressArmed) {
+                    mScrollView.postDelayed(mLongPressRunnable,
+                            ViewConfiguration.getLongPressTimeout());
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (mLongPressArmed
+                        && (Math.abs(motionEvent.getX() - mLongPressDownX)
+                                > ViewConfiguration.get(mScrollView.getContext())
+                                        .getScaledTouchSlop()
+                                || Math.abs(motionEvent.getY() - mLongPressDownY)
+                                        > ViewConfiguration.get(mScrollView.getContext())
+                                                .getScaledTouchSlop())) {
+                    mLongPressArmed = false;
+                    mScrollView.removeCallbacks(mLongPressRunnable);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                mLongPressArmed = false;
+                mScrollView.removeCallbacks(mLongPressRunnable);
+                break;
+            default:
+                break;
+        }
     }
 
     private void runSnap() {
