@@ -29,46 +29,44 @@ import java.util.Map;
  * scheme the SystemUI shade/lockscreen player uses (frameworks/libs/systemui monet +
  * MediaColorSchemes.kt):
  * <ul>
- *     <li>ColorScheme(wallpaperColors, darkTheme=false, Style.TONAL_SPOT) with seed
- *     extraction from the artwork (filter=true: GOOGLE_BLUE when chroma &lt; 5)</li>
- *     <li>TONAL_SPOT palette chromas: accent1 36, accent2 16, neutral1 6, neutral2 8</li>
- *     <li>SystemUI shade mapping: shade N = tone((1000 - N) / 10)</li>
- *     <li>Lineage 23.2 MediaColorSchemes.kt selections (material roles): play/pause bg /
- *     ripple / app icon = primaryFixed (accent1 t90), play/pause icon = onPrimaryFixed
- *     (accent1 t10), scrim = onSurface (neutral1 t10), seekbar wave/thumb + prev/next =
- *     media_on_background (white)</li>
+ *     <li>ColorScheme(wallpaperColors, darkTheme=false, Style.CONTENT) — SchemeContent:
+ *     the primary palette keeps the SEED's own hue AND chroma, and the pill tone tracks the
+ *     seed tone (ColorSpec2021.primaryContainer with isFidelity=true = seed tone), so vivid
+ *     covers get a vivid pill and muted covers a muted one</li>
+ *     <li>seed extraction with filter=false for CONTENT (ColorScheme ctor passes
+ *     {@code style != ThemeStyle.CONTENT} as the filter flag): low-chroma colors are
+ *     allowed and there is NO Google-Blue fallback — that is why the system player stays
+ *     pink where our old TONAL_SPOT-style port jumped to blue/teal</li>     * <li>Lineage 23.2 MediaColorSchemes.kt selections (material roles):
+     * play/pause bg / ripple / app icon = primaryFixed (accent1 FIXED tone 90 — light
+     * pastel of the seed hue, verified in libmonet MaterialDynamicColors),
+     * play/pause icon = onPrimaryFixed (accent1 tone 10 — near-black),
+     * scrim = onSurface (neutral1 tone 10), title/seekbar = media_on_background (white)</li>
  * </ul>
  */
 public final class MonetColorExtractor {
 
-    // TONAL_SPOT palette chromas (ColorSpec2021 get*Palette).
-    private static final double CHROMA_ACCENT1 = 36.0;
-    private static final double CHROMA_ACCENT2 = 16.0;
-    private static final double CHROMA_NEUTRAL1 = 6.0;
-    private static final double CHROMA_NEUTRAL2 = 8.0;
-
-    // ColorScheme.ACCENT1_CHROMA / MIN_CHROMA: seed with chroma < 5 falls back to blue
-    // because the player always passes filter=true (ColorScheme(WallpaperColors, darkTheme)).
-    private static final double MIN_CHROMA = 5.0;
+    // The CONTENT scheme (SchemeContent via ColorSpec2021) keeps the seed's own chroma in
+    // the primary palette — no fixed 48 chroma. The pill tone is the seed tone too
+    // (primaryContainer isFidelity), clamped to a sane band like DynamicColor does.
     private static final int GOOGLE_BLUE = 0xFF1b6ef3;
 
     private final boolean mDark;
-    private final HctSolverUtils.TonalPalette mAccent1;
+    private final int mSeed;    private final HctSolverUtils.TonalPalette mAccent1;
     private final HctSolverUtils.TonalPalette mAccent2;
     private final HctSolverUtils.TonalPalette mNeutral1;
     private final HctSolverUtils.TonalPalette mNeutral2;
 
-    private MonetColorExtractor(int seed, boolean dark) {
-        mDark = dark;
+    private MonetColorExtractor(int seed, boolean dark) {        mDark = dark;
+        mSeed = seed;
         double[] hct = HctSolverUtils.hctFromInt(seed);
-        if (hct[1] < MIN_CHROMA) {
-            hct = HctSolverUtils.hctFromInt(GOOGLE_BLUE);
-        }
         double hue = hct[0];
-        mAccent1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_ACCENT1);
-        mAccent2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_ACCENT2);
-        mNeutral1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_NEUTRAL1);
-        mNeutral2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, CHROMA_NEUTRAL2);
+        double chroma = hct[1];
+        // SchemeContent: primary palette = seed hue/chroma, secondary = 0.33x chroma,
+        // neutral = 0.0833x, neutralVariant = 0.1666x (ColorSpec2021.getPrimaryPalette et al).
+        mAccent1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma);
+        mAccent2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma * 0.33);
+        mNeutral1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma * 0.0833);
+        mNeutral2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma * 0.1666);
     }
 
     /** Builds the scheme from a source color (the average artwork color). */
@@ -78,10 +76,10 @@ public final class MonetColorExtractor {
 
     /**
      * Extracts the seed color from the album artwork exactly like
-     * {@code ColorScheme(WallpaperColors.fromBitmap(art), darkTheme)}: the seed is the
-     * top-scored quantized color of the bitmap (a faithful port of
-     * {@code ColorScheme.getSeedColors(wallpaperColors, filter=true)}). Falls back to the
-     * monet neutral seed when there is no artwork.
+     * {@code ColorScheme(WallpaperColors.fromBitmap(art), darkTheme, Style.CONTENT)}: the
+     * seed is the top-scored quantized color of the bitmap, and because the style is
+     * CONTENT the filter flag is <b>false</b> — low-chroma colors are allowed and the
+     * GOOGLE_BLUE fallback never fires (only a fully empty quantization falls back).
      */
     public static MonetColorExtractor fromArtwork(Bitmap artwork, boolean darkTheme) {
         int seed = 0xFF606573; // neutral fallback seed
@@ -117,7 +115,8 @@ public final class MonetColorExtractor {
         }
 
         Map<Integer, double[]> intToHc = new HashMap<>();
-        // Percentage of the image with each hue (360 slots).
+        // Percentage of the image with each hue (360 slots). filter=false for CONTENT:
+        // low-chroma colors still contribute to the hue population.
         double[] hueProportions = new double[360];
         for (Map.Entry<Integer, Integer> entry : allColors.entrySet()) {
             double[] hc = HctSolverUtils.hctFromInt(entry.getKey());
@@ -168,7 +167,10 @@ public final class MonetColorExtractor {
                 break;
             }
         }
-        return seeds.isEmpty() ? GOOGLE_BLUE : seeds.get(0);
+        // filter=false: no hue-population filter and NO GOOGLE_BLUE fallback here;
+        // the top-scored color wins even if it is nearly gray.
+        return seeds.isEmpty() ? (allColors.isEmpty() ? GOOGLE_BLUE : scored.get(0))
+                : seeds.get(0);
     }
 
     private static double score(double[] hc, double proportion) {
@@ -196,17 +198,24 @@ public final class MonetColorExtractor {
         return diff;
     }
 
-    /** Downscales to at most 256px on the long side for fast quantization. */
+    /**
+     * Matches WallpaperColors.fromBitmap's internal downscale: area at most
+     * MAX_BITMAP_SIZE^2 = 112x112 (see WallpaperColors#calculateOptimalSize). The old
+     * 256px-long-side scale kept 5x more area, which shifted quantizer population
+     * weights and picked different seeds than the system player.
+     */
     private static Bitmap scaleDown(Bitmap bitmap) {
+        final int maxArea = 112 * 112;
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
-        int maxSide = Math.max(w, h);
-        if (maxSide <= 256) {
+        int area = w * h;
+        if (area <= maxArea) {
             return bitmap;
         }
-        float scale = 256f / maxSide;
-        return Bitmap.createScaledBitmap(bitmap,
-                Math.max(1, Math.round(w * scale)), Math.max(1, Math.round(h * scale)), true);
+        double scale = Math.sqrt(maxArea / (double) area);
+        int newWidth = Math.max(1, (int) (w * scale));
+        int newHeight = Math.max(1, (int) (h * scale));
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
     }
 
     public boolean isDark() {
@@ -223,26 +232,28 @@ public final class MonetColorExtractor {
 
     /**
      * The play/pause button background / ripple / app-icon color: Lineage 23.2
-     * MediaColorSchemes.primaryFromScheme = materialScheme.getPrimaryFixed() = accent1
-     * tone 90 (fixed, same for the light scheme the player uses).
+     * MediaColorSchemes.primaryFromScheme = materialScheme.getPrimaryFixed().
+     * Verified against libmonet MaterialDynamicColors.primaryFixed(): the tone is FIXED
+     * at 90 (light/dark alike; 40 only in the monochrome spec) — a light pastel of the
+     * seed hue, which is why the system pill stays light on every cover.
      */
     public int getPillBackground() {
-        return shade(mAccent1, 100);
+        return mAccent1.tone(90);
     }
 
     /**
-     * The icon inside the play/pause button: Lineage 23.2
-     * onPrimaryFromScheme = materialScheme.getOnPrimaryFixed() = accent1 tone 10
-     * (a dark tone of the SAME hue as the button background).
+     * The icon inside the play/pause button: Lineage onPrimaryFromScheme =
+     * materialScheme.getOnPrimaryFixed() = accent1 tone 10 (near-black), matching the
+     * black play triangle of the system pill.
      */
     public int getPillIcon() {
         return shade(mAccent1, 900);
     }
 
     /**
-     * The album scrim: Lineage 23.2 MediaColorSchemes.backgroundFromScheme =
-     * materialScheme.getOnSurface() = neutral1 tone 10 — a neutral near-black, NOT an
-     * accent tone (a colored scrim reads as a vignette).
+     * The album scrim: Lineage 23.2 backgroundFromScheme = materialScheme.getOnSurface()
+     * — in the light CONTENT scheme that is neutral1 tone 10, a near-black with a slight
+     * tint of the artwork hue (neutral chroma = 0.0833x seed chroma).
      */
     public int getScrim() {
         return shade(mNeutral1, 900);
@@ -272,8 +283,8 @@ public final class MonetColorExtractor {
     }
 
     /**
-     * The LightSourceDrawable press glow: ColorSchemeTransition multiRipple/turbulence
-     * updates use accentPrimary = accent1.s100, same as the pill.
+     * The LightSourceDrawable press glow: Lineage getSurfaceEffectColor =
+     * primaryColor.targetColor = the pill color, same as the ripple.
      */
     public int getHighlight() {
         return getPillBackground();
