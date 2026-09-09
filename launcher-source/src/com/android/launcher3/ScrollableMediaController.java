@@ -87,10 +87,40 @@ public class ScrollableMediaController {
 
     private final MediaSessionManager.OnActiveSessionsChangedListener mSessionsChangedListener =
             controllers -> {
-                observeSessions(controllers);
+                observeSessions(filterPhantomSessions(controllers));
                 clearPinIfDead();
                 setActiveController(pickController(mSessions));
             };
+
+    /**
+     * trebufork: the shade only shows players backed by a live media notification
+     * (MediaDataManager builds media data from notifications). Some apps (Boosty, some
+     * browsers) register a MediaSession without ever posting one — those sessions have no
+     * artwork and dead buttons, so they are dropped here. The gate is only applied when the
+     * launcher's notification listener has data; if the listener is not connected (e.g. right
+     * after boot), sessions are kept so a real player is never lost — its notification (and
+     * small icon) will arrive and nothing needs to be re-filtered.
+     */
+    private List<MediaController> filterPhantomSessions(
+            @Nullable List<MediaController> controllers) {
+        if (controllers == null || controllers.isEmpty()
+                || !com.android.launcher3.notification.NotificationListener
+                        .isListenerPopulated()) {
+            return controllers;
+        }
+        List<MediaController> result = new java.util.ArrayList<>(controllers.size());
+        for (MediaController controller : controllers) {
+            if (com.android.launcher3.notification.NotificationListener.hasMediaNotification(
+                    controller.getPackageName())) {
+                result.add(controller);
+            } else {
+                android.util.Log.d("TrebuforkMedia",
+                        "dropping phantom session (no media notification): "
+                                + controller.getPackageName());
+            }
+        }
+        return result;
+    }
 
     // Registered on EVERY active session: any playback-state change anywhere re-runs the
     // pick (a no-op if the winner didn't change). A session that just entered STATE_PLAYING
