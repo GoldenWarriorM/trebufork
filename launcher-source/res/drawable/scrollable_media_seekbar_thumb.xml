@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Port of SystemUI res/drawable/media_seekbar_thumb.xml (static state): the 4x16dp
+  ~ pill-shaped seek bar thumb. The path spans -2..2 and the group transform (verbatim
+  ~ from the AVD) maps it into the 4dp viewport — dropping the group clips the left half.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="4dp"
+    android:height="16dp"
+    android:viewportWidth="4"
+    android:viewportHeight="16">
+    <group
+        android:translateX="2"
+        android:translateY="8">
+        <path
+            android:fillColor="#ffffff"
+            android:fillAlpha="1"
+            android:fillType="nonZero"
+            android:pathData=" M2 -6 C2,-6 2,6 2,6 C2,7.1 1.1,8 0,8 C0,8 0,8 0,8 C-1.1,8 -2,7.1 -2,6 C-2,6 -2,-6 -2,-6 C-2,-7.1 -1.1,-8 0,-8 C0,-8 0,-8 0,-8 C1.1,-8 2,-7.1 2,-6c " />
+    </group>
+</vector>

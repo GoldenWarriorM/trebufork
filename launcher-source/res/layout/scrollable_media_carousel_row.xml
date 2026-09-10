@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ The media carousel row: a MediaScrollView port (HorizontalScrollView) hosting one
+  ~ player card per media session (ScrollableMediaCardView), with the animated page
+  ~ dots overlaid at the bottom edge — the layout of the shade's media carousel
+  ~ (media_carousel.xml + media_session_view.xml) adapted to the launcher row.
+  ~
+  ~ The root is <merge>: ScrollableMediaRowView is itself a FrameLayout and positions
+  ~ the carousel + indicator manually in onLayout (a nested FrameLayout here would stay
+  ~ 0x0 and clip the whole carousel to nothing).
+  -->
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:parentTag="android.widget.FrameLayout"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.android.launcher3.ScrollableMediaScrollView
+        android:id="@+id/scrollable_media_carousel_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/scrollable_media_carousel_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+
+    </com.android.launcher3.ScrollableMediaScrollView>
+
+    <!-- Carousel page indicator (SystemUI media_page_indicator): animated dots shown
+         only when more than one player is active; overlaid at the card's bottom edge
+         (positioned in code, like the shade overlays it on the card). -->
+    <com.android.launcher3.ScrollableMediaPageIndicator
+        android:id="@+id/scrollable_media_page_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="4dp" />
+
+</merge>

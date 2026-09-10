@@ -122,6 +122,9 @@ public class ScrollableAppsView extends RecyclerView
     private final AppAdapter mAdapter = new AppAdapter();
     private AllAppsStore mAppsStore;
     private ScrollableDesktopStore mDesktopStore;
+    // trebufork: watches the active media session for the built-in media player row.
+    @Nullable
+    private ScrollableMediaController mMediaController;
     // Cache of widget host views keyed by app widget id so widgets survive view recycling.
     private final SparseArray<View> mWidgetViews = new SparseArray<>();
 
@@ -136,6 +139,8 @@ public class ScrollableAppsView extends RecyclerView
     private static final int VIEW_TYPE_FOOTER = 5;
     private static final int VIEW_TYPE_DESKTOP_FOLDER = 6;
     private static final int VIEW_TYPE_DESKTOP_GROUP = 7;
+    // trebufork: built-in media player row (renders the active MediaSession directly).
+    private static final int VIEW_TYPE_DESKTOP_MEDIA = 8;
     private static final long ALPHABET_REVEAL_DURATION_MS = 180L;
     // trebufork: boot/appearance fade-in — duration and per-row stagger for the entrance
     // animation played when the scrollable home first becomes visible.
@@ -235,6 +240,13 @@ public class ScrollableAppsView extends RecyclerView
     // desktop; the search bar is then hidden instantly (it was never visible) instead of
     // animating down.
     private boolean mJustEnteredAppsMode;
+    // trebufork: true while the recents/overview is open and this view's content (rows, search
+    // bar, sidebar) is hidden behind it by setRecentsVisible(false). While hidden, the search
+    // bar's alpha must stay 0: cancelSearchBarAnimation() normally pins alpha to 1, but an app
+    // launch from recents loses window focus before the launcher state settles, and that focus
+    // path (onWindowFocusChanged -> resetSearchBarLift) would resurrect the search bar alone
+    // over the launch animation while the rest of the home is still hidden.
+    private boolean mRecentsHidden = false;
     // trebufork: state of the in-group member drag (reorder mode). A long-press on a group icon
     // lifts it; horizontal finger movement slides it between the group's slots (see
     // beginGroupMemberDrag / handleGroupMemberDragMove / endGroupMemberDrag).
@@ -305,6 +317,11 @@ public class ScrollableAppsView extends RecyclerView
             // Defer so the adapter re-binds outside the current layout pass.
             post(mAdapter::notifyDataSetChanged);
         }
+    }
+
+    /** trebufork: px reserved on the right for the alphabet strip (see setRowEndMarginPx). */
+    public int getRowEndMarginPx() {
+        return mRowEndMarginPx;
     }
 
     /** Toggles the privacy mode that hides app labels and fills icons with a pastel color. */
@@ -409,6 +426,7 @@ public class ScrollableAppsView extends RecyclerView
      * sits above the scrim and would otherwise stay crisp.
      */
     public void setRecentsVisible(boolean visible) {
+        mRecentsHidden = !visible;
         if (visible) {
             // Return to home: fade the home content back in.
             animateRecentsAlpha(this, 1f);
@@ -745,7 +763,13 @@ public class ScrollableAppsView extends RecyclerView
     private void cancelSearchBarAnimation() {
         if (mSearchBar != null) {
             mSearchBar.animate().cancel();
-            mSearchBar.setAlpha(1f);
+            // Pin the alpha to 1 only while the home is actually on screen. While the
+            // recents/overview is open the home content is faded out (setRecentsVisible(false))
+            // and the search bar must stay hidden; otherwise a focus-loss during an app launch
+            // from recents pops the bar back in over the launch animation.
+            if (!mRecentsHidden) {
+                mSearchBar.setAlpha(1f);
+            }
         }
     }
 
@@ -1151,6 +1175,18 @@ public class ScrollableAppsView extends RecyclerView
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         startEntranceWhenReady();
+        if (mMediaController == null) {
+            mMediaController = new ScrollableMediaController(getContext());
+        }
+        mMediaController.start();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mMediaController != null) {
+            mMediaController.stop();
+        }
     }
 
     @Override
@@ -1741,6 +1777,8 @@ public class ScrollableAppsView extends RecyclerView
                 mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_FOLDER, null, '\0', item));
             } else if (item.type == ScrollableDesktopStore.TYPE_GROUP) {
                 mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_GROUP, null, '\0', item));
+            } else if (item.type == ScrollableDesktopStore.TYPE_MEDIA) {
+                mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_MEDIA, null, '\0', item));
             } else {
                 mDesktopRows.add(new ListRow(VIEW_TYPE_DESKTOP_WIDGET, null, '\0', item));
             }
@@ -1755,6 +1793,17 @@ public class ScrollableAppsView extends RecyclerView
     public void addToDesktop(AppInfo info) {
         if (mDesktopStore != null) {
             mDesktopStore.addApp(info.getTargetPackage(), info.user);
+            showDesktop();
+        }
+    }
+
+    /**
+     * trebufork: adds the built-in media player row to the desktop (singleton; switches to
+     * desktop mode so the new row is immediately visible).
+     */
+    public void addMediaRow() {
+        if (mDesktopStore != null) {
+            mDesktopStore.addMediaRow();
             showDesktop();
         }
     }
@@ -1783,6 +1832,57 @@ public class ScrollableAppsView extends RecyclerView
     public void setWidgetPositionX(long id, float positionX) {
         if (mDesktopStore != null) {
             mDesktopStore.setWidgetPositionX(id, positionX);
+        }
+    }
+
+    /**
+     * trebufork: clamps the stored widget width scale and horizontal position to the
+     * alphabet-strip boundary, persisting the healed values. A widget added at the default
+     * full-row width (widthScale = 1 is relative to the FULL row width) pokes under the
+     * strip; without this clamp the first resize attempt would visibly snap it smaller
+     * (the resize frame caps the scale at the strip). Runs at bind time, so legacy items
+     * saved before the strip-aware cap self-heal too.
+     */
+    private void clampWidgetScalesToStrip(ScrollableDesktopStore.DesktopItem item,
+            boolean mediaRow) {
+        int width = getWidth();
+        if (width <= 0) {
+            return;
+        }
+        float maxScale = (width - getRowEndMarginPx()) / (float) width;
+        if (mediaRow) {
+            maxScale = Math.min(maxScale, ScrollableMediaRowView.MAX_WIDTH_SCALE);
+        }
+        maxScale = Math.max(0.1f, maxScale);
+        boolean changed = false;
+        if (item.widthScale > maxScale) {
+            item.widthScale = maxScale;
+            changed = true;
+        }
+        // The content's right edge must stay short of the strip: offset <=
+        // (width - margin) - contentWidth, expressed as a fraction of the free space.
+        float contentWidth = width * item.widthScale;
+        float freeSpace = width - contentWidth;
+        float maxPositionX = freeSpace > 0f
+                ? Math.min(1f, Math.max(0f, width - getRowEndMarginPx() - contentWidth)
+                        / freeSpace)
+                : 0f;
+        if (item.positionX > maxPositionX) {
+            item.positionX = maxPositionX;
+            changed = true;
+        }
+        if (changed) {
+            // Persist OUTSIDE the current layout pass: the store fires a change notification
+            // (notifyDataSetChanged), which is illegal while RecyclerView is binding. On the
+            // next bind the item is already clamped, so this runs at most once per item.
+            long id = item.id;
+            float widthScale = item.widthScale;
+            float heightScale = item.heightScale;
+            float positionX = item.positionX;
+            post(() -> {
+                setWidgetSize(id, widthScale, heightScale);
+                setWidgetPositionX(id, positionX);
+            });
         }
     }
 
@@ -2413,6 +2513,10 @@ public class ScrollableAppsView extends RecyclerView
                         .inflate(R.layout.scrollable_widget_row, parent, false);
                 return new DesktopWidgetViewHolder(v);
             }
+            if (viewType == VIEW_TYPE_DESKTOP_MEDIA) {
+                // trebufork: the media row is built entirely in code (no RemoteViews).
+                return new DesktopMediaViewHolder(new ScrollableMediaRowView(parent.getContext()));
+            }
             if (viewType == VIEW_TYPE_DESKTOP_FOLDER) {
                 View v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.scrollable_folder_row, parent, false);
@@ -2455,6 +2559,8 @@ public class ScrollableAppsView extends RecyclerView
                 ((DesktopHeaderViewHolder) holder).applyTopInset();
             } else if (holder instanceof DesktopWidgetViewHolder && row.desktopItem != null) {
                 ((DesktopWidgetViewHolder) holder).bind(row.desktopItem);
+            } else if (holder instanceof DesktopMediaViewHolder && row.desktopItem != null) {
+                ((DesktopMediaViewHolder) holder).bind(row.desktopItem);
             } else if (holder instanceof FolderViewHolder && row.desktopItem != null) {
                 ((FolderViewHolder) holder).bind(row.desktopItem);
             } else if (holder instanceof GroupViewHolder && row.desktopItem != null) {
@@ -3206,7 +3312,9 @@ public class ScrollableAppsView extends RecyclerView
             mRow.setAspectRatio(getWidgetAspectRatio(item));
             // trebufork: per-widget size (width/height scale) and horizontal position persisted
             // by the desktop store; adjusted with the resize frame (see
-            // ScrollableWidgetResizeFrame).
+            // ScrollableWidgetResizeFrame). Clamped to the alphabet-strip boundary first so a
+            // just-added full-width widget never pokes under the strip.
+            clampWidgetScalesToStrip(item, /* mediaRow= */ false);
             mRow.setScales(item.widthScale, item.heightScale);
             mRow.setPositionX(item.positionX);
             // trebufork: the 3-dot reorder handle is intentionally never shown; reordering is
@@ -3311,6 +3419,81 @@ public class ScrollableAppsView extends RecyclerView
             AbstractFloatingView.closeAllOpenViews((Launcher) getContext());
             action.run();
         });
+    }
+
+    /**
+     * trebufork: holder of the built-in media player row. The row renders the active media
+     * session itself; this holder wires the shared {@link ScrollableMediaController}, handles
+     * the long-press context menu (remove / reorder) and reorder-mode dragging.
+     */
+    private class DesktopMediaViewHolder extends RecyclerView.ViewHolder {
+
+        private final ScrollableMediaRowView mRow;
+        private ScrollableDesktopStore.DesktopItem mItem;
+
+        DesktopMediaViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mRow = (ScrollableMediaRowView) itemView;
+            // Long-press opens the same context menu as widget rows (remove / reorder).
+            itemView.setOnLongClickListener(v -> {
+                if (mReorderMode) {
+                    if (mItemTouchHelper != null && !mDragInProgress) {
+                        mItemTouchHelper.startDrag(this);
+                    }
+                } else {
+                    return showMediaContextMenu();
+                }
+                return true;
+            });
+        }
+
+        void bind(ScrollableDesktopStore.DesktopItem item) {
+            mItem = item;
+            if (mMediaController != null) {
+                mRow.setSource(mMediaController);
+            }
+            // trebufork: per-row size and horizontal position persisted by the desktop store;
+            // adjusted with the resize frame (see ScrollableWidgetResizeFrame). Clamped to the
+            // alphabet-strip boundary first (see clampWidgetScalesToStrip).
+            clampWidgetScalesToStrip(item, /* mediaRow= */ true);
+            mRow.setScales(item.widthScale, item.heightScale);
+            mRow.setPositionX(item.positionX);
+        }
+
+        private boolean showMediaContextMenu() {
+            if (mItem == null || !(getContext() instanceof Launcher launcher)) {
+                return false;
+            }
+            if (PopupContainer.getOpen(launcher) != null) {
+                return false;
+            }
+            PopupContainer<Launcher> container =
+                    PopupContainer.create(launcher, mRow, createWidgetInfo(mItem));
+            container.setSystemShortcutContainer(
+                    container.inflateAndAdd(R.layout.system_shortcut_rows_container, container));
+            addWidgetPopupRow(container, R.drawable.ic_remove_no_shadow,
+                    R.string.scrollable_desktop_remove, () -> {
+                        if (mDesktopStore != null) {
+                            mDesktopStore.remove(mItem.id);
+                        }
+                    });
+            addWidgetPopupRow(container, R.drawable.ic_more_vert_dots,
+                    R.string.scrollable_desktop_reorder,
+                    ScrollableAppsView.this::enterReorderMode);
+            container.show();
+            // trebufork: show the workspace-style resize frame around the media row together
+            // with the menu (same behavior as widget rows).
+            ScrollableWidgetResizeFrame.show(ScrollableAppsView.this, mRow, mItem);
+            container.addOnCloseCallback(() -> {
+                AbstractFloatingView frame = AbstractFloatingView.getOpenView(
+                        launcher, AbstractFloatingView.TYPE_WIDGET_RESIZE_FRAME);
+                if (frame == null || !(frame instanceof ScrollableWidgetResizeFrame)
+                        || !((ScrollableWidgetResizeFrame) frame).isDragActive()) {
+                    ScrollableWidgetResizeFrame.closeOpenFrame(launcher);
+                }
+            });
+            return true;
+        }
     }
 
     private class DesktopHeaderViewHolder extends RecyclerView.ViewHolder {

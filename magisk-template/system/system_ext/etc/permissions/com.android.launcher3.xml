@@ -27,5 +27,10 @@
         <permission name="android.permission.STOP_APP_SWITCHES"/>
         <permission name="android.permission.ACCESS_SHORTCUTS"/>
         <permission name="android.permission.ACCESS_HIDDEN_PROFILES_FULL"/>
+        <!-- trebufork: the scrollable-home media row reads the active MediaSession. -->
+        <permission name="android.permission.MEDIA_CONTENT_CONTROL"/>
+        <!-- trebufork: the media row shows the media notification's small icon, like the
+             SystemUI shade player. -->
+        <permission name="android.permission.ACCESS_NOTIFICATIONS"/>
     </privapp-permissions>
 </permissions>

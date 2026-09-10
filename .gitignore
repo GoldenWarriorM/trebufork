@@ -9,7 +9,7 @@ launcher-source/.idea/
 local.properties
 keystore.properties
 
-# Local Freebuff/Gradle state, agent instructions, and captured UI screenshots.
+# Local Gradle state, agent instructions, and captured UI screenshots.
 AGENTS.md
 .*
 !.gitignore

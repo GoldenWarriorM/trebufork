@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The trebufork Project
+  ~
+  ~ Verbatim port of SystemUI res/drawable/media_squiggly_progress.xml.
+  -->
+<com.android.launcher3.SquigglyProgress />
