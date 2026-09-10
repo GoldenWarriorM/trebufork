@@ -154,6 +154,15 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 }
 
                 @Override
+                public void onSessionListChanged() {
+                    // trebufork: the SESSION SET changed (a player appeared/died) even though
+                    // the active one may not have — like the shade's carousel, which rebuilds
+                    // on every media-data update. Rebuild (deferred while a transition runs,
+                    // same as above).
+                    post(ScrollableMediaRowView.this::rebuildCarouselWhenIdle);
+                }
+
+                @Override
                 public void onMediaChanged() {
                     post(() -> {
                         // Metadata/playback changes do not alter the page set: rebind the
@@ -220,6 +229,20 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         try {
             List<MediaController> sessions = mSource == null
                     ? java.util.Collections.emptyList() : mSource.getSessionList();
+            // trebufork: while the launcher window is NOT active (another app in the
+            // foreground), the carousel follows the LIVE system session order — exactly like
+            // the shade's media controls, which re-rank their players while the shade is
+            // closed. Once the user is back at home, the order FREEZES at whatever it was, so
+            // the pages never visibly shuffle or scroll while the user is looking at them.
+            boolean launcherActive = false;
+            try {
+                Launcher launcher = Launcher.getLauncher(getContext());
+                launcherActive = (launcher.getActivityFlags()
+                        & BaseActivity.ACTIVITY_STATE_WINDOW_FOCUSED) != 0;
+            } catch (ClassCastException | IllegalStateException ignored) {
+                // No launcher context (e.g. preview): keep the stable-order behavior.
+                launcherActive = false;
+            }
             // trebufork: stable card order (like the shade's MediaCarouselController): cards
             // that already exist KEEP their current positions, new sessions are APPENDED at
             // the end. Iterating the raw session list instead would reshuffle the pages every
@@ -227,14 +250,27 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             // reorder itself (and scroll) while the launcher is active.
             java.util.List<ScrollableMediaCardView> newCards = new java.util.ArrayList<>();
             java.util.List<MediaSession.Token> newTokens = new java.util.ArrayList<>();
-            // Pass 1: surviving cards, in current carousel order.
-            for (int i = 0; i < mCards.size(); i++) {
-                MediaSession.Token token = mCardTokens.get(i);
+            // Pass 1: surviving cards. While the launcher is NOT active the cards are
+            // re-emitted in LIVE system order (the shade behavior — MediaCarouselController
+            // reorders its player set on every update); at an active home the current
+            // carousel order is kept so pages never shuffle while the user is looking.
+            if (!launcherActive) {
                 for (MediaController session : sessions) {
-                    if (session.getSessionToken().equals(token)) {
-                        newCards.add(mCards.get(i));
-                        newTokens.add(token);
-                        break;
+                    ScrollableMediaCardView card = findCard(session.getSessionToken());
+                    if (card != null) {
+                        newCards.add(card);
+                        newTokens.add(session.getSessionToken());
+                    }
+                }
+            } else {
+                for (int i = 0; i < mCards.size(); i++) {
+                    MediaSession.Token token = mCardTokens.get(i);
+                    for (MediaController session : sessions) {
+                        if (session.getSessionToken().equals(token)) {
+                            newCards.add(mCards.get(i));
+                            newTokens.add(token);
+                            break;
+                        }
                     }
                 }
             }
@@ -485,7 +521,16 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         // synchronous measure here would still read the stale flag and re-pin forever.
         android.util.Log.d("TrebuforkMedia", "row focus changed=" + hasWindowFocus
                 + " lastStable=" + mLastStableHeight);
-        if (hasWindowFocus) {
+        if (!hasWindowFocus) {
+            // trebufork: while the launcher is in the background the carousel behaves like
+            // the shade — the most recently playing session wins. Drop the user's swipe pin
+            // so a session that starts playing in another app becomes the active player;
+            // when home comes back, the visible page follows the (possibly changed) active
+            // session via the rebuild below.
+            if (mSource != null) {
+                mSource.clearPin();
+            }
+        } else {
             post(this::requestLayout);
         }
     }
