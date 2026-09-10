@@ -73,6 +73,14 @@ class ScrollableMediaCarouselScrollHandler {
     private int mSnapTargetX;
     /** Rubber-band translation beyond the first/last page. */
     private float mEdgeTranslation;
+    // trebufork: true while a pointer is down on the carousel (a drag/fling gesture is in
+    // flight). A session-set change landing mid-gesture must NOT force a scroll re-anchor —
+    // it would cancel the user's drag/fling and park the carousel between pages.
+    private boolean mGestureActive;
+    // trebufork: a session-set/width change (or an external page jump) that arrived during
+    // a gesture and is deferred to the gesture end (see onPlayersChanged).
+    private boolean mPlayersChangedPending;
+    private boolean mPendingWidthChanged;
 
     ScrollableMediaCarouselScrollHandler(
             ScrollableMediaScrollView scrollView,
@@ -171,6 +179,7 @@ class ScrollableMediaCarouselScrollHandler {
         // gesture stolen by an ancestor (vertical desktop scroll) delivers its ACTION_CANCEL
         // to onTouchEvent, which MUST disarm the pending long-press or the timer fires
         // mid-swipe and opens the menu.
+        trackGesture(motionEvent);
         trackLongPress(motionEvent);
         int action = motionEvent.getActionMasked();
         boolean isUp = action == MotionEvent.ACTION_UP;
@@ -178,8 +187,17 @@ class ScrollableMediaCarouselScrollHandler {
             if (isUp) {
                 // If this is an up and we're flinging, we don't want to have this touch
                 // reach the view, otherwise that would scroll, while we are trying to snap
-                // to the new page. Let's dispatch a cancel instead.
+                // to the new page. Let's dispatch a cancel instead. Resolve a deferred
+                // players change FIRST (it re-anchors scrollX), then post the snap to the
+                // new page: runSnap reads mSnapTargetX, which was computed from the
+                // pre-anchor scroll position — rebase it after the re-anchor so the fling
+                // lands on the right page and never parks between pages.
                 mScrollView.cancelCurrentScroll();
+                int oldScrollX = mScrollView.getScrollX();
+                finishGesture(action);
+                if (mSnapPending && oldScrollX != mScrollView.getScrollX()) {
+                    mSnapTargetX += mScrollView.getScrollX() - oldScrollX;
+                }
                 return true;
             }
             // Pass touches to the scrollView.
@@ -193,6 +211,7 @@ class ScrollableMediaCarouselScrollHandler {
             if (mEdgeTranslation != 0f) {
                 // We started a swipe past the edge: spring the rubber-band back.
                 animateEdgeTranslationTo(0f);
+                finishGesture(action);
                 return false;
             }
             // It's an up and the fling didn't take it above: snap to the nearest page.
@@ -211,20 +230,75 @@ class ScrollableMediaCarouselScrollHandler {
                     mSnapPending = true;
                     // trebufork: cancel the native scroll before snapping. Without this,
                     // HorizontalScrollView's own springback/fling on this UP races the
-                    // posted snap and the carousel parks between pages mid-swipe.
+                    // posted snap and the carousel parks between pages mid-swipe. Resolve a
+                    // deferred players change FIRST and rebase the snap target on the
+                    // re-anchored scroll position (same as the fling path above).
                     mScrollView.cancelCurrentScroll();
+                    int oldScrollX = mScrollView.getScrollX();
+                    finishGesture(action);
+                    if (mSnapPending && oldScrollX != mScrollView.getScrollX()) {
+                        mSnapTargetX += mScrollView.getScrollX() - oldScrollX;
+                    }
                     mScrollView.post(this::runSnap);
                     return true;
                 }
             }
         }
+        finishGesture(action);
         // Always pass touches to the scrollView.
         return false;
     }
 
     private boolean onInterceptTouch(MotionEvent motionEvent) {
+        trackGesture(motionEvent);
         trackLongPress(motionEvent);
+        int action = motionEvent.getActionMasked();
+        if (action == MotionEvent.ACTION_CANCEL) {
+            // A cancel can terminate the gesture before onTouchEvent ever sees it (the
+            // touch target swallowed every event): resolve a pending deferred change here.
+            finishGesture(action);
+        }
         return mGestureDetector.onTouchEvent(motionEvent);
+    }
+
+    /**
+     * trebufork: tracks whether a pointer is down on the carousel. While it is, any
+     * session-set change defers its scroll re-anchor (see onPlayersChanged) instead of
+     * cancelling the user's in-flight drag/fling.
+     */
+    private void trackGesture(MotionEvent motionEvent) {
+        switch (motionEvent.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                mGestureActive = true;
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                mGestureActive = false;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * trebufork: the gesture is over (UP/CANCEL) — apply a session-set change that landed
+     * while it ran. The change was deferred (see onPlayersChanged) so the pages moved
+     * beneath the finger without a forced re-anchor; now that the gesture is over, settle
+     * the scroll onto the still-visible page. Doing this on BOTH UP and CANCEL keeps the
+     * state consistent: on UP the re-anchor runs before the posted nearest-page snap (and
+     * re-targets it via the scroll-position delta), so a deferred set change can no longer
+     * leave the carousel parked between pages.
+     */
+    private void finishGesture(int action) {
+        if (action != MotionEvent.ACTION_UP && action != MotionEvent.ACTION_CANCEL) {
+            return;
+        }
+        if (!mPlayersChangedPending) {
+            return;
+        }
+        boolean widthChanged = mPendingWidthChanged;
+        mPendingWidthChanged = false;
+        applyPlayersChanged(widthChanged);
     }
 
     /**
@@ -368,6 +442,20 @@ class ScrollableMediaCarouselScrollHandler {
         if (visibleMediaIndex > childCount - 1) {
             visibleMediaIndex = Math.max(0, childCount - 1);
         }
+        if (mGestureActive) {
+            // trebufork: forcing scrollX right now would cancel the user's in-flight
+            // drag/fling and park the carousel between pages (a rebuild fired by a playback
+            // change or a media-notification update lands exactly mid-swipe). Defer the
+            // re-anchor until the gesture ends.
+            mPlayersChangedPending = true;
+            mPendingWidthChanged = widthChanged;
+            return;
+        }
+        applyPlayersChanged(widthChanged);
+    }
+
+    private void applyPlayersChanged(boolean widthChanged) {
+        mPlayersChangedPending = false;
         mScrollView.setRelativeScrollX(visibleMediaIndex * playerWidthPlusPadding);
         if (widthChanged) {
             // Keep the page dots settled after a size change (no fractional position).
@@ -378,9 +466,15 @@ class ScrollableMediaCarouselScrollHandler {
     /** Forces the carousel to a page (session pinning from outside). */
     void setVisibleMediaIndex(int index) {
         visibleMediaIndex = Math.max(0, index);
-        mScrollView.setRelativeScrollX(visibleMediaIndex * playerWidthPlusPadding);
         mPageIndicator.setLocation(visibleMediaIndex);
         mScrollView.updateClipToOutline(false);
+        if (mGestureActive) {
+            // trebufork: a mid-gesture jump (the active session changed under the user's
+            // finger) would cancel the drag/fling — apply it when the gesture ends.
+            mPlayersChangedPending = true;
+            return;
+        }
+        mScrollView.setRelativeScrollX(visibleMediaIndex * playerWidthPlusPadding);
     }
 
     /** Resets to the first page. */

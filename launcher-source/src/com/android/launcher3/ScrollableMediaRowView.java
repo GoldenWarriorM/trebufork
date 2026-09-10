@@ -229,6 +229,11 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         try {
             List<MediaController> sessions = mSource == null
                     ? java.util.Collections.emptyList() : mSource.getSessionList();
+            // trebufork: a rebuild with an UNCHANGED card set must not touch the carousel
+            // at all: removeAllViews + re-add resets the scroll position, and the following
+            // onPlayersChanged force-anchors scrollX — together they cancel a swipe that is
+            // in flight (any playback-state change or media-notification update re-runs
+            // this). Bail out early when the session set is identical.
             // trebufork: while the launcher window is NOT active (another app in the
             // foreground), the carousel follows the LIVE system session order — exactly like
             // the shade's media controls, which re-rank their players while the shade is
@@ -291,6 +296,24 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                     MediaController bound = card.getBoundController();
                     card.setController(null, null);
                 }
+            }
+            // trebufork: cheap no-set-change check BEFORE mutating anything: if the
+            // surviving+appended token list equals the current one (same order, same
+            // tokens), the child views are already correct — skip removeAllViews/re-add and
+            // onPlayersChanged entirely so an in-flight swipe is never disturbed by a no-op
+            // rebuild (any playback-state change or media-notification update re-runs this
+            // through onActiveControllerChanged).
+            boolean sameSet = newTokens.size() == mCardTokens.size();
+            if (sameSet) {
+                for (int i = 0; i < newTokens.size(); i++) {
+                    if (!newTokens.get(i).equals(mCardTokens.get(i))) {
+                        sameSet = false;
+                        break;
+                    }
+                }
+            }
+            if (sameSet) {
+                return;
             }
             mCards.clear();
             mCards.addAll(newCards);
