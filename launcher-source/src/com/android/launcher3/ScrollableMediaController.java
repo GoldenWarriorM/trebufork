@@ -50,6 +50,13 @@ public class ScrollableMediaController {
 
         /** Metadata or playback state of the active session changed. */
         default void onMediaChanged() {}
+
+        /**
+         * trebufork: the set of active sessions changed (a session appeared, died, or was
+         * re-filtered) — the carousel reorders while the launcher window is not active, so
+         * it needs to rebuild even when the ACTIVE session did not change.
+         */
+        default void onSessionListChanged() {}
     }
 
     private final Context mContext;
@@ -87,9 +94,13 @@ public class ScrollableMediaController {
 
     private final MediaSessionManager.OnActiveSessionsChangedListener mSessionsChangedListener =
             controllers -> {
+                int oldSize = mSessions.size();
                 observeSessions(filterPhantomSessions(controllers));
                 clearPinIfDead();
                 setActiveController(pickController(mSessions));
+                if (mSessions.size() != oldSize) {
+                    notifySessionListChanged();
+                }
             };
 
     /**
@@ -241,6 +252,7 @@ public class ScrollableMediaController {
             clearPinIfDead();
             setActiveController(pickController(mSessions));
             notifyControllerChanged();
+            notifySessionListChanged();
         }
     }
 
@@ -325,6 +337,21 @@ public class ScrollableMediaController {
     public void pinSession(@Nullable MediaController controller) {
         mPinnedToken = controller == null ? null : controller.getSessionToken();
         setActiveController(controller);
+    }
+
+    /**
+     * trebufork: drops the user's swipe pin (if any) and re-picks the active session by the
+     * normal rules. The launcher media row calls this when its window loses focus: while
+     * home is in the background the carousel must behave like the shade — the most recently
+     * playing session wins, a stale pin must not hold the active player on an old session
+     * while a NEW one starts playing in another app.
+     */
+    public void clearPin() {
+        if (mPinnedToken == null) {
+            return;
+        }
+        mPinnedToken = null;
+        setActiveController(pickController(mSessions));
     }
 
     /** Drops the carousel pin if the pinned session died. */
@@ -448,6 +475,14 @@ public class ScrollableMediaController {
         } catch (PackageManager.NameNotFoundException e) {
             mAppName = packageName;
         }
+    }
+
+    private void notifySessionListChanged() {
+        mMainHandler.post(() -> {
+            for (Listener listener : copyListeners()) {
+                listener.onSessionListChanged();
+            }
+        });
     }
 
     private void notifyControllerChanged() {
