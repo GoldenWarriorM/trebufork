@@ -61,6 +61,31 @@ explicit archive, a specific device, or install without reboot:
 ./flash-magisk.sh --no-reboot
 ```
 
+### Quick testing: hot update instead of a full flash
+
+For fast iteration on launcher **code changes** prefer `./hot-update.sh` over
+the full flash-with-reboot cycle. It installs the freshly built signed release
+APK live (`pm install -r -d`), the launcher process restarts on its own, and
+the installed Magisk module directory + install marker are kept in sync so the
+next real boot does not roll the package back:
+
+```bash
+./hot-update.sh               # defaults to the signed release APK in launcher/build/outputs/apk/release
+./hot-update.sh path/app.apk [--serial DEVICE]
+```
+
+Typical quick-test cycle:
+
+```bash
+gradle :launcher:assembleRelease && ./hot-update.sh
+```
+
+A full `./package-magisk.sh && ./flash-magisk.sh` (with reboot) is only needed
+when the module files themselves change — permissions XML, boot scripts
+(`service.sh`), `module.prop`, module layout — or when installing the module
+on a device for the first time. For the 10-second recording/log test cycle
+below, always use hot update.
+
 For a quick Java-compilation-only check, use the same command with
 `:launcher:compileReleaseJavaWithJavac` instead of `:launcher:assembleRelease`.
 
