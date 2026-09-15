@@ -187,18 +187,7 @@ class ScrollableMediaCarouselScrollHandler {
         trackGesture(motionEvent);
         trackLongPress(motionEvent);
         int action = motionEvent.getActionMasked();
-        // trebufork: the residual rubber-band reset for THIS gesture happens in
-        // trackGesture (below), NOT here: when the finger lands on a player card the card
-        // consumes the DOWN and onTouchEvent never sees it — only onInterceptTouch does.
-        // A reset in onTouchEvent alone left the previous swipe's residual mEdgeTranslation
-        // + stale mRubberbanded alive, misrouting the next short swipe into the rubber-band
-        // branch and parking the carousel between pages on release.
         boolean isUp = action == MotionEvent.ACTION_UP;
-        // trebufork: temporary gesture trace (short-swipe stuck diagnosis).
-        android.util.Log.d("TrebuforkMediaCarousel", "touch act=" + action
-                + " edgeT=" + mEdgeTranslation + " rubber=" + mRubberbanded
-                + " relX=" + mScrollView.getRelativeScrollX()
-                + " snapPending=" + mSnapPending);
         if (mGestureDetector.onTouchEvent(motionEvent)) {
             if (isUp) {
                 // If this is an up and we're flinging, we don't want to have this touch
@@ -262,8 +251,6 @@ class ScrollableMediaCarouselScrollHandler {
             // It's an up and the fling didn't take it above: snap to the nearest page.
             if (action == MotionEvent.ACTION_UP && playerWidthPlusPadding > 0) {
                 int relativePos = mScrollView.getRelativeScrollX() % playerWidthPlusPadding;
-                android.util.Log.d("TrebuforkMediaCarousel", "release-snap relPos=" + relativePos
-                        + " pageW=" + playerWidthPlusPadding);
                 int scrollXAmount;
                 if (relativePos > playerWidthPlusPadding / 2) {
                     scrollXAmount = playerWidthPlusPadding - relativePos;
@@ -407,8 +394,6 @@ class ScrollableMediaCarouselScrollHandler {
     }
 
     private void runSnap() {
-        android.util.Log.d("TrebuforkMediaCarousel", "runSnap pending=" + mSnapPending
-                + " target=" + mSnapTargetX + " scrollX=" + mScrollView.getScrollX());
         if (!mSnapPending) {
             return;
         }
@@ -451,11 +436,6 @@ class ScrollableMediaCarouselScrollHandler {
         float newTranslation = mEdgeTranslation - distanceX * RUBBERBAND_FACTOR;
         boolean unwound = mEdgeTranslation != 0f
                 && (mEdgeTranslation > 0f ? newTranslation <= 0f : newTranslation >= 0f);
-        // trebufork: temporary gesture trace.
-        android.util.Log.d("TrebuforkMediaCarousel", "scroll dX=" + distanceX
-                + " atStart=" + atStart + " atEnd=" + atEnd
-                + " canScroll=" + canScrollTowardDrag + " edgeT=" + mEdgeTranslation
-                + " -> newT=" + newTranslation + " unwound=" + unwound);
         if (unwound) {
             mRubberbanded = false;
             mEdgeTranslation = 0f;
@@ -473,9 +453,6 @@ class ScrollableMediaCarouselScrollHandler {
     }
 
     private boolean onFling(float vX, float vY) {
-        // trebufork: temporary gesture trace.
-        android.util.Log.d("TrebuforkMediaCarousel", "fling vX=" + vX + " vY=" + vY
-                + " rubber=" + mRubberbanded + " edgeT=" + mEdgeTranslation);
         if (vX * vX < 0.5 * vY * vY) {
             return false;
         }
@@ -561,8 +538,6 @@ class ScrollableMediaCarouselScrollHandler {
             // drag/fling and park the carousel between pages (a rebuild fired by a playback
             // change or a media-notification update lands exactly mid-swipe). Defer the
             // re-anchor until the gesture ends.
-            android.util.Log.d("TrebuforkMediaCarousel",
-                    "onPlayersChanged DEFERRED width=" + newPlayerWidthPlusPadding);
             mPlayersChangedPending = true;
             mPendingWidthChanged = widthChanged;
             return;
@@ -571,8 +546,6 @@ class ScrollableMediaCarouselScrollHandler {
     }
 
     private void applyPlayersChanged(boolean widthChanged) {
-        android.util.Log.d("TrebuforkMediaCarousel", "applyPlayersChanged width="
-                + playerWidthPlusPadding + " index=" + visibleMediaIndex);
         mPlayersChangedPending = false;
         mScrollView.setRelativeScrollX(visibleMediaIndex * playerWidthPlusPadding);
         if (widthChanged) {

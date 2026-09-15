@@ -323,11 +323,110 @@ public class ScrollableMediaCardView extends FrameLayout {
         bindAppIcon();
 
         if (artworkBitmap != null) {
-            mAlbumArt.setImageBitmap(artworkBitmap);
+            mAlbumArt.setImageBitmap(trimBlackBars(cropToFill(artworkBitmap)));
         }
         // Rebuild the Monet scheme from the artwork and retint the whole player,
         // exactly like ColorSchemeTransition.updateColorScheme in SystemUI.
         updateColorScheme(artworkBitmap);
+    }
+
+    /**
+     * trebufork: some video apps (YouTube on non-16:9 content) deliver artwork with
+     * BLACK BARS BAKED INTO THE BITMAP — letterboxing done by the sending app. No view
+     * scaling or aspect crop can remove those (they scale along with the picture). So
+     * detect the uniform near-black rows at the bitmap's top/bottom edges and trim them
+     * before the fill-crop. Detection is conservative: a row counts as a bar only when
+     * the WHOLE row is nearly black (max channel < 24), and at most 25% of the height
+     * per edge is ever trimmed so real dark artwork is never cut.
+     */
+    private static Bitmap trimBlackBars(Bitmap art) {
+        if (art == null || art.isRecycled() || art.getHeight() < 16) {
+            return art;
+        }
+        int w = art.getWidth();
+        int h = art.getHeight();
+        int maxTrim = h / 4;
+        int[] row = new int[w];
+        int top = 0;
+        while (top < maxTrim && isBlackRow(art, row, top, w)) {
+            top++;
+        }
+        int bottom = 0;
+        while (bottom < maxTrim && isBlackRow(art, row, h - 1 - bottom, w)) {
+            bottom++;
+        }
+        if (top == 0 && bottom == 0) {
+            return art;
+        }
+        int newH = h - top - bottom;
+        if (newH < 16) {
+            return art; // would leave nothing: not artwork bars, bail out
+        }
+        try {
+            return Bitmap.createBitmap(art, 0, top, w, newH);
+        } catch (IllegalArgumentException e) {
+            return art;
+        }
+    }
+
+    private static boolean isBlackRow(Bitmap art, int[] row, int y, int w) {
+        art.getPixels(row, 0, w, 0, y, w, 1);
+        for (int x = 0; x < w; x++) {
+            int c = row[x];
+            int r = (c >> 16) & 0xFF;
+            int g = (c >> 8) & 0xFF;
+            int b = c & 0xFF;
+            int max = Math.max(r, Math.max(g, b));
+            if (max > 24) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * trebufork: source-side center-crop of the artwork to the card's aspect ratio.
+     * Video-streaming sessions (YouTube etc.) deliver a WIDE 16:9 frame as their art,
+     * while the card is much taller than wide; the shade letterboxes such art in a
+     * (dark) placeholder background — the black bars the user reported. Instead of
+     * letterboxing we ZOOM: the bitmap is cropped around its center so its aspect ratio
+     * matches the art view, and the view's centerCrop then scales it to cover exactly.
+     * The extracted Monet colors keep using the full, uncropped artwork.
+     */
+    private Bitmap cropToFill(Bitmap art) {
+        if (art == null || art.isRecycled() || mAlbumArt.getWidth() == 0
+                || mAlbumArt.getHeight() == 0) {
+            return art;
+        }
+        int viewW = mAlbumArt.getWidth();
+        int viewH = mAlbumArt.getHeight();
+        int artW = art.getWidth();
+        int artH = art.getHeight();
+        float viewAspect = (float) viewW / viewH;
+        float artAspect = (float) artW / artH;
+        if (Math.abs(viewAspect - artAspect) < 0.02f) {
+            return art; // already matching: nothing to crop
+        }
+        int cropW;
+        int cropH;
+        if (artAspect > viewAspect) {
+            // Art is wider than the view: crop the sides.
+            cropH = artH;
+            cropW = Math.round(artH * viewAspect);
+        } else {
+            // Art is taller than the view: crop top/bottom.
+            cropW = artW;
+            cropH = Math.round(artW / viewAspect);
+        }
+        cropW = Math.min(cropW, artW);
+        cropH = Math.min(cropH, artH);
+        int cropX = (artW - cropW) / 2;
+        int cropY = (artH - cropH) / 2;
+        try {
+            return Bitmap.createBitmap(art, cropX, cropY, cropW, cropH);
+        } catch (IllegalArgumentException e) {
+            return art; // defensive: pathological dimensions
+        }
     }
 
     /**
