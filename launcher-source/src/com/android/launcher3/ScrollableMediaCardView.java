@@ -15,14 +15,20 @@
  */
 package com.android.launcher3;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import java.util.ArrayList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
 import android.media.session.PlaybackState;
@@ -112,6 +118,27 @@ public class ScrollableMediaCardView extends FrameLayout {
     // morph animation.
     private boolean mPlayPauseShown;
 
+    // Metadata transition (MediaControlPanel + MetadataAnimationHandler port): the
+    // title/artist pair slides out and in when the song changes, and the album art
+    // crossfades via a TransitionDrawable (addGradientToPlayerAlbum path).
+    @Nullable
+    private AnimatorSet mMetadataEnter;
+    @Nullable
+    private AnimatorSet mMetadataExit;
+    @Nullable
+    private Runnable mPostExitUpdate;
+    @Nullable
+    private Runnable mPostEnterUpdate;
+    // Identity of the currently shown (title, artist) pair; a change triggers the
+    // exit -> update -> enter motion.
+    @Nullable
+    private CharSequence mShownTitle;
+    @Nullable
+    private CharSequence mShownArtist;
+    // Previous artwork drawable for the crossfade (mPrevArtwork).
+    @Nullable
+    private Drawable mPrevArtwork;
+
     private final Runnable mProgressTick = new Runnable() {
         @Override
         public void run() {
@@ -179,6 +206,8 @@ public class ScrollableMediaCardView extends FrameLayout {
 
         mPrev.setImageResource(R.drawable.scrollable_media_ic_prev);
         mNext.setImageResource(R.drawable.scrollable_media_ic_next);
+
+        loadMetadataAnimators();
 
         mPrev.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -250,6 +279,99 @@ public class ScrollableMediaCardView extends FrameLayout {
         return getResources().getDimension(resId);
     }
 
+    /**
+     * Loads the enter/exit animator sets (MediaControlPanel.attachPlayer: loadAnimator
+     * with media_metadata_enter/exit): one outer AnimatorSet per animation that plays
+     * a per-view set (title, artist) together — exactly like loadAnimator builds
+     * result.playTogether(per-target sets loaded from the same XML). SystemUI's private
+     * EMPHASIZED interpolators are approximated with the closest public framework
+     * curves, set on the translationX child (childAnimations.get(0)) like loadAnimator.
+     */
+    private void loadMetadataAnimators() {
+        mMetadataEnter = loadMetadataAnimator(R.anim.scrollable_media_metadata_enter,
+                android.R.interpolator.decelerate_quad);
+        mMetadataExit = loadMetadataAnimator(R.anim.scrollable_media_metadata_exit,
+                android.R.interpolator.accelerate_quad);
+        mMetadataEnter.addListener(mMetadataAnimatorListener);
+        mMetadataExit.addListener(mMetadataAnimatorListener);
+    }
+
+    /** One outer set playing the XML animation for title and artist together. */
+    private AnimatorSet loadMetadataAnimator(int animRes, int interpolatorRes) {
+        android.view.animation.Interpolator interpolator =
+                android.view.animation.AnimationUtils.loadInterpolator(getContext(),
+                        interpolatorRes);
+        ArrayList<Animator> perView = new ArrayList<>();
+        for (View target : new View[] {mTitle, mArtist}) {
+            AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(),
+                    animRes);
+            set.getChildAnimations().get(0).setInterpolator(interpolator);
+            set.setTarget(target);
+            perView.add(set);
+        }
+        AnimatorSet result = new AnimatorSet();
+        result.playTogether(perView);
+        return result;
+    }
+
+    // MetadataAnimationHandler.onAnimationEnd: exit end runs the queued data update and
+    // starts the enter; enter end flushes a newer queued update (restarts the exit).
+    private final AnimatorListenerAdapter mMetadataAnimatorListener =
+            new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator anim) {
+                    if (anim == mMetadataExit) {
+                        Runnable update = mPostExitUpdate;
+                        mPostExitUpdate = null;
+                        if (update != null) {
+                            update.run();
+                        }
+                        if (mMetadataEnter != null) {
+                            mMetadataEnter.start();
+                        }
+                    } else if (anim == mMetadataEnter) {
+                        if (mPostExitUpdate != null) {
+                            // A new song arrived while entering: restart the exit.
+                            if (mMetadataExit != null) {
+                                mMetadataExit.start();
+                            }
+                        } else {
+                            Runnable update = mPostEnterUpdate;
+                            mPostEnterUpdate = null;
+                            if (update != null) {
+                                update.run();
+                            }
+                        }
+                    }
+                }
+            };
+
+    /**
+     * MetadataAnimationHandler.setNext port: when the (title, artist) pair changes,
+     * queue the data update and run the exit; the enter follows in the exit's end
+     * callback. Returns true when the transition was triggered.
+     */
+    private boolean transitionMetadata(CharSequence title, CharSequence artist,
+            Runnable update) {
+        boolean changed = mShownTitle == null || !mShownTitle.equals(title)
+                || mShownArtist == null || !mShownArtist.equals(artist);
+        if (!changed) {
+            return false;
+        }
+        mShownTitle = title;
+        mShownArtist = artist;
+        mPostExitUpdate = update;
+        if (!isMetadataAnimating() && mMetadataExit != null) {
+            mMetadataExit.start();
+        }
+        return true;
+    }
+
+    private boolean isMetadataAnimating() {
+        return (mMetadataExit != null && mMetadataExit.isRunning())
+                || (mMetadataEnter != null && mMetadataEnter.isRunning());
+    }
+
     /** The media session bound to this card, or null. */
     @Nullable
     public MediaController getBoundController() {
@@ -317,18 +439,60 @@ public class ScrollableMediaCardView extends FrameLayout {
                 artworkBitmap = metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
             }
         }
-        mTitle.setText(title == null ? "" : title);
-        mArtist.setText(artist == null ? "" : artist);
+        // Song metadata with the SystemUI transition (bindSongMetadata +
+        // MetadataAnimationHandler.setNext): when the (title, artist) pair changed, the
+        // old text exits (slide + fade) and the new text enters only after the exit
+        // ends; otherwise the text is applied directly.
+        final CharSequence newTitle = title == null ? "" : title;
+        final CharSequence newArtist = artist == null ? "" : artist;
+        final Runnable applyText = () -> {
+            mTitle.setText(newTitle);
+            mArtist.setText(newArtist);
+        };
+        if (!transitionMetadata(newTitle, newArtist, applyText)) {
+            applyText.run();
+        }
 
         bindAppIcon();
 
         if (artworkBitmap != null) {
-            mAlbumArt.setImageBitmap(trimBlackBars(cropToFill(artworkBitmap)));
+            bindArtworkWithCrossfade(artworkBitmap);
         }
         // Rebuild the Monet scheme from the artwork and retint the whole player,
         // exactly like ColorSchemeTransition.updateColorScheme in SystemUI.
         updateColorScheme(artworkBitmap);
     }
+
+    /**
+     * Album art binding with the MediaControlPanel.bindArtworkAndColors crossfade: the
+     * previous artwork crossfades into the new one via a TransitionDrawable (333ms,
+     * the same duration SystemUI uses for artwork-to-artwork transitions), so a track
+     * change glides between covers instead of popping. The processed bitmap is only
+     * rebuilt when the raw artwork actually changed.
+     */
+    private void bindArtworkWithCrossfade(Bitmap rawArtwork) {
+        if (rawArtwork == mShownRawArtwork) {
+            return; // same artwork object: nothing to update
+        }
+        mShownRawArtwork = rawArtwork;
+        Bitmap processed = trimBlackBars(cropToFill(rawArtwork));
+        Drawable newArt = new android.graphics.drawable.BitmapDrawable(
+                getResources(), processed);
+        Drawable prev = mPrevArtwork;
+        if (prev != null && mAlbumArt.getDrawable() != null) {
+            TransitionDrawable transition = new TransitionDrawable(
+                    new Drawable[] {prev, newArt});
+            transition.setCrossFadeEnabled(true);
+            mAlbumArt.setImageDrawable(transition);
+            transition.startTransition(333);
+        } else {
+            mAlbumArt.setImageDrawable(newArt);
+        }
+        mPrevArtwork = newArt;
+    }
+
+    @Nullable
+    private Bitmap mShownRawArtwork;
 
     /**
      * trebufork: some video apps (YouTube on non-16:9 content) deliver artwork with
