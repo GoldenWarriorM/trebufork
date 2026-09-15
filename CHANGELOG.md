@@ -813,4 +813,3 @@ height; restoring them with a smooth alpha animation on release.
 ---
 
 ### a9bd2f7f69d6 (2026-08-13) — Initialize Trebufork Gradle workspace.
-
