@@ -11,7 +11,12 @@ runs:
         java-version: '21'
 
     - name: Set up Android SDK
+      # The default package list of the action still includes the deprecated
+      # `tools` package, which Google stopped serving (the install fails with
+      # "Failed to find package 'tools'"). Request only what we need.
       uses: android-actions/setup-android@v3
+      with:
+        packages: platform-tools
 
     - name: Install missing SDK components
       run: |

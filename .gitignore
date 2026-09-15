@@ -11,6 +11,7 @@ keystore.properties
 
 # Local Gradle state, agent instructions, and captured UI screenshots.
 AGENTS.md
+scripts/publish.sh
 .*
 !.gitignore
 !.github/
