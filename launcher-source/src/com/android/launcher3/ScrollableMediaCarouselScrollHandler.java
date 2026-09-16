@@ -554,6 +554,11 @@ class ScrollableMediaCarouselScrollHandler {
         }
     }
 
+    /** trebufork: true while a pointer is down on the carousel (see trackGesture). */
+    boolean isGestureActive() {
+        return mGestureActive;
+    }
+
     /** Forces the carousel to a page (session pinning from outside). */
     void setVisibleMediaIndex(int index) {
         visibleMediaIndex = Math.max(0, index);
