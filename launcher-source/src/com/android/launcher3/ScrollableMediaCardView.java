@@ -209,6 +209,21 @@ public class ScrollableMediaCardView extends FrameLayout {
 
         loadMetadataAnimators();
 
+        mBackgroundColor = new AnimatingColorTransition(0xFF1c1b1f, color ->
+                mAlbumArt.setBackgroundTintList(
+                        android.content.res.ColorStateList.valueOf(color)));
+        mPrimaryColor = new AnimatingColorTransition(0xFFFFFFFF, color -> {
+            mAccentPrimary = color;
+            tintPlayPauseBackground();
+            mRippleView.updateColor(color);
+            if (mAppIcon.getVisibility() == VISIBLE && mAppIconUsesSmallIcon) {
+                mAppIcon.setColorFilter(color);
+            }
+        });
+        mOnPrimaryColor = new AnimatingColorTransition(0xFF1c1b1f, color ->
+                mPlayPause.setImageTintList(
+                        android.content.res.ColorStateList.valueOf(color)));
+
         mPrev.setOnClickListener(v -> {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             playButtonRipple(v);
@@ -476,6 +491,16 @@ public class ScrollableMediaCardView extends FrameLayout {
         }
         mShownRawArtwork = rawArtwork;
         Bitmap processed = trimBlackBars(cropToFill(rawArtwork));
+        mProcessedForAspect = mAlbumArt.getWidth() == 0 || mAlbumArt.getHeight() == 0
+                ? -1f : (float) mAlbumArt.getWidth() / mAlbumArt.getHeight();
+        Bitmap prevProcessed = mShownProcessedArtwork;
+        mShownProcessedArtwork = processed;
+        if (prevProcessed != null && prevProcessed.sameAs(processed)) {
+            // Identical art (play/pause re-posts metadata with a fresh bitmap object):
+            // keep the current drawable — a crossfade here flashed the white album
+            // placeholder through and read as a brightening of the whole card.
+            return;
+        }
         Drawable newArt = new android.graphics.drawable.BitmapDrawable(
                 getResources(), processed);
         Drawable prev = mPrevArtwork;
@@ -483,6 +508,24 @@ public class ScrollableMediaCardView extends FrameLayout {
             TransitionDrawable transition = new TransitionDrawable(
                     new Drawable[] {prev, newArt});
             transition.setCrossFadeEnabled(true);
+            // Port of SystemUI scaleTransitionDrawableLayer + setLayerGravity(CENTER):
+            // TransitionDrawable does NOT propagate the view bounds to its layers, so
+            // without this the layers draw at intrinsic size from (0,0) and the white
+            // album background shines through wherever they don't cover. Scale both
+            // layers to COVER the art view and center them.
+            int viewW = mAlbumArt.getWidth();
+            int viewH = mAlbumArt.getHeight();
+            if (viewW > 0 && viewH > 0) {
+                int artW = processed.getWidth();
+                int artH = processed.getHeight();
+                float scale = Math.max((float) viewW / artW, (float) viewH / artH);
+                int layerW = Math.round(artW * scale);
+                int layerH = Math.round(artH * scale);
+                transition.setLayerSize(0, layerW, layerH);
+                transition.setLayerSize(1, layerW, layerH);
+                transition.setLayerGravity(0, android.view.Gravity.CENTER);
+                transition.setLayerGravity(1, android.view.Gravity.CENTER);
+            }
             mAlbumArt.setImageDrawable(transition);
             transition.startTransition(333);
         } else {
@@ -493,6 +536,13 @@ public class ScrollableMediaCardView extends FrameLayout {
 
     @Nullable
     private Bitmap mShownRawArtwork;
+    @Nullable
+    private Bitmap mShownProcessedArtwork;
+    // Aspect ratio the CURRENT processed artwork was cropped for. When the art view is
+    // measured later (first bind can run before layout) or re-measured (size change),
+    // onSizeChanged reprocesses the raw artwork so the zoom-crop is always correct —
+    // the user never sees the wide frame shrink-to-fit and then zoom in.
+    private float mProcessedForAspect = -1f;
 
     /**
      * trebufork: some video apps (YouTube on non-16:9 content) deliver artwork with
@@ -558,12 +608,11 @@ public class ScrollableMediaCardView extends FrameLayout {
      * The extracted Monet colors keep using the full, uncropped artwork.
      */
     private Bitmap cropToFill(Bitmap art) {
-        if (art == null || art.isRecycled() || mAlbumArt.getWidth() == 0
-                || mAlbumArt.getHeight() == 0) {
-            return art;
-        }
         int viewW = mAlbumArt.getWidth();
         int viewH = mAlbumArt.getHeight();
+        if (art == null || art.isRecycled() || viewW == 0 || viewH == 0) {
+            return art;
+        }
         int artW = art.getWidth();
         int artH = art.getHeight();
         float viewAspect = (float) viewW / viewH;
@@ -683,6 +732,59 @@ public class ScrollableMediaCardView extends FrameLayout {
         });
     }
 
+    // ---------------------------------------------------------------------
+    // AnimatingColorTransition — Java port of SystemUI's class of the same name
+    // (media/controls/ui/animation/ColorSchemeTransition.kt): ArgbEvaluator between the
+    // CURRENT color and the new target over 333 ms, so scheme changes animate.
+    // ---------------------------------------------------------------------
+    private static final class AnimatingColorTransition
+            implements android.animation.ValueAnimator.AnimatorUpdateListener {
+        private final android.animation.ArgbEvaluator mArgbEvaluator =
+                new android.animation.ArgbEvaluator();
+        private final android.animation.ValueAnimator mAnimator;
+        private final java.util.function.IntConsumer mApplyColor;
+        private int mCurrentColor;
+        private int mSourceColor;
+        private int mTargetColor;
+
+        AnimatingColorTransition(int defaultColor, java.util.function.IntConsumer applyColor) {
+            mApplyColor = applyColor;
+            mCurrentColor = defaultColor;
+            mSourceColor = defaultColor;
+            mTargetColor = defaultColor;
+            mAnimator = android.animation.ValueAnimator.ofFloat(0f, 1f);
+            mAnimator.setDuration(333); // ColorSchemeTransition.buildAnimator duration
+            mAnimator.addUpdateListener(this);
+        }
+
+        @Override
+        public void onAnimationUpdate(android.animation.ValueAnimator animation) {
+            mCurrentColor = (int) mArgbEvaluator.evaluate(
+                    animation.getAnimatedFraction(), mSourceColor, mTargetColor);
+            mApplyColor.accept(mCurrentColor);
+        }
+
+        void update(int newTargetColor) {
+            if (newTargetColor == mTargetColor) {
+                return;
+            }
+            mSourceColor = mCurrentColor;
+            mTargetColor = newTargetColor;
+            mAnimator.cancel();
+            mAnimator.start();
+        }
+    }
+
+    // The three color slots of ColorSchemeTransition that our player uses:
+    // background = album art letterbox background (onSurface),
+    // primary = play/pause container (primaryFixed),
+    // onPrimary = play/pause icon (onPrimaryFixed).
+    // Created in the constructor AFTER the views are found (the apply lambdas capture
+    // them).
+    private final AnimatingColorTransition mBackgroundColor;
+    private final AnimatingColorTransition mPrimaryColor;
+    private final AnimatingColorTransition mOnPrimaryColor;
+
     /** Main-thread half of {@link #updateColorScheme}: tints every surface. */
     private void applyColorScheme(MonetColorExtractor scheme) {
         mColorScheme = scheme;
@@ -692,8 +794,16 @@ public class ScrollableMediaCardView extends FrameLayout {
         mAccentPrimary = accent;
         int pillIcon = scheme.getPillIcon();
 
-        // Radial scrim over the album art (addGradientToPlayerAlbum: qs_media_scrim with
-        // MEDIA_PLAYER_SCRIM_START/END_ALPHA = 0.25 / 1.0).
+        // Port of SystemUI ColorSchemeTransition: every slot is an AnimatingColorTransition
+        // that ArgbEvaluator-interpolates from the CURRENT color to the new scheme color
+        // over 333 ms — a track change glides between palettes instead of snapping.
+        mBackgroundColor.update(scheme.getScrim());
+        mPrimaryColor.update(accent);
+        mOnPrimaryColor.update(pillIcon);
+
+        // Radial scrim over the album art + album background tint (ColorSchemeTransition
+        // backgroundColor: albumView.backgroundTintList = onSurface). The scrim gradient
+        // itself is tinted synchronously; the background behind letterboxed art animates.
         applyScrim(scrimColor);
 
         // Title and artist are plain white (media_on_background) — the shade applies no
@@ -703,13 +813,10 @@ public class ScrollableMediaCardView extends FrameLayout {
         mArtist.setTextColor(white());
 
         // The app icon slot follows the branch chosen in bindAppIcon: accentPrimary tint
-        // for the media small icon, grayscale for the launcher-icon fallback.
-        if (mAppIcon.getVisibility() == VISIBLE) {
-            if (mAppIconUsesSmallIcon) {
-                mAppIcon.setColorFilter(mAccentPrimary);
-            } else {
-                mAppIcon.setColorFilter(GRAYSCALE_FILTER);
-            }
+        // for the media small icon (animated via mPrimaryColor), grayscale for the
+        // launcher-icon fallback.
+        if (mAppIcon.getVisibility() == VISIBLE && !mAppIconUsesSmallIcon) {
+            mAppIcon.setColorFilter(GRAYSCALE_FILTER);
         }
 
         // Small action icons: media_player_action_color = plain white (the shade never
@@ -721,14 +828,9 @@ public class ScrollableMediaCardView extends FrameLayout {
             button.setImageTintList(android.content.res.ColorStateList.valueOf(white));
         }
 
-        // Play/pause: backgroundTint = primaryFixed (accentPrimary); imageTint =
-        // onPrimaryFixed (a dark tone of the same hue, ColorSchemeTransition.onPrimary).
-        tintPlayPauseBackground();
-        mPlayPause.setImageTintList(android.content.res.ColorStateList.valueOf(pillIcon));
-
-        // Tap ripple color = accentPrimary (ColorSchemeTransition feeds the
-        // MultiRippleController the same color).
-        mRippleView.updateColor(accent);
+        // Play/pause + ripple colors are animated by the transitions above (update()
+        // already applied the target colors this frame — the animator only glides
+        // intermediate frames); no duplicated application here.
 
         // Seekbar: wave, thumb and rest-of-bar follow the style's media_on_background
         // (white); Lineage's MediaPlayer.ProgressBar hardcodes the color, no scheme tint.
@@ -977,9 +1079,66 @@ public class ScrollableMediaCardView extends FrameLayout {
 
     private void scheduleProgressTick() {
         removeCallbacks(mProgressTick);
-        if (mIsPlaying) {
+        // Port of SystemUI MediaCarouselController.updateSeekbarListening(visibleToUser):
+        // the progress only ticks when the card is attached to the window AND visible to
+        // the user (the carousel page the user is actually looking at). Hidden cards stop
+        // extrapolating position — no wasted work and no drift from stale updates.
+        if (mIsPlaying && isAttachedToWindow() && mVisibleToUser) {
             postDelayed(mProgressTick, PROGRESS_TICK_MS);
         }
+    }
+
+    /** Whether this card is the carousel page the user is looking at. */
+    private boolean mVisibleToUser = true;
+
+    /**
+     * Port of MediaCarouselController.updateSeekbarListening: toggles the progress
+     * extrapolation on the visible card. Called by the row when the page set changes.
+     */
+    void setVisibleToUser(boolean visible) {
+        if (mVisibleToUser == visible) {
+            return;
+        }
+        mVisibleToUser = visible;
+        if (visible) {
+            updateProgressUi(); // resync from the last state + extrapolation anchor
+        }
+        scheduleProgressTick();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (w == 0 || h == 0) {
+            return;
+        }
+        // The art view got its real size (first layout or a resize). If the shown artwork
+        // was processed with a different aspect (or not processed at all — bound before
+        // layout), reprocess NOW so the zoom-crop is applied before this frame is drawn:
+        // the wide video frame never appears letterboxed and "zooming in" during a swipe.
+        float aspect = (float) w / h;
+        if (mShownRawArtwork != null && aspect != mProcessedForAspect) {
+            reprocessShownArtwork();
+        }
+    }
+
+    /** Re-crops the current raw artwork for the current view size, without crossfade. */
+    private void reprocessShownArtwork() {
+        Bitmap raw = mShownRawArtwork;
+        if (raw == null || raw.isRecycled()) {
+            return;
+        }
+        Bitmap processed = trimBlackBars(cropToFill(raw));
+        if (mShownProcessedArtwork != null && mShownProcessedArtwork.sameAs(processed)) {
+            mProcessedForAspect = (float) mAlbumArt.getWidth() / mAlbumArt.getHeight();
+            return; // same pixels: keep the drawable, avoid a needless swap
+        }
+        mShownProcessedArtwork = processed;
+        mProcessedForAspect = (float) mAlbumArt.getWidth() / mAlbumArt.getHeight();
+        // Silent swap: no crossfade — this is a geometry fix-up, not a track change.
+        mAlbumArt.setImageDrawable(
+                new android.graphics.drawable.BitmapDrawable(getResources(), processed));
+        mPrevArtwork = mAlbumArt.getDrawable();
     }
 
     @Override
@@ -1006,6 +1165,7 @@ public class ScrollableMediaCardView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         NotificationListener.removeMediaSmallIconListener(mSmallIconListener);
+        setVisibleToUser(true); // rearm so a re-attach resumes ticking
         super.onDetachedFromWindow();
         removeCallbacks(mProgressTick);
         if (mController != null) {
