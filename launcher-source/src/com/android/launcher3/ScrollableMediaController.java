@@ -80,6 +80,12 @@ public class ScrollableMediaController {
     // auto-pick while its session stays alive (SystemUI keeps the swiped-to page visible).
     @Nullable
     private MediaSession.Token mPinnedToken;
+    // True when the pin came from a carousel swipe (the user explicitly chose the player):
+    // a swipe-pinned session must NOT be reordered to the front of the carousel — the user
+    // is already looking at it, moving its page would replay an animation over their own
+    // gesture. Only an organically changed active session (a new app starts playing)
+    // triggers the move-to-front reorder.
+    private boolean mPinnedBySwipe;
     // Per-callback owner map: MediaController.Callback has no session reference, so
     // observeSessions remembers which controller each listener instance is attached to.
     private final java.util.Map<MediaController.Callback, MediaController> mObserverOwners =
@@ -88,6 +94,22 @@ public class ScrollableMediaController {
     // winner when several sessions still report "playing".
     @Nullable
     private java.lang.ref.WeakReference<MediaController> mLastPlayedController;
+    // Last playback state seen per session token: distinguishes a real transition into
+    // STATE_PLAYING (a takeover) from apps re-posting the same (stagnated) state, which
+    // must never re-run the pick.
+    private final java.util.Map<MediaSession.Token, PlaybackState> mLastKnownStates =
+            new java.util.HashMap<>();
+    // ------------------------------------------------------------------
+    // trebufork port of SystemUI's MediaTimeoutListener (media/controls/domain/pipeline/):
+    // a session paused for PAUSED_MEDIA_TIMEOUT (10 min, like debug.sysui.media_timeout)
+    // "times out" — it leaves the carousel, exactly like a player expiring from the
+    // shade. Playing again or a playback-state change restarts the timeout.
+    // ------------------------------------------------------------------
+    private static final long PAUSED_MEDIA_TIMEOUT_MS = 10 * 60 * 1000L;
+    // Pending timeout runnables per session token (MediaTimeoutListener.cancellation).
+    private final java.util.Map<MediaSession.Token, Runnable> mTimeouts = new java.util.HashMap<>();
+    // Sessions that have already timed out; filtered from the carousel until they play.
+    private final java.util.Set<MediaSession.Token> mTimedOut = new java.util.HashSet<>();
     // Trebufork: true while the media row controller is actively listening. Kept so duplicate
     // start()/stop() calls are cheap no-ops.
     private boolean mListening;
@@ -112,9 +134,46 @@ public class ScrollableMediaController {
      * after boot), sessions are kept so a real player is never lost — its notification (and
      * small icon) will arrive and nothing needs to be re-filtered.
      */
+    /**
+     * Trebufork: some apps (mpv-based players, some games) register several MediaSessions
+     * for a single playback — the carousel must not show the same player twice. One
+     * controller per package is kept: the playing one if the already-kept duplicate is
+     * not playing, otherwise the first registered (system order is stable).
+     */
+    private static List<MediaController> dedupeByPackage(List<MediaController> controllers) {
+        List<MediaController> result = new java.util.ArrayList<>(controllers.size());
+        java.util.Map<String, MediaController> byPackage = new java.util.HashMap<>();
+        for (MediaController controller : controllers) {
+            String pkg = controller.getPackageName();
+            MediaController kept = byPackage.get(pkg);
+            if (kept == null) {
+                byPackage.put(pkg, controller);
+                result.add(controller);
+            } else {
+                PlaybackState keptState = kept.getPlaybackState();
+                PlaybackState newState = controller.getPlaybackState();
+                boolean keptPlaying = keptState != null
+                        && keptState.getState() == PlaybackState.STATE_PLAYING;
+                boolean newPlaying = newState != null
+                        && newState.getState() == PlaybackState.STATE_PLAYING;
+                if (!keptPlaying && newPlaying) {
+                    result.set(result.indexOf(kept), controller);
+                    byPackage.put(pkg, controller);
+                }
+                android.util.Log.d("TrebuforkMedia",
+                        "dropping duplicate session for package: " + pkg);
+            }
+        }
+        return result;
+    }
+
     private List<MediaController> filterPhantomSessions(
             @Nullable List<MediaController> controllers) {
-        if (controllers == null || controllers.isEmpty()
+        if (controllers == null || controllers.isEmpty()) {
+            return controllers;
+        }
+        controllers = dedupeByPackage(controllers);
+        if (controllers.isEmpty()
                 || !com.android.launcher3.notification.NotificationListener
                         .isListenerPopulated()) {
             return controllers;
@@ -274,10 +333,24 @@ public class ScrollableMediaController {
                 } catch (IllegalStateException ignored) {
                 }
             }
-        }
-        mSessions = controllers == null
+        }        mSessions = controllers == null
                 ? java.util.Collections.emptyList() : new java.util.ArrayList<>(controllers);
+        // Forget states of removed sessions and seed the new ones, so the first delivery
+        // of an unchanged state is not mistaken for a transition.
+        java.util.Set<MediaSession.Token> known = new java.util.HashSet<>();
         for (MediaController controller : mSessions) {
+            known.add(controller.getSessionToken());
+            mLastKnownStates.putIfAbsent(controller.getSessionToken(),
+                    controller.getPlaybackState());
+        }
+        mLastKnownStates.keySet().retainAll(known);
+        // MediaTimeoutListener: drop bookkeeping for removed sessions, seed new ones.
+        mTimeouts.keySet().retainAll(known);
+        mTimedOut.retainAll(known);
+        for (MediaController controller : mSessions) {
+            if (!mTimeouts.containsKey(controller.getSessionToken())) {
+                armTimeout(controller.getSessionToken());
+            }
             MediaController.Callback callback = new SessionObserver();
             mObserverOwners.put(callback, controller);
             try {
@@ -287,17 +360,90 @@ public class ScrollableMediaController {
         }
     }
 
+    /** Schedules the paused-player timeout for a session (MediaTimeoutListener). */
+    private void armTimeout(MediaSession.Token token) {
+        cancelTimeout(token);
+        Runnable timeout = () -> {
+            mTimeouts.remove(token);
+            if (mTimedOut.add(token)) {
+                android.util.Log.d("TrebuforkMedia",
+                        "session paused timeout -> hidden from carousel");
+                // The timed-out player leaves the carousel; it comes back the moment it
+                // plays again (SessionObserver clears the flag on a PLAYING transition).
+                notifySessionListChanged();
+                if (mController != null && token.equals(mController.getSessionToken())) {
+                    clearPinIfDead();
+                    setActiveController(pickController(mSessions));
+                    notifyControllerChanged();
+                }
+            }
+        };
+        mTimeouts.put(token, timeout);
+        mMainHandler.postDelayed(timeout, PAUSED_MEDIA_TIMEOUT_MS);
+    }
+
+    private void cancelTimeout(MediaSession.Token token) {
+        Runnable timeout = mTimeouts.remove(token);
+        if (timeout != null) {
+            mMainHandler.removeCallbacks(timeout);
+        }
+    }
+
     /** Per-session playback observer; the owner is tracked in {@link #mObserverOwners}. */
     private class SessionObserver extends MediaController.Callback {
         @Override
         public void onPlaybackStateChanged(@Nullable PlaybackState state) {
+            MediaController owner = mObserverOwners.get(this);
+            if (owner == null) {
+                return;
+            }
+            PlaybackState prev = mLastKnownStates.get(owner.getSessionToken());
+            mLastKnownStates.put(owner.getSessionToken(), state);
+            // trebufork: the pick is sticky — the carousel is stolen ONLY by a session
+            // that genuinely (re)starts playing:
+            //  1. a real transition into STATE_PLAYING (the user pressed play there), or
+            //  2. a PLAYING report from a NON-active session whose state actually changed
+            //     (the previous player's playback does not end the instant the new one
+            //     starts, and many apps stay stuck in STATE_PLAYING while paused — a
+            //     bare PLAYING re-post of an unchanged state must not flip the pick,
+            //     but pressing play in such a stale session must take over at once).
+            // Anything else (a pause of the active player, an identical re-post) keeps
+            // the current pick.
+            boolean takeover = false;
             if (state != null && state.getState() == PlaybackState.STATE_PLAYING) {
-                MediaController owner = mObserverOwners.get(this);
-                if (owner != null) {
-                    mLastPlayedController = new java.lang.ref.WeakReference<>(owner);
+                boolean wasPlaying = prev != null
+                        && prev.getState() == PlaybackState.STATE_PLAYING;
+                if (!wasPlaying) {
+                    takeover = true;
+                } else if (!owner.equals(mController) && !samePlayback(prev, state)) {
+                    takeover = true;
                 }
             }
-            setActiveController(pickController(mSessions));
+            if (takeover) {
+                mLastPlayedController = new java.lang.ref.WeakReference<>(owner);
+            }
+            // MediaTimeoutListener semantics: playing cancels the timeout (and un-hides a
+            // timed-out player); not playing arms/re-arms the 10-minute expiration.
+            if (state != null && state.getState() == PlaybackState.STATE_PLAYING) {
+                if (mTimedOut.remove(owner.getSessionToken())) {
+                    android.util.Log.d("TrebuforkMedia",
+                            "timed-out session started playing -> back in carousel");
+                    notifySessionListChanged();
+                }
+                cancelTimeout(owner.getSessionToken());
+            } else {
+                armTimeout(owner.getSessionToken());
+            }
+            if (takeover) {
+                setActiveController(pickController(mSessions));
+            }
+        }
+
+        /** True when two playback states report the same (re-posted) playback. */
+        private boolean samePlayback(PlaybackState a, PlaybackState b) {
+            return a.getState() == b.getState()
+                    && a.getPosition() == b.getPosition()
+                    && a.getLastPositionUpdateTime() == b.getLastPositionUpdateTime();
         }
     }
 
@@ -314,7 +460,14 @@ public class ScrollableMediaController {
      * page instead.
      */
     public List<MediaController> getSessionList() {
-        return new java.util.ArrayList<>(mSessions);
+        List<MediaController> result = new java.util.ArrayList<>(mSessions.size());
+        for (MediaController session : mSessions) {
+            // MediaTimeoutListener: a player paused for 10 minutes leaves the carousel.
+            if (!mTimedOut.contains(session.getSessionToken())) {
+                result.add(session);
+            }
+        }
+        return result;
     }
 
     /**
@@ -335,8 +488,25 @@ public class ScrollableMediaController {
      * if another session starts playing (the user explicitly chose it).
      */
     public void pinSession(@Nullable MediaController controller) {
+        pinSession(controller, false);
+    }
+
+    /**
+     * Pins the carousel to the given session, remembering whether the pin came from a
+     * carousel swipe ({@code fromSwipe}) — see {@link #isPinnedBySwipe()}.
+     */
+    public void pinSession(@Nullable MediaController controller, boolean fromSwipe) {
         mPinnedToken = controller == null ? null : controller.getSessionToken();
+        mPinnedBySwipe = fromSwipe && controller != null;
         setActiveController(controller);
+    }
+
+    /**
+     * True while the active session is pinned by a carousel swipe: the row must not
+     * reorder the pages in response to this activation (the user just swiped to it).
+     */
+    public boolean isPinnedBySwipe() {
+        return mPinnedToken != null && mPinnedBySwipe;
     }
 
     /**
@@ -348,9 +518,15 @@ public class ScrollableMediaController {
      */
     public void clearPin() {
         if (mPinnedToken == null) {
+            // Even with no swipe pin, re-pick on window unfocus: a stale pause-kept
+            // active session must yield to one that is actually PLAYING when home is
+            // left and the user interacts elsewhere (the shade behavior: while the
+            // launcher is in the background, the most recently playing session wins).
+            setActiveController(pickController(mSessions));
             return;
         }
         mPinnedToken = null;
+        mPinnedBySwipe = false;
         setActiveController(pickController(mSessions));
     }
 

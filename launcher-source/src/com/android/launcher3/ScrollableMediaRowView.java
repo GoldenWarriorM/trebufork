@@ -27,7 +27,9 @@ import android.widget.LinearLayout;
 import android.animation.ValueAnimator;
 import android.view.animation.AnimationUtils;
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 
 import androidx.annotation.Nullable;
 
@@ -61,6 +63,11 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     private final java.util.List<MediaSession.Token> mCardTokens = new java.util.ArrayList<>();
     // Index of the card currently shown (kept in sync with the scroll handler).
     private int mCarouselIndex;
+    // The session token of the card the user is actually looking at (settled page):
+    // rebuilds re-anchor the carousel to THIS card, never to an index, so a reorder can
+    // never swap a different player in front of the user.
+    @Nullable
+    private MediaSession.Token mVisibleCardToken;
     // True while a rebuild is in progress, so listener callbacks don't recurse.
     private boolean mRebuilding;
     // True while a rebuild is deferred until the launcher leaves its transition.
@@ -120,10 +127,15 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         mScrollHandler.setVisibleCardChangedListener(index -> {
             if (index != mCarouselIndex && index < mCardTokens.size() && mSource != null) {
                 mCarouselIndex = index;
+                mVisibleCardToken = mCardTokens.get(index);
+                updateSeekbarListening();
                 List<MediaController> sessions = mSource.getSessionList();
                 for (MediaController session : sessions) {
                     if (session.getSessionToken().equals(mCardTokens.get(index))) {
-                        mSource.pinSession(session);
+                        // fromSwipe=true: the activation came from the user's own gesture,
+                        // so the row must not reorder the pages (no exit/enter transition
+                        // replayed over the swipe the user just made).
+                        mSource.pinSession(session, true);
                         break;
                     }
                 }
@@ -189,11 +201,15 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
      * during an app launch.
      */
     private void rebuildCarouselWhenIdle() {
+        rebuildCarouselWhenIdle(false);
+    }
+
+    private void rebuildCarouselWhenIdle(boolean reorderOnHomeReturn) {
         Launcher launcher;
         try {
             launcher = Launcher.getLauncher(getContext());
         } catch (ClassCastException | IllegalStateException e) {
-            rebuildCarousel();
+            rebuildCarousel(reorderOnHomeReturn);
             return;
         }
         if (launcher.getStateManager().isInTransition()
@@ -206,13 +222,50 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                     public void onStateTransitionComplete(LauncherState finalState) {
                         launcher.getStateManager().removeStateListener(this);
                         mDeferredRebuild = false;
-                        post(ScrollableMediaRowView.this::rebuildCarousel);
+                        post(() -> rebuildCarousel(reorderOnHomeReturn));
                     }
                 });
             }
             return;
         }
-        rebuildCarousel();
+        rebuildCarousel(reorderOnHomeReturn);
+    }
+
+    /** No-reorder rebuild (session events, playback changes, play/pause taps). */
+    private void rebuildCarousel() {
+        rebuildCarousel(false);
+    }
+
+    /**
+     * Re-anchors the carousel to the card the user is looking at (by session token), or
+     * to the active (playing) player on the home-return reorder. Never an index: an index
+     * anchor after a reorder would show a DIFFERENT player than the user had on screen.
+     */
+    private void anchorCarousel(boolean toActivePlayer) {
+        MediaController target = null;
+        if (toActivePlayer) {
+            target = mSource == null ? null : mSource.getController();
+        }
+        if (target == null) {
+            ScrollableMediaCardView visible = findCard(mVisibleCardToken);
+            if (visible != null && visible.getBoundController() != null) {
+                target = visible.getBoundController();
+            }
+        }
+        if (target != null) {
+            int index = mCardTokens.indexOf(target.getSessionToken());
+            if (index >= 0) {
+                if (index != mCarouselIndex) {
+                    mCarouselIndex = index;
+                    mVisibleCardToken = target.getSessionToken();
+                    mScrollHandler.setVisibleMediaIndex(index);
+                }
+                return;
+            }
+        }
+        if (mVisibleCardToken != null && !mCardTokens.contains(mVisibleCardToken)) {
+            mVisibleCardToken = null;
+        }
     }
 
     /**
@@ -221,7 +274,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
      * drop out, new ones get a card appended — exactly how the shade's
      * MediaCarouselController diffs the player set.
      */
-    private void rebuildCarousel() {
+    private void rebuildCarousel(boolean reorderOnHomeReturn) {
         if (mRebuilding) {
             return;
         }
@@ -234,50 +287,48 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             // onPlayersChanged force-anchors scrollX — together they cancel a swipe that is
             // in flight (any playback-state change or media-notification update re-runs
             // this). Bail out early when the session set is identical.
-            // trebufork: while the launcher window is NOT active (another app in the
-            // foreground), the carousel follows the LIVE system session order — exactly like
-            // the shade's media controls, which re-rank their players while the shade is
-            // closed. Once the user is back at home, the order FREEZES at whatever it was, so
-            // the pages never visibly shuffle or scroll while the user is looking at them.
-            boolean launcherActive = false;
-            try {
-                Launcher launcher = Launcher.getLauncher(getContext());
-                launcherActive = (launcher.getActivityFlags()
-                        & BaseActivity.ACTIVITY_STATE_WINDOW_FOCUSED) != 0;
-            } catch (ClassCastException | IllegalStateException ignored) {
-                // No launcher context (e.g. preview): keep the stable-order behavior.
-                launcherActive = false;
-            }
-            // trebufork: stable card order (like the shade's MediaCarouselController): cards
-            // that already exist KEEP their current positions, new sessions are APPENDED at
-            // the end. Iterating the raw session list instead would reshuffle the pages every
-            // time MediaSessionManager's priority order changes — the carousel would visibly
-            // reorder itself (and scroll) while the launcher is active.
+            // trebufork: the carousel order follows the ACTIVE session first, the rest in
+            // system order (getCarouselSessions / the shade's re-ranked player list): when
+            // another app starts playing, its player moves to the FRONT — even while the
+            // user is looking at the desktop. A pure reorder (same sessions, new order)
+            // plays the metadata exit/enter transition instead of snapping (see below).
             java.util.List<ScrollableMediaCardView> newCards = new java.util.ArrayList<>();
             java.util.List<MediaSession.Token> newTokens = new java.util.ArrayList<>();
-            // Pass 1: surviving cards. While the launcher is NOT active the cards are
-            // re-emitted in LIVE system order (the shade behavior — MediaCarouselController
-            // reorders its player set on every update); at an active home the current
-            // carousel order is kept so pages never shuffle while the user is looking.
-            if (!launcherActive) {
-                for (MediaController session : sessions) {
-                    ScrollableMediaCardView card = findCard(session.getSessionToken());
-                    if (card != null) {
-                        newCards.add(card);
-                        newTokens.add(session.getSessionToken());
-                    }
+            MediaController activeSession = mSource == null ? null : mSource.getController();
+            // Pass 1a: the active session's card first — ONLY when a reorder was armed by
+            // returning to the desktop (passed as reorderOnHomeReturn). Otherwise the current
+            // order is kept: swipes and play/pause taps never shuffle the pages.
+            boolean reorder = reorderOnHomeReturn;
+            if (activeSession != null && reorder) {
+                ScrollableMediaCardView card = findCard(activeSession.getSessionToken());
+                if (card != null) {
+                    newCards.add(card);
+                    newTokens.add(activeSession.getSessionToken());
                 }
-            } else {
-                for (int i = 0; i < mCards.size(); i++) {
-                    MediaSession.Token token = mCardTokens.get(i);
-                    for (MediaController session : sessions) {
-                        if (session.getSessionToken().equals(token)) {
-                            newCards.add(mCards.get(i));
-                            newTokens.add(token);
-                            break;
-                        }
-                    }
+            }
+            // Pass 1b: surviving cards KEEP THEIR CURRENT VISIBLE ORDER (not the system
+            // order): a rebuild triggered by a play/pause tap or a notification update
+            // must never silently reshuffle pages in front of the user. Only the
+            // active-first pass (1a, armed by returning to the desktop) may reorder.
+            // trebufork (like SystemUI's MediaCarouselController, which diffs the player
+            // list against the authoritative mediaEntries map): a card may only survive
+            // if its session is STILL in the controller's session list — otherwise a
+            // duplicate that the controller already dropped (e.g. two sessions of one
+            // app) would keep its card forever.
+            java.util.Set<MediaSession.Token> liveTokens = new java.util.HashSet<>();
+            for (MediaController session : sessions) {
+                liveTokens.add(session.getSessionToken());
+            }
+            for (ScrollableMediaCardView existing : mCards) {
+                MediaController bound = existing.getBoundController();
+                MediaSession.Token token = bound == null ? null : bound.getSessionToken();
+                if (token == null || !liveTokens.contains(token) || newTokens.contains(token)
+                        || (activeSession != null && reorder
+                                && token.equals(activeSession.getSessionToken()))) {
+                    continue;
                 }
+                newCards.add(existing);
+                newTokens.add(token);
             }
             // Pass 2: brand-new sessions, appended.
             for (MediaController session : sessions) {
@@ -315,14 +366,26 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             if (sameSet) {
                 return;
             }
+            // trebufork: a PURE REORDER (identical session set, different order) applies
+            // silently: pages never shuffle while the user interacts — reordering only
+            // happens on RETURNING TO THE DESKTOP (reorderOnHomeReturn, passed by window
+            // focus / a completed launcher transition), and even then it is a quiet swap
+            // without any exit/enter animation (the user asked for no slide animation).
+            boolean pureReorder = newCards.size() == mCards.size()
+                    && newCards.containsAll(mCards);
+            int padding = getResources().getDimensionPixelSize(
+                    R.dimen.scrollable_media_padding);
+            if (pureReorder) {
+                applyNewOrder(newCards, newTokens, padding);
+                anchorCarousel(reorder);
+                return;
+            }
             mCards.clear();
             mCards.addAll(newCards);
             mCardTokens.clear();
             mCardTokens.addAll(newTokens);
 
             mCardContent.removeAllViews();
-            int padding = getResources().getDimensionPixelSize(
-                    R.dimen.scrollable_media_padding);
             for (int i = 0; i < mCards.size(); i++) {
                 ScrollableMediaCardView card = mCards.get(i);
                 // updateMediaPaddings: every card except the last carries the end margin
@@ -342,17 +405,69 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 mScrollHandler.onPlayersChanged(
                         mScrollView.getWidth() > 0 ? mScrollView.getWidth() + padding : 0);
             }
-            // Keep the pinned/active session's page on screen when the set changes.
-            MediaController active = mSource == null ? null : mSource.getController();
-            if (active != null) {
-                int index = mCardTokens.indexOf(active.getSessionToken());
-                if (index >= 0 && index != mCarouselIndex) {
-                    mCarouselIndex = index;
-                    mScrollHandler.setVisibleMediaIndex(index);
-                }
-            }
+            // Port of MediaCarouselController.updateSeekbarListening: only the page the
+            // user is looking at extrapolates its progress; hidden cards stop ticking.
+            updateSeekbarListening();
+            // Keep the pinned/visible session's page on screen when the set changes: the
+            // page is located by SESSION TOKEN (the visible card the user is looking at),
+            // never by index — an index anchor after a reorder would show a DIFFERENT
+            // player than the one the user had on screen. On the home-return reorder the
+            // ACTIVE (playing) player is shown instead — see anchorCarousel.
+            anchorCarousel(reorder);
         } finally {
             mRebuilding = false;
+        }
+    }
+
+    /**
+     * trebufork: applies a new card order instantly (used while a swipe gesture is active
+     * — the touch pipeline must keep its page — and as the hidden middle step of the
+     * animated reorder).
+     */
+    private void applyNewOrder(java.util.List<ScrollableMediaCardView> newCards,
+            java.util.List<MediaSession.Token> newTokens, int padding) {
+        mCards.clear();
+        mCards.addAll(newCards);
+        mCardTokens.clear();
+        mCardTokens.addAll(newTokens);
+        relayoutCards(padding);
+    }
+
+    /** Re-adds the cards in current mCards order with correct page widths/margins. */
+    private void relayoutCards(int padding) {
+        mCardContent.removeAllViews();
+        for (int i = 0; i < mCards.size(); i++) {
+            ScrollableMediaCardView card = mCards.get(i);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    mLastContentWidth > 0 ? mLastContentWidth
+                            : ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.rightMargin = i == mCards.size() - 1 ? 0 : padding;
+            mCardContent.addView(card, lp);
+        }
+        mPageIndicator.setNumPages(mCards.size());
+        if (mScrollHandler != null) {
+            mScrollHandler.onPlayersChanged(
+                    mScrollView.getWidth() > 0 ? mScrollView.getWidth() + padding : 0);
+        }
+    }
+
+    //
+    // trebufork: reorder gating. The carousel reorders ONLY on the "user returned to the
+    // desktop" rebuilds: the flag is passed as a parameter (reorderOnHomeReturn) from
+    // exactly two call sites — window focus regained and a launcher transition completing
+    // into NORMAL. Every other rebuild (session events, playback changes, play/pause
+    // taps) passes false and keeps the current card order verbatim. A shared boolean
+    // field was deliberately NOT used: a stale armed flag consumed by a later unrelated
+    // rebuild reordered pages in front of the user while they were interacting.
+
+    /**
+     * Port of MediaCarouselController.updateSeekbarListening(visibleToUser): feeds each
+     * card its visibility so only the visible one runs its progress extrapolation tick.
+     */
+    private void updateSeekbarListening() {
+        for (int i = 0; i < mCards.size(); i++) {
+            mCards.get(i).setVisibleToUser(i == mCarouselIndex);
         }
     }
 
@@ -554,7 +669,11 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 mSource.clearPin();
             }
         } else {
+            // trebufork: the user is back at the desktop — run the rebuild WITH the
+            // home-return reorder (active player first). This is one of exactly two call
+            // sites that may reorder; all other rebuilds keep the visible order verbatim.
             post(this::requestLayout);
+            post(() -> rebuildCarouselWhenIdle(true));
         }
     }
 
@@ -576,7 +695,11 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                         // or collapse (all sessions gone) — at idle home this cannot disturb
                         // any animation.
                         if (finalState == LauncherState.NORMAL) {
+                            // A completed transition back to home is the second "exited to
+                            // the desktop" moment: rebuild WITH the home-return reorder
+                            // (active player first).
                             post(ScrollableMediaRowView.this::requestLayout);
+                            post(() -> rebuildCarouselWhenIdle(true));
                         }
                     }
                 });
