@@ -368,6 +368,7 @@ public class ScrollableMediaCardView extends FrameLayout {
      */
     private boolean transitionMetadata(CharSequence title, CharSequence artist,
             Runnable update) {
+        boolean firstBind = mShownTitle == null && mShownArtist == null;
         boolean changed = mShownTitle == null || !mShownTitle.equals(title)
                 || mShownArtist == null || !mShownArtist.equals(artist);
         if (!changed) {
@@ -376,6 +377,13 @@ public class ScrollableMediaCardView extends FrameLayout {
         mShownTitle = title;
         mShownArtist = artist;
         mPostExitUpdate = update;
+        // The FIRST bind (including a card freshly rebound to a swapped session of the
+        // same package) applies the text directly: the exit/enter motion is a TRACK
+        // CHANGE effect, and playing it on a brand-new card animates from blank in
+        // front of the user (MetadataAnimationHandler is only fed on updates).
+        if (firstBind) {
+            return false;
+        }
         if (!isMetadataAnimating() && mMetadataExit != null) {
             mMetadataExit.start();
         }
@@ -511,20 +519,26 @@ public class ScrollableMediaCardView extends FrameLayout {
             // Port of SystemUI scaleTransitionDrawableLayer + setLayerGravity(CENTER):
             // TransitionDrawable does NOT propagate the view bounds to its layers, so
             // without this the layers draw at intrinsic size from (0,0) and the white
-            // album background shines through wherever they don't cover. Scale both
-            // layers to COVER the art view and center them.
+            // album background shines through wherever they don't cover. EACH layer is
+            // scaled to COVER the art view by its OWN bitmap size — sizing both from the
+            // new bitmap left the old layer (different aspect, e.g. the wide frame a
+            // video app posted before the song change) short of the edges, and the white
+            // placeholder flashed through the crossfade.
             int viewW = mAlbumArt.getWidth();
             int viewH = mAlbumArt.getHeight();
             if (viewW > 0 && viewH > 0) {
-                int artW = processed.getWidth();
-                int artH = processed.getHeight();
-                float scale = Math.max((float) viewW / artW, (float) viewH / artH);
-                int layerW = Math.round(artW * scale);
-                int layerH = Math.round(artH * scale);
-                transition.setLayerSize(0, layerW, layerH);
-                transition.setLayerSize(1, layerW, layerH);
-                transition.setLayerGravity(0, android.view.Gravity.CENTER);
-                transition.setLayerGravity(1, android.view.Gravity.CENTER);
+                Drawable[] layers = {prev, newArt};
+                for (int i = 0; i < layers.length; i++) {
+                    int artW = layers[i].getIntrinsicWidth();
+                    int artH = layers[i].getIntrinsicHeight();
+                    if (artW <= 0 || artH <= 0) {
+                        continue;
+                    }
+                    float scale = Math.max((float) viewW / artW, (float) viewH / artH);
+                    transition.setLayerSize(i,
+                            Math.round(artW * scale), Math.round(artH * scale));
+                    transition.setLayerGravity(i, android.view.Gravity.CENTER);
+                }
             }
             mAlbumArt.setImageDrawable(transition);
             transition.startTransition(333);

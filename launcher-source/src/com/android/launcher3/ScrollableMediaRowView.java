@@ -331,22 +331,45 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 newTokens.add(token);
             }
             // Pass 2: brand-new sessions, appended.
+            // trebufork: when a package's representative session SWAPPED (the dedupe
+            // picked its playing session — e.g. pressing play in an mpv-based player),
+            // the orphaned card is REBOUND to the new session instead of destroying and
+            // recreating it: a fresh card would flash the white album placeholder (its
+            // Monet scheme is extracted asynchronously) and replay the title enter
+            // animation from blank, right in front of the user.
+            java.util.List<ScrollableMediaCardView> orphans = new java.util.ArrayList<>();
+            for (ScrollableMediaCardView card : mCards) {
+                if (!newCards.contains(card)) {
+                    orphans.add(card);
+                }
+            }
             for (MediaController session : sessions) {
                 if (findCard(session.getSessionToken()) == null
                         && !newTokens.contains(session.getSessionToken())) {
-                    ScrollableMediaCardView card = new ScrollableMediaCardView(getContext());
+                    ScrollableMediaCardView card = null;
+                    for (java.util.Iterator<ScrollableMediaCardView> it =
+                            orphans.iterator(); it.hasNext(); ) {
+                        ScrollableMediaCardView orphan = it.next();
+                        MediaController bound = orphan.getBoundController();
+                        if (bound != null && bound.getPackageName()
+                                .equals(session.getPackageName())) {
+                            card = orphan;
+                            it.remove();
+                            break;
+                        }
+                    }
+                    if (card == null) {
+                        card = new ScrollableMediaCardView(getContext());
+                    }
                     card.setController(mSource, session);
                     newCards.add(card);
                     newTokens.add(session.getSessionToken());
                 }
             }
-            // Unregister cards that dropped out (their controller callbacks are cleared
-            // inside the card when the binding changes).
-            for (ScrollableMediaCardView card : mCards) {
-                if (!newCards.contains(card)) {
-                    MediaController bound = card.getBoundController();
-                    card.setController(null, null);
-                }
+            // Unregister cards that dropped out for real (their controller callbacks are
+            // cleared inside the card when the binding changes).
+            for (ScrollableMediaCardView card : orphans) {
+                card.setController(null, null);
             }
             // trebufork: cheap no-set-change check BEFORE mutating anything: if the
             // surviving+appended token list equals the current one (same order, same
