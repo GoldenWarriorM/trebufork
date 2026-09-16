@@ -45,6 +45,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.android.launcher3.notification.NotificationListener;
+import com.android.launcher3.Utilities;
 
 /**
  * trebufork: one player card of the media carousel — the verbatim port of the SystemUI
@@ -1196,10 +1197,15 @@ public class ScrollableMediaCardView extends FrameLayout {
     }
 
     /**
-     * Opens the player app for this card, mirroring the shade player's card click:
-     * the media notification's contentIntent (MediaDataLoader clickIntent =
-     * notification.contentIntent) sent through the launcher for the launch animation.
-     * Falls back to the app's launch intent when the notification carries none.
+     * Opens the player app for this card with a clip-reveal from the WHOLE card: the
+     * system widget's "stretch from the widget" RemoteAnimation path
+     * (QuickstepTransitionManager.getOpeningWindowAnimatorsForWidget + FloatingWidgetView)
+     * only runs for LauncherAppWidgetHostView, which this card is not — Quickstep would
+     * fall back to its ICON animator whose source rect is icon-sized. The base
+     * ActivityContext launch options (makeClipRevealAnimation over the full view bounds,
+     * with the sender-side background-activity-start allowance) reveal the app out of
+     * the entire card instead. Falls back to the app's launch intent when the
+     * notification carries none.
      */
     private void openPlayerApp() {
         if (mController == null) {
@@ -1209,32 +1215,25 @@ public class ScrollableMediaCardView extends FrameLayout {
         android.app.PendingIntent clickIntent =
                 NotificationListener.getMediaClickIntent(pkg);
         Context context = getContext();
-        android.util.Log.d("TrebuforkMedia", "openPlayerApp pkg=" + pkg
-                + " clickIntent=" + (clickIntent != null));
-        try {
-            if (clickIntent != null) {
-                // Like the shade: fire the notification's content intent (it already
-                // targets the right activity, e.g. the in-app player screen).
-                // MODE_BACKGROUND_ACTIVITY_START_ALLOWED (SENDER side): Android 12+
-                // blocks a PendingIntent whose CREATOR is a background app (the media
-                // app) even when the sender (this launcher, foreground) fires it. The
-                // sender-mode option is the documented way for the app doing the send
-                // (e.g. the launcher) to allow the background-activity start; the
-                // creator-mode variant throws IllegalArgumentException when set by a
-                // sender. SystemUI gets the same result through its system privileges.
-                android.app.ActivityOptions opts = android.app.ActivityOptions.makeBasic();
-                opts.setPendingIntentBackgroundActivityStartMode(
-                        android.app.ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED);
+        if (clickIntent != null) {
+            // ActivityContext.getActivityLaunchOptions for a non-icon view: reveal from
+            // the full view bounds. allowBGLaunch adds the sender-side allowance that
+            // Android 12+ requires when the PendingIntent's creator is a background app.
+            android.app.ActivityOptions opts = Utilities.allowBGLaunch(
+                    android.app.ActivityOptions.makeClipRevealAnimation(
+                            this, 0, 0, getMeasuredWidth(), getMeasuredHeight()));
+            if (getDisplay() != null) {
+                opts.setLaunchDisplayId(getDisplay().getDisplayId());
+            }
+            try {
                 clickIntent.send(context, 0, null, null, null, null, opts.toBundle());
                 return;
+            } catch (android.app.PendingIntent.CanceledException e) {
+                // fall through to the package launch intent
             }
-        } catch (android.app.PendingIntent.CanceledException e) {
-            // fall through to the package launch intent
         }
         android.content.Intent launch =
                 context.getPackageManager().getLaunchIntentForPackage(pkg);
-        android.util.Log.d("TrebuforkMedia", "openPlayerApp fallback launch="
-                + (launch != null) + " isLauncher=" + (context instanceof Launcher));
         if (launch != null && context instanceof Launcher) {
             ((Launcher) context).startActivitySafely(this, launch, null);
         } else if (launch != null) {
