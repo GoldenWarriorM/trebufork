@@ -84,6 +84,25 @@ public class NotificationListener extends NotificationListenerService {
             sMediaSmallIcons = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
+     * trebufork: the content intent of the package's current media-style notification —
+     * what SystemUI's shade player uses as its clickIntent (MediaDataLoader:
+     * {@code clickIntent = notification.contentIntent}). Tapping the launcher media card
+     * sends this PendingIntent, opening the player exactly like the system widget.
+     * Updated on the worker thread; read on any.
+     */
+    private static final Map<String, android.app.PendingIntent>
+            sMediaClickIntents = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * Returns the content intent (clickIntent) of the package's current media-style
+     * notification, or null when there is none.
+     */
+    @Nullable
+    public static android.app.PendingIntent getMediaClickIntent(String packageName) {
+        return sMediaClickIntents.get(packageName);
+    }
+
+    /**
      * Returns the small icon of the package's current media-style notification, or null when
      * the listener is not connected or the package has no such notification.
      */
@@ -154,6 +173,15 @@ public class NotificationListener extends NotificationListenerService {
                 } else {
                     sMediaSmallIcons.remove(sbn.getPackageName());
                 }
+                // trebufork: remember the media notification's content intent for the
+                // card click (the shade player's clickIntent source).
+                android.app.PendingIntent contentIntent =
+                        sbn.getNotification().contentIntent;
+                if (contentIntent != null) {
+                    sMediaClickIntents.put(sbn.getPackageName(), contentIntent);
+                } else {
+                    sMediaClickIntents.remove(sbn.getPackageName());
+                }
                 notifyMediaSmallIconListeners();
             } catch (Exception e) {
                 Log.w(TAG, "failed to load media small icon", e);
@@ -164,6 +192,7 @@ public class NotificationListener extends NotificationListenerService {
     private void forgetSmallIcon(StatusBarNotification sbn) {
         if (sbn.getNotification().isMediaNotification()) {
             sMediaSmallIcons.remove(sbn.getPackageName());
+            sMediaClickIntents.remove(sbn.getPackageName());
             notifyMediaSmallIconListeners();
         }
     }
@@ -261,6 +290,7 @@ public class NotificationListener extends NotificationListenerService {
         HashMap<PackageUserKey, DotInfo> updatedDots = new HashMap<>(mPackageUserToDotInfos);
         mPackageUserToDotInfos.clear();
         sMediaSmallIcons.clear();
+        sMediaClickIntents.clear();
         // trebufork: media small icons must be remembered for ALL active media
         // notifications, not only the ones that pass the badge/UI filters —
         // SystemUI's shade shows every media session regardless of the
