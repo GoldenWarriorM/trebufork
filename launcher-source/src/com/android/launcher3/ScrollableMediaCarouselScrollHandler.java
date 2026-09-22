@@ -150,6 +150,17 @@ class ScrollableMediaCarouselScrollHandler {
             // A long-press means a menu/resize, not a scroll: kill the touch stream the
             // children (and the scroll view) are tracking, then fire the action.
             mScrollView.cancelCurrentScroll();
+            // trebufork: the card under the finger is clickable (tap opens the player app);
+            // its gesture is still holding a pending tap-up, so the ACTION_UP that ends the
+            // long-press would run its onClick on top of the just-opened menu. A synthetic
+            // CANCEL through the content container finishes the children's gestures without
+            // a click — the menu stays alone on screen.
+            long now = android.os.SystemClock.uptimeMillis();
+            android.view.MotionEvent cancel = android.view.MotionEvent.obtain(
+                    now, now, android.view.MotionEvent.ACTION_CANCEL, 0f, 0f, 0);
+            cancel.setSource(android.view.InputDevice.SOURCE_TOUCHSCREEN);
+            mScrollView.getContentContainer().dispatchTouchEvent(cancel);
+            cancel.recycle();
             mLongPressAction.run();
             mLongPressArmed = false;
         }
