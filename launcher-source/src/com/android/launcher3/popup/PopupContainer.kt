@@ -52,6 +52,13 @@ open class PopupContainer<T>(context: Context?, val originalView: View, val item
             R.dimen.deep_shortcuts_start_drag_threshold
         )
 
+    /**
+     * trebufork: when set, a tap on the original view closes this popup instead of passing
+     * through to it (stock behavior launches the item with one tap; the scrollable desktop
+     * menus want the first tap to just dismiss the menu).
+     */
+    var consumeTapOverOriginal = false
+
     @CallSuper
     override fun onControllerInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {
@@ -59,6 +66,11 @@ open class PopupContainer<T>(context: Context?, val originalView: View, val item
             if (!dl.isEventOverView(this, ev)) {
                 // TODO: add WW log if want to log if tap closed deep shortcut container.
                 close(true)
+
+                if (consumeTapOverOriginal && dl.isEventOverView(originalView, ev)) {
+                    // The first tap only dismisses the menu — never reaches the item.
+                    return true
+                }
 
                 // We let touches on the original view go through so that users can launch
                 // the item with one tap.

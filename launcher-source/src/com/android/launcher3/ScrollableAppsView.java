@@ -3370,6 +3370,8 @@ public class ScrollableAppsView extends RecyclerView
             }
             PopupContainer<Launcher> container =
                     PopupContainer.create(launcher, anchor, widgetInfo);
+            // trebufork: the first tap on the widget dismisses the menu.
+            container.setConsumeTapOverOriginal(true);
             container.setSystemShortcutContainer(
                     container.inflateAndAdd(R.layout.system_shortcut_rows_container, container));
             // Remove from desktop.
@@ -3469,6 +3471,9 @@ public class ScrollableAppsView extends RecyclerView
             }
             PopupContainer<Launcher> container =
                     PopupContainer.create(launcher, mRow, createWidgetInfo(mItem));
+            // trebufork: the first tap on the row dismisses the menu instead of opening
+            // the player app.
+            container.setConsumeTapOverOriginal(true);
             container.setSystemShortcutContainer(
                     container.inflateAndAdd(R.layout.system_shortcut_rows_container, container));
             addWidgetPopupRow(container, R.drawable.ic_remove_no_shadow,
