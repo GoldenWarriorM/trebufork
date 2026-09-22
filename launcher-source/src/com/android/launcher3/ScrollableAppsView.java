@@ -3481,17 +3481,8 @@ public class ScrollableAppsView extends RecyclerView
                     R.string.scrollable_desktop_reorder,
                     ScrollableAppsView.this::enterReorderMode);
             container.show();
-            // trebufork: show the workspace-style resize frame around the media row together
-            // with the menu (same behavior as widget rows).
-            ScrollableWidgetResizeFrame.show(ScrollableAppsView.this, mRow, mItem);
-            container.addOnCloseCallback(() -> {
-                AbstractFloatingView frame = AbstractFloatingView.getOpenView(
-                        launcher, AbstractFloatingView.TYPE_WIDGET_RESIZE_FRAME);
-                if (frame == null || !(frame instanceof ScrollableWidgetResizeFrame)
-                        || !((ScrollableWidgetResizeFrame) frame).isDragActive()) {
-                    ScrollableWidgetResizeFrame.closeOpenFrame(launcher);
-                }
-            });
+            // trebufork: no resize frame for the media row — its size is fixed by the
+            // carousel layout (unlike widget rows, which keep the workspace-style frame).
             return true;
         }
     }
