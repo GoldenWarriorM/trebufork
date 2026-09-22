@@ -699,6 +699,14 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
      * targets are displayed.
      */
     public ActivityOptionsWrapper getActivityLaunchOptions(View v, ItemInfo itemInfo) {
+        // trebufork: in scrollable home the close-to-home spring of a PREVIOUS gesture may
+        // still be flying the app window to its icon (it is deliberately kept alive across
+        // list scrolls). While it runs, the recents CLOSE transition is still active, and a
+        // new OPEN transition gets merged into it — which kills the launch animation instead
+        // of the close. A launch here means the user tapped a target: cancel the stale close
+        // spring (and with it the recents transition, via its release check) so the open
+        // animation plays cleanly. No-op when no spring is running.
+        com.android.quickstep.AbsSwipeUpHandler.killFlyingIcon();
         boolean fromRecents = isLaunchingFromRecents(v, null /* targets */);
         RunnableList onEndCallback = new RunnableList();
 

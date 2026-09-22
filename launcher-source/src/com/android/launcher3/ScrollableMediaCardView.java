@@ -1207,6 +1207,13 @@ public class ScrollableMediaCardView extends FrameLayout
      * background-activity-start allowance Android 12+ requires when the PendingIntent's
      * creator is a background media app. Falls back to the app's launch intent when the
      * notification carries none.
+     *
+     * trebufork: the PendingIntent.send path bypasses startActivitySafely (and its defer
+     * guard), so a tap landing while the previous close-to-icon spring's recents transition
+     * is still finishing gets merged into it by WM Shell and the open animation is skipped
+     * (the "relaunch interrupt" bug). Route the send through the launcher's
+     * run-when-transition-idle wrapper: it force-finishes the running transition first and
+     * re-issues the send, exactly like the deferred icon-launch path.
      */
     private void openPlayerApp() {
         if (mController == null) {
@@ -1221,12 +1228,14 @@ public class ScrollableMediaCardView extends FrameLayout
             ActivityOptionsWrapper options = launcher.getActivityLaunchOptions(this, null);
             options.options.setPendingIntentLaunchFlags(
                     android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-            try {
-                clickIntent.send(context, 0, null, null, null, null, options.toBundle());
-                return;
-            } catch (android.app.PendingIntent.CanceledException e) {
-                // fall through to the package launch intent
-            }
+            launcher.runWhenLaunchTransitionIdle(() -> {
+                try {
+                    clickIntent.send(context, 0, null, null, null, null, options.toBundle());
+                } catch (android.app.PendingIntent.CanceledException e) {
+                    // fall through to the package launch intent
+                }
+            });
+            return;
         }
         android.content.Intent launch =
                 context.getPackageManager().getLaunchIntentForPackage(pkg);

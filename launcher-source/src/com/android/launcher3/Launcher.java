@@ -2462,6 +2462,26 @@ public class Launcher extends StatefulActivity<LauncherState>
     }
 
     /**
+     * trebufork: runs {@param launch} after any running window/recents transition (e.g. the
+     * scrollable-home close-to-icon spring) has finished. A launch issued while such a
+     * transition is still active at the WM level gets merged into it by WM Shell and the
+     * open animation is skipped. PendingIntent-based launches (media card tap) bypass
+     * {@link #startActivitySafely}, so they must go through this wrapper explicitly.
+     */
+    public void runWhenLaunchTransitionIdle(Runnable launch) {
+        if (!mIsDeferringLaunchForTransition && shouldDeferLaunchForRunningTransition()) {
+            Log.d(TREBUFORK_TAG, "runWhenLaunchTransitionIdle: deferring pending-intent launch");
+            mIsDeferringLaunchForTransition = true;
+            deferLaunchForRunningTransition(() -> {
+                mIsDeferringLaunchForTransition = false;
+                launch.run();
+            });
+            return;
+        }
+        launch.run();
+    }
+
+    /**
      * trebufork: whether a launch must be deferred because a window/recents animation (e.g. the
      * scrollable-home close-to-icon spring) is still running. Launching during such an animation
      * would be merged into the active transition and the open animation skipped.
