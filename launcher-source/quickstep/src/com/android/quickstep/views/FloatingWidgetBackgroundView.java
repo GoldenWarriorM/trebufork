@@ -66,7 +66,7 @@ final class FloatingWidgetBackgroundView extends View {
         setClipToOutline(true);
     }
 
-    void init(LauncherAppWidgetHostView hostView, @NonNull View backgroundView,
+    void init(View hostView, @NonNull View backgroundView,
             float finalRadius, int fallbackBackgroundColor) {
         mFinalRadius = finalRadius;
         mSourceView = backgroundView;
@@ -169,9 +169,9 @@ final class FloatingWidgetBackgroundView extends View {
     }
 
     /** Corner radius from source view's outline, or enforced view. */
-    private static float getOutlineRadius(LauncherAppWidgetHostView hostView, View v) {
-        if (hostView.hasEnforcedCornerRadius()) {
-            return hostView.getEnforcedCornerRadius();
+    private static float getOutlineRadius(View hostView, View v) {
+        if (hostView instanceof LauncherAppWidgetHostView lwv && lwv.hasEnforcedCornerRadius()) {
+            return lwv.getEnforcedCornerRadius();
         } else if (v.getOutlineProvider() instanceof RemoteViewOutlineProvider
                 && v.getClipToOutline()) {
             return ((RemoteViewOutlineProvider) v.getOutlineProvider()).getRadius();

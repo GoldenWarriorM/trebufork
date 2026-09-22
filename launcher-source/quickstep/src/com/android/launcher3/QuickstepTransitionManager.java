@@ -148,6 +148,7 @@ import com.android.launcher3.util.ActivityOptionsWrapper;
 import com.android.launcher3.util.RunnableList;
 import com.android.launcher3.util.StableViewInfo;
 import com.android.launcher3.views.FloatingIconView;
+import com.android.launcher3.views.UpdateDeferrableView;
 import com.android.launcher3.widget.LauncherAppWidgetHostView;
 import com.android.quickstep.HandoffTrace;
 import com.android.quickstep.LauncherBackAnimationController;
@@ -906,7 +907,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
     private void composeWidgetLaunchAnimator(
             @NonNull AnimatorSet anim,
-            @NonNull LauncherAppWidgetHostView v,
+            @NonNull View v,
             @NonNull RemoteAnimationTarget[] appTargets,
             @NonNull RemoteAnimationTarget[] wallpaperTargets,
             @NonNull RemoteAnimationTarget[] nonAppTargets,
@@ -1482,7 +1483,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         return TaskbarFeatureEvaluator.INSTANCE.get(mLauncher).isTransient();
     }
 
-    private Animator getOpeningWindowAnimatorsForWidget(LauncherAppWidgetHostView v,
+    private Animator getOpeningWindowAnimatorsForWidget(View v,
             RemoteAnimationTarget[] appTargets,
             RemoteAnimationTarget[] wallpaperTargets,
             RemoteAnimationTarget[] nonAppTargets, boolean launcherClosing) {
@@ -1970,13 +1971,14 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         // Get floating view and target rect.
         boolean isInHotseat = false;
-        if (launcherView instanceof LauncherAppWidgetHostView) {
+        if (launcherView instanceof LauncherAppWidgetHostView
+                || launcherView instanceof UpdateDeferrableView) {
             Size windowSize = new Size(mDeviceProfile.getDeviceProperties().getWidthPx(),
                     mDeviceProfile.getDeviceProperties().getHeightPx());
             int fallbackBackgroundColor =
                     FloatingWidgetView.getDefaultBackgroundColor(mLauncher, runningTaskTarget);
             floatingWidget = FloatingWidgetView.getFloatingWidgetView(mLauncher,
-                    (LauncherAppWidgetHostView) launcherView, targetRect, windowSize,
+                    launcherView, targetRect, windowSize,
                     getWindowCornerRadius(mLauncher), isTransluscent, fallbackBackgroundColor);
         } else if (launcherView != null && !RemoveAnimationSettingsTracker.INSTANCE.get(
                 mLauncher).isRemoveAnimationEnabled()) {
@@ -2427,11 +2429,15 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             boolean launcherClosing =
                     launcherIsATargetWithMode(appTargets, MODE_CLOSING);
 
-            final boolean launchingFromWidget = mV instanceof LauncherAppWidgetHostView;
+            // trebufork: the widget-style launch also covers any UpdateDeferrableView
+            // (the media carousel card) so its tap plays the same stretch-from-view
+            // animation instead of the icon fallback.
+            final boolean launchingFromWidget = mV instanceof LauncherAppWidgetHostView
+                    || mV instanceof UpdateDeferrableView;
             final boolean launchingFromRecents = isLaunchingFromRecents(mV, appTargets);
             final boolean skipFirstFrame;
             if (launchingFromWidget) {
-                composeWidgetLaunchAnimator(anim, (LauncherAppWidgetHostView) mV, appTargets,
+                composeWidgetLaunchAnimator(anim, mV, appTargets,
                         wallpaperTargets, nonAppTargets, launcherClosing);
                 addCujInstrumentation(anim, Cuj.CUJ_LAUNCHER_APP_LAUNCH_FROM_WIDGET);
                 skipFirstFrame = true;

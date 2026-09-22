@@ -41,7 +41,6 @@ import com.android.launcher3.uioverrides.QuickstepLauncher;
 import com.android.launcher3.util.Themes;
 import com.android.launcher3.views.FloatingView;
 import com.android.launcher3.views.ListenerView;
-import com.android.launcher3.widget.LauncherAppWidgetHostView;
 import com.android.launcher3.widget.RoundedCornerEnforcement;
 
 /** A view that mimics an App Widget through a launch animation. */
@@ -54,7 +53,9 @@ public class FloatingWidgetView extends FrameLayout implements AnimatorListener,
     private final FloatingWidgetBackgroundView mBackgroundView;
     private final RectF mBackgroundOffset = new RectF();
 
-    private LauncherAppWidgetHostView mAppWidgetView;
+    // trebufork: generalized from LauncherAppWidgetHostView to any UpdateDeferrableView
+    // (the media carousel card participates in the widget-style launch animation too).
+    private View mAppWidgetView;
     private View mAppWidgetBackgroundView;
     private RectF mBackgroundPosition;
     @Nullable
@@ -154,12 +155,14 @@ public class FloatingWidgetView extends FrameLayout implements AnimatorListener,
     }
 
     private void init(QuickstepLauncher launcher, DragLayer dragLayer,
-            LauncherAppWidgetHostView originalView,
+            View originalView,
             RectF widgetBackgroundPosition, Size windowSize, float windowCornerRadius,
             boolean appTargetIsTranslucent, int fallbackBackgroundColor) {
         mAppWidgetView = originalView;
         // Deferrals must begin before GhostView is created. See b/190818220
-        mAppWidgetView.setUpdatesDeferred(true);
+        if (mAppWidgetView instanceof com.android.launcher3.views.UpdateDeferrableView udv) {
+            udv.setUpdatesDeferred(true);
+        }
         mBackgroundPosition = widgetBackgroundPosition;
         mAppTargetIsTranslucent = appTargetIsTranslucent;
         mEndRunnable = () -> finish(launcher, dragLayer);
@@ -277,7 +280,9 @@ public class FloatingWidgetView extends FrameLayout implements AnimatorListener,
         dragLayer.removeView(mListenerView);
         mBackgroundView.finish();
         // Removing GhostView must occur before ending deferrals. See b/190818220
-        mAppWidgetView.setUpdatesDeferred(false);
+        if (mAppWidgetView instanceof com.android.launcher3.views.UpdateDeferrableView udv) {
+            udv.setUpdatesDeferred(false);
+        }
         recycle();
         launcher.getViewCache().recycleView(R.layout.floating_widget_view, this);
     }
@@ -313,7 +318,7 @@ public class FloatingWidgetView extends FrameLayout implements AnimatorListener,
      * @param windowCornerRadius       the corner radius of the window
      */
     public static FloatingWidgetView getFloatingWidgetView(QuickstepLauncher launcher,
-            LauncherAppWidgetHostView originalView, RectF widgetBackgroundPosition,
+            View originalView, RectF widgetBackgroundPosition,
             Size windowSize, float windowCornerRadius, boolean appTargetsAreTranslucent,
             int fallbackBackgroundColor) {
         final DragLayer dragLayer = launcher.getDragLayer();

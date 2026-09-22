@@ -46,6 +46,7 @@ import androidx.annotation.Nullable;
 
 import com.android.launcher3.notification.NotificationListener;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.util.ActivityOptionsWrapper;
 
 /**
  * trebufork: one player card of the media carousel — the verbatim port of the SystemUI
@@ -59,7 +60,8 @@ import com.android.launcher3.Utilities;
  * colored at runtime from the album artwork through {@link MonetColorExtractor} exactly
  * like MediaColorSchemes.kt does.
  */
-public class ScrollableMediaCardView extends FrameLayout {
+public class ScrollableMediaCardView extends FrameLayout
+        implements com.android.launcher3.views.UpdateDeferrableView {
 
     private static final long PROGRESS_TICK_MS = 500L;
     // Lineage 23.2 MediaControlPanel.MEDIA_PLAYER_SCRIM_START/END_ALPHA is 0.65/0.75 for
@@ -1197,14 +1199,13 @@ public class ScrollableMediaCardView extends FrameLayout {
     }
 
     /**
-     * Opens the player app for this card with a clip-reveal from the WHOLE card: the
-     * system widget's "stretch from the widget" RemoteAnimation path
-     * (QuickstepTransitionManager.getOpeningWindowAnimatorsForWidget + FloatingWidgetView)
-     * only runs for LauncherAppWidgetHostView, which this card is not — Quickstep would
-     * fall back to its ICON animator whose source rect is icon-sized. The base
-     * ActivityContext launch options (makeClipRevealAnimation over the full view bounds,
-     * with the sender-side background-activity-start allowance) reveal the app out of
-     * the entire card instead. Falls back to the app's launch intent when the
+     * Opens the player app for this card with the widget-style RemoteAnimation: the
+     * card implements UpdateDeferrableView, which QuickstepTransitionManager treats as a
+     * widget launch source, so tapping plays the same stretch-from-view transition the
+     * system widget plays (FloatingWidgetView ghosts the card and morphs it into the
+     * opening app window). The launch options also carry the sender-side
+     * background-activity-start allowance Android 12+ requires when the PendingIntent's
+     * creator is a background media app. Falls back to the app's launch intent when the
      * notification carries none.
      */
     private void openPlayerApp() {
@@ -1215,18 +1216,13 @@ public class ScrollableMediaCardView extends FrameLayout {
         android.app.PendingIntent clickIntent =
                 NotificationListener.getMediaClickIntent(pkg);
         Context context = getContext();
-        if (clickIntent != null) {
-            // ActivityContext.getActivityLaunchOptions for a non-icon view: reveal from
-            // the full view bounds. allowBGLaunch adds the sender-side allowance that
-            // Android 12+ requires when the PendingIntent's creator is a background app.
-            android.app.ActivityOptions opts = Utilities.allowBGLaunch(
-                    android.app.ActivityOptions.makeClipRevealAnimation(
-                            this, 0, 0, getMeasuredWidth(), getMeasuredHeight()));
-            if (getDisplay() != null) {
-                opts.setLaunchDisplayId(getDisplay().getDisplayId());
-            }
+        if (clickIntent != null && context instanceof Launcher) {
+            Launcher launcher = (Launcher) context;
+            ActivityOptionsWrapper options = launcher.getActivityLaunchOptions(this, null);
+            options.options.setPendingIntentLaunchFlags(
+                    android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
             try {
-                clickIntent.send(context, 0, null, null, null, null, opts.toBundle());
+                clickIntent.send(context, 0, null, null, null, null, options.toBundle());
                 return;
             } catch (android.app.PendingIntent.CanceledException e) {
                 // fall through to the package launch intent
@@ -1239,6 +1235,13 @@ public class ScrollableMediaCardView extends FrameLayout {
         } else if (launch != null) {
             context.startActivity(launch);
         }
+    }
+
+    // UpdateDeferrableView: the widget-style launch animation (FloatingWidgetView) defers
+    // view updates while the card is ghosted into the floating overlay. The card has no
+    // remote-updates pipeline, so this is a no-op stub.
+    @Override
+    public void setUpdatesDeferred(boolean isDeferred) {
     }
 
     /** Single background thread for the Monet scheme extraction (like mBackgroundExecutor). */
