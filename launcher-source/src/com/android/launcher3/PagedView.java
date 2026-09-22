@@ -296,7 +296,17 @@ public abstract class PagedView<T extends View & PageIndicator> extends ViewGrou
     }
 
     private int validateNewPage(int newPage) {
+        int requested = newPage;
         newPage = ensureWithinScrollBounds(newPage);
+        if (newPage != requested) {
+            // trebufork: the scroll bounds can be stale (mPageScrolls not yet relaid out
+            // after a task list change); walking the page to the edge of the list here
+            // lands the user next to Clear All. Prefer the requested page, clamped to
+            // the actual child range.
+            Log.w(TAG, "validateNewPage: keeping requested page " + requested
+                    + " (ensureWithinScrollBounds walked to " + newPage + ")");
+            newPage = requested;
+        }
         // Ensure that it is clamped by the actual set of children in all cases
         newPage = Utilities.boundToRange(newPage, 0, getPageCount() - 1);
 
@@ -448,6 +458,11 @@ public abstract class PagedView<T extends View & PageIndicator> extends ViewGrou
         }
         int prevPage = overridePrevPage != INVALID_PAGE ? overridePrevPage : mCurrentPage;
         mCurrentPage = validateNewPage(currentPage);
+        // trebufork: trace who moves the overview to the wrong page (temporary diagnostic)
+        android.util.Log.d("TrebuforkRecents", "setCurrentPage " + currentPage
+                + " -> " + mCurrentPage + " childCount=" + getChildCount()
+                + " diff=" + mCurrentPageScrollDiff + " from "
+                + new Throwable().getStackTrace()[1]);
         mCurrentScrollOverPage = mCurrentPage;
         updateCurrentPageScroll();
         notifyPageSwitchListener(prevPage);

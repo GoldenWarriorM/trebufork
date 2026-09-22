@@ -2193,6 +2193,10 @@ public abstract class RecentsView<
         }
         if (targetPage != -1 && mCurrentPage != targetPage) {
             int finalTargetPage = targetPage;
+            Log.d("TrebuforkRecents", "applyLoadPlan targetPage=" + targetPage
+                    + " prevPage=" + previousCurrentPage + " mNextPage=" + mNextPage
+                    + " childCount=" + getChildCount()
+                    + " from " + new Throwable().getStackTrace()[0]);
             runOnPageScrollsInitialized(() -> setCurrentPage(finalTargetPage));
         }
 
@@ -3206,7 +3210,11 @@ public abstract class RecentsView<
         }
         setFocusedTaskViewId(focusedTaskViewId);
 
-        runOnPageScrollsInitialized(() -> setCurrentPage(getRunningTaskIndex()));
+        runOnPageScrollsInitialized(() -> {
+            Log.d("TrebuforkRecents", "showCurrentTask scrolling to running task index="
+                    + getRunningTaskIndex() + " childCount=" + getChildCount());
+            setCurrentPage(getRunningTaskIndex());
+        });
         setRunningTaskViewShowScreenshot(false);
         setRunningTaskHidden(runningTaskTileHidden);
         // Update task size after setting current task.
