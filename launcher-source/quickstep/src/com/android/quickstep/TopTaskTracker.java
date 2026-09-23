@@ -101,12 +101,13 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
     private final SplitStageInfo mSideStagePosition = new SplitStageInfo();
     private int mPinnedTaskId = INVALID_TASK_ID;
 
-    // TrebuforkPip: right after a task enters or leaves PiP, its TaskInfo in the ordered
-    // list still carries a stale fullscreen windowing mode for a short while. During that
-    // window the plain mPinnedTaskId filter does not catch it, and the task can flash as a
-    // ghost tile in Overview. Remember the task for a short grace period and keep it out of
-    // the recents list/cache (this never touches the gesture/animation path: handlers use
-    // the recents animation targets, not this filtered list).
+    // TrebuforkPip: right after a task enters or leaves PiP, its TaskInfo in the recents
+    // list still carries a stale fullscreen windowing mode for a short while, so the plain
+    // mPinnedTaskId filter does not catch it and it can flash as a ghost tile in Overview.
+    // Remember the task for a short grace period and keep it out of the recents *list*
+    // (RecentTasksList) only. Never filter it from getCachedTopTask: that resolves the
+    // gesture's running task, and dropping the real foreground task right after a PiP expand
+    // breaks the swipe-pip-to-home spring (fade PiP entry plays instead).
     private static final long PINNED_GRACE_MS = 1500;
     private int mLastPinnedTaskId = INVALID_TASK_ID;
     private long mPinnedGraceUntilElapsed = 0;
@@ -453,11 +454,7 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
 
             Stream<TaskInfo> taskStream = mOrderedTaskList.stream()
                     // Strip the pinned task and recents task.
-                    .filter(t -> t.taskId != mPinnedTaskId && !isRecentsTask(t))
-                    // TrebuforkPip: also strip the task that just entered/left PiP during the
-                    // grace window - its list entry still carries a stale fullscreen mode and
-                    // it would flash as a ghost tile in Overview.
-                    .filter(t -> t.taskId != getPinnedGraceFilteredTaskIdInternal());
+                    .filter(t -> t.taskId != mPinnedTaskId && !isRecentsTask(t));
             if (enableOverviewOnConnectedDisplays()) {
                 taskStream = taskStream.filter(
                         info -> ExternalDisplaysKt.getSafeDisplayId(info) == displayId);
