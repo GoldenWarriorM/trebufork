@@ -3155,15 +3155,17 @@ public abstract class RecentsView<
             return;
         }
 
-        // TrebuforkPip: never render a PiP task as the running/overview task. When an app is
-        // entering PiP its task info can still carry a stale fullscreen mode and briefly flash
-        // as a stub TaskView for a few frames. Skip it so the gesture goes straight to the
-        // next task / empty overview instead.
-        final TaskInfo baseTaskInfo = groupedTaskInfo.getBaseGroupedTask().getTaskInfo1();
-        if (baseTaskInfo != null
-                && baseTaskInfo.getWindowingMode() == WINDOWING_MODE_PINNED) {
+        // TrebuforkPip: never render a task that is really in PiP as the running/overview
+        // tile. Its TaskInfo can still carry a stale fullscreen mode right after entering
+        // PiP, so the pinned windowing mode is checked directly. Unlike the reverted
+        // attempt this does not consume the gesture placeholder (handlers get their
+        // geometry from recents-anim targets before this view call), it only keeps the
+        // pinned task out of the visible overview.
+        final TaskInfo baseInfo = groupedTaskInfo.getBaseGroupedTask().getTaskInfo1();
+        if (baseInfo != null
+                && baseInfo.getWindowingMode() == WINDOWING_MODE_PINNED) {
             Log.d("TrebuforkPip", "showCurrentTask(" + caller + "): suppressing PiP task id="
-                    + baseTaskInfo.taskId + " (base=" + baseTaskInfo.baseActivity + ")");
+                    + baseInfo.taskId);
             return;
         }
 

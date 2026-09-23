@@ -699,8 +699,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
      * targets are displayed.
      */
     public ActivityOptionsWrapper getActivityLaunchOptions(View v, ItemInfo itemInfo) {
-        // trebufork: launches are deferred upstream (Launcher.startActivitySafely) while a
-        // media-row height animation runs, so the geometry captured below is always stable.
         // trebufork: in scrollable home the close-to-home spring of a PREVIOUS gesture may
         // still be flying the app window to its icon (it is deliberately kept alive across
         // list scrolls). While it runs, the recents CLOSE transition is still active, and a
@@ -1157,14 +1155,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 true /* isOpening */);
         Rect crop = new Rect();
         Matrix matrix = new Matrix();
-
-        // trebufork: log the captured icon geometry and the row height state at capture time,
-        // to pinpoint why the open animation starts shifted up by the widget height.
-        android.util.Log.d("TrebuforkMedia", "openAnim: iconBounds=" + launcherIconBounds
-                + " windowTarget=" + windowTargetBounds
-                + " heightAnimsRunning="
-                + com.android.launcher3.ScrollableMediaRowView.hasHeightAnimationsRunning()
-                + " uptime=" + android.os.SystemClock.uptimeMillis());
 
         SurfaceTransactionApplier surfaceApplier =
                 new SurfaceTransactionApplier(floatingView);

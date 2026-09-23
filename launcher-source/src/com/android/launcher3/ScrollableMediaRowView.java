@@ -82,17 +82,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     @Nullable
     private ValueAnimator mHeightAnimator;
 
-    // trebufork: global count of in-flight height animations across all rows (rows are
-    // created/destroyed dynamically, so a plain static int guarded by start/end/cancel
-    // listeners is not enough). Launches consult it (Launcher.startActivitySafely) and wait
-    // for the animation to finish instead of capturing icon geometry mid-relayout — the row
-    // animation itself is untouched, other animations simply start after it settles.
-    private static final java.util.Set<Object> sRunningAnimations =
-            java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
-    // Registered per running animator; removed on end/cancel.
-    @Nullable
-    private Object mAnimationToken;
-
     // User-configurable size, persisted in ScrollableDesktopStore (same fields as widget
     // rows): width relative to the list width, height relative to the natural height.
     // The width is capped below 1.0 so the card never slides under the alphabet index
@@ -622,23 +611,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                 mLastStableHeight = height;
             }
         } else if (mLastStableHeight >= 0) {
-            if (mHeightAnimator != null) {
-                // trebufork: a collapse/expand that started in the same frame as an app
-                // launch (e.g. the media session dropped because the launched app paused)
-                // must not keep mutating the layout while the open animation is in flight:
-                // its onAnimationEnd sets mLastStableHeight to the target height, which
-                // collapses/grows the row MID-LAUNCH and shifts the whole desktop while the
-                // icon geometry was captured with the old height ("teleport by the widget
-                // height" before the real surface appears). Cancel the animator WITHOUT
-                // adopting its target: the row stays frozen at mLastStableHeight (the height
-                // the launch geometry was captured with), and the change is re-evaluated —
-                // and animated as usual — once home is stable again. The animation logic
-                // itself is untouched at idle home.
-                android.util.Log.d("TrebuforkMedia", "heightAnim cancelled (launcher unstable)"
-                        + " uptime=" + android.os.SystemClock.uptimeMillis());
-                mHeightAnimator.cancel();
-                mHeightAnimator = null;
-            }
             if (height != mLastStableHeight) {
                 android.util.Log.d("TrebuforkMedia", "row pinned: natural=" + height
                         + " lastStable=" + mLastStableHeight + " cards=" + mCards.size());
@@ -662,8 +634,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             mHeightAnimator.cancel();
             mHeightAnimator = null;
         }
-        android.util.Log.d("TrebuforkMedia", "heightAnim start " + from + "->" + to
-                + " uptime=" + android.os.SystemClock.uptimeMillis());
         ValueAnimator anim = ValueAnimator.ofInt(from, to);
         anim.setDuration(220);
         anim.setInterpolator(AnimationUtils.loadInterpolator(getContext(),
@@ -687,13 +657,6 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             @Override
             public void onAnimationEnd(Animator animation) {
                 mHeightAnimator = null;
-                android.util.Log.d("TrebuforkMedia", "heightAnim end (cancelled=" + mCancelled
-                        + ") uptime=" + android.os.SystemClock.uptimeMillis());
-                if (mAnimationToken != null) {
-                    sRunningAnimations.remove(mAnimationToken);
-                    mAnimationToken = null;
-                }
-                notifyHeightAnimationEnd();
                 if (!mCancelled) {
                     mLastStableHeight = to;
                 }
@@ -701,65 +664,7 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             }
         });
         mHeightAnimator = anim;
-        // trebufork: register this animator in the global in-flight set BEFORE start (the
-        // end listener may fire synchronously on cancel) so a concurrent launch deferral
-        // always sees a consistent count. The token just needs identity; the animator is
-        // retained only while it runs.
-        Object token = new Object();
-        sRunningAnimations.add(token);
-        mAnimationToken = token;
         anim.start();
-    }
-
-    // trebufork: callbacks waiting for ALL in-flight height animations to finish (see
-    // hasHeightAnimationsRunning / runWhenHeightAnimationsEnd).
-    private static final java.util.List<Runnable> sHeightAnimEndCallbacks =
-            new java.util.ArrayList<>();
-
-    private static void notifyHeightAnimationEnd() {
-        android.util.Log.d("TrebuforkMedia", "notifyHeightAnimationEnd: running="
-                + sRunningAnimations.size() + " callbacks=" + sHeightAnimEndCallbacks.size());
-        if (sRunningAnimations.isEmpty() && !sHeightAnimEndCallbacks.isEmpty()) {
-            // trebufork: POST, don't run inline. onAnimationEnd fires inside the animation
-            // callback phase of the current frame, but the requestLayout() issued there has
-            // NOT been processed yet — the row still measures at the intermediate height.
-            // Running the launch inline captured icon geometry from the STALE layout and the
-            // open window teleported once the layout pass shrank/grew the row (the "jump up
-            // by the widget height" before the real surface appeared). A posted message runs
-            // after this frame's traversal, i.e. after the final layout settles. If a new
-            // animation started meanwhile, the callbacks stay queued until it ends too.
-            new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
-                if (sRunningAnimations.isEmpty() && !sHeightAnimEndCallbacks.isEmpty()) {
-                    java.util.ArrayList<Runnable> toRun =
-                            new java.util.ArrayList<>(sHeightAnimEndCallbacks);
-                    sHeightAnimEndCallbacks.clear();
-                    for (int i = 0; i < toRun.size(); i++) {
-                        toRun.get(i).run();
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * trebufork: whether any row's expand/collapse height animation is in flight.
-     * Launcher defers launches while this is true so icon geometry is captured from a
-     * stable layout (the row animation itself keeps running untouched).
-     */
-    public static boolean hasHeightAnimationsRunning() {
-        return !sRunningAnimations.isEmpty();
-    }
-
-    /**
-     * trebufork: runs {@param action} once every in-flight height animation has ended
-     * (immediately when none is running). Must be called on the main thread.
-     */
-    public static void runWhenHeightAnimationsEnd(Runnable action) {
-        if (sRunningAnimations.isEmpty()) {
-            action.run();
-        } else {
-            sHeightAnimEndCallbacks.add(action);
-        }
     }
 
     @Override
