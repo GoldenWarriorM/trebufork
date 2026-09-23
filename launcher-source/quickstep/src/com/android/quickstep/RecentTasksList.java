@@ -16,6 +16,8 @@
 
 package com.android.quickstep;
 
+import static android.app.WindowConfiguration.ACTIVITY_TYPE_UNDEFINED;
+import static android.app.WindowConfiguration.WINDOWING_MODE_PINNED;
 import static android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS;
 
 import static com.android.launcher3.Flags.enableLaterIsLockedCheck;
@@ -23,7 +25,9 @@ import static com.android.launcher3.util.Executors.UI_HELPER_EXECUTOR;
 import static com.android.wm.shell.shared.GroupedTaskInfo.TYPE_DESK;
 import static com.android.wm.shell.shared.GroupedTaskInfo.TYPE_SPLIT;
 
+import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
+import android.app.ActivityTaskManager;
 import android.app.KeyguardManager;
 import android.app.TaskInfo;
 import android.companion.virtual.VirtualDeviceManager;
@@ -59,6 +63,7 @@ import kotlin.collections.MapsKt;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +96,11 @@ public class RecentTasksList {
 
     private TaskLoadResult mResultsBg = INVALID_RESULT;
     private TaskLoadResult mResultsUi = INVALID_RESULT;
+
+    // TrebuforkPip: children of the live pinned (PiP) root task. Refreshed on each background
+    // load. A task can linger in the system recents list with a stale fullscreen windowing
+    // mode right after entering PiP, so the mode flag alone is not enough to filter it.
+    private int[] mPinnedChildTaskIds = new int[0];
 
     private @Nullable RecentsModel.RunningTasksListener mRunningTasksListener;
     private @Nullable RecentsModel.RecentTasksChangedListener mRecentTasksChangedListener;
@@ -394,6 +404,8 @@ public class RecentTasksList {
         // The raw tasks are given in most-recent to least-recent order, we need to reverse it
         Collections.reverse(rawTasks);
 
+        refreshPinnedChildTaskIds();
+
         SparseBooleanArray tmpLockedUsers = new SparseBooleanArray() {
             @Override
             public boolean get(int key) {
@@ -433,6 +445,13 @@ public class RecentTasksList {
             // [getTaskInfo1] will not be null for types below beside [TYPE_DESK].
             if (Flags.enableShellTopTaskTracking()) {
                 final TaskInfo taskInfo1 = rawTask.getBaseGroupedTask().getTaskInfo1();
+                // TrebuforkPip: skip live pinned-root descendants (their reported windowing
+                // mode may still be fullscreen right after entering PiP).
+                if (isPinnedRootDescendant(taskInfo1.taskId)) {
+                    Log.d("TrebuforkPip", "loadTasksInBackground: filtering shell task "
+                            + taskInfo1.taskId + " - pinned root descendant");
+                    continue;
+                }
                 final Task.TaskKey task1Key = createTaskKey(taskInfo1);
                 final Task task1 = Task.from(task1Key, taskInfo1,
                         tmpLockedUsers.get(task1Key.userId) /* isLocked */);
@@ -449,6 +468,18 @@ public class RecentTasksList {
                 }
             } else {
                 TaskInfo taskInfo1 = rawTask.getTaskInfo1();
+                // TrebuforkPip: skip live pinned-root descendants (their reported windowing
+                // mode may still be fullscreen right after entering PiP), and the task that
+                // just left PiP during its grace period (stale fullscreen mode in the list).
+                if (isPinnedRootDescendant(taskInfo1.taskId)
+                        || taskInfo1.taskId == TopTaskTracker
+                        .getPinnedExitGraceFilteredTaskId(mContext)) {
+                    Log.d("TrebuforkPip", "loadTasksInBackground: filtering task "
+                            + taskInfo1.taskId + " ("
+                            + taskInfo1.baseIntent.getComponent() + ") - pinned root descendant"
+                            + " or PiP-exit grace");
+                    continue;
+                }
                 TaskInfo taskInfo2 = rawTask.getTaskInfo2();
                 Task.TaskKey task1Key = createTaskKey(taskInfo1);
                 Task task1 = loadKeysOnly
@@ -498,6 +529,37 @@ public class RecentTasksList {
         task.isVisible = taskInfo.isVisible;
         task.isMinimized = minimizedTaskIds.contains(taskInfo.taskId);
         return task;
+    }
+
+    /**
+     * TrebuforkPip: query the live pinned root task and remember its descendants.
+     * Called from the background loader only.
+     */
+    private void refreshPinnedChildTaskIds() {
+        try {
+            var pinnedRoot = ActivityTaskManager.getService()
+                    .getRootTaskInfo(WINDOWING_MODE_PINNED, ACTIVITY_TYPE_UNDEFINED);
+            if (pinnedRoot != null && pinnedRoot.childTaskIds != null
+                    && pinnedRoot.childTaskIds.length > 0) {
+                mPinnedChildTaskIds = Arrays.copyOf(pinnedRoot.childTaskIds,
+                        pinnedRoot.childTaskIds.length);
+                Log.d("TrebuforkPip", "refreshPinnedChildTaskIds: pinned root "
+                        + pinnedRoot.taskId + " children=" + Arrays.toString(mPinnedChildTaskIds));
+                return;
+            }
+        } catch (RemoteException e) {
+            // fall through to the empty default
+        }
+        mPinnedChildTaskIds = new int[0];
+    }
+
+    private boolean isPinnedRootDescendant(int taskId) {
+        for (int id : mPinnedChildTaskIds) {
+            if (id == taskId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Task.TaskKey createTaskKey(TaskInfo taskInfo) {

@@ -2391,6 +2391,24 @@ public class Launcher extends StatefulActivity<LauncherState>
 
     @Override
     public RunnableList startActivitySafely(View v, Intent intent, ItemInfo item) {
+        // trebufork: a media-row expand/collapse (player appeared/disappeared) is animating
+        // its height with per-frame requestLayouts. A launch issued inside that window
+        // captures icon geometry that is still moving and the open animation starts from a
+        // shifted rect. The row animation is only 220 ms: wait for it to finish instead of
+        // disturbing it, then run the launch from a stable layout.
+        if (com.android.launcher3.ScrollableMediaRowView.hasHeightAnimationsRunning()) {
+            Log.d(TREBUFORK_TAG, "startActivitySafely: deferring for media height animation");
+            RunnableList result = new RunnableList();
+            com.android.launcher3.ScrollableMediaRowView.runWhenHeightAnimationsEnd(() -> {
+                RunnableList actualResult = startActivitySafely(v, intent, item);
+                if (actualResult != null) {
+                    actualResult.add(result::executeAllAndDestroy);
+                } else {
+                    result.executeAllAndDestroy();
+                }
+            });
+            return result;
+        }
         if (!hasBeenResumed()) {
             RunnableList result = new RunnableList();
             // Workaround an issue where the WM launch animation is clobbered when finishing the
@@ -2469,6 +2487,9 @@ public class Launcher extends StatefulActivity<LauncherState>
      * {@link #startActivitySafely}, so they must go through this wrapper explicitly.
      */
     public void runWhenLaunchTransitionIdle(Runnable launch) {
+        // trebufork: the re-issued launch (with icon-capture) must also wait out any
+        // in-flight media-row height animation; see startActivitySafely.
+        com.android.launcher3.ScrollableMediaRowView.runWhenHeightAnimationsEnd(launch);
         if (!mIsDeferringLaunchForTransition && shouldDeferLaunchForRunningTransition()) {
             Log.d(TREBUFORK_TAG, "runWhenLaunchTransitionIdle: deferring pending-intent launch");
             mIsDeferringLaunchForTransition = true;

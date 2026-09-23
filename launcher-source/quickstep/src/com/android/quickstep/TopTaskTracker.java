@@ -19,6 +19,7 @@ import static android.app.ActivityTaskManager.INVALID_TASK_ID;
 import static android.app.WindowConfiguration.ACTIVITY_TYPE_HOME;
 import static android.app.WindowConfiguration.ACTIVITY_TYPE_RECENTS;
 import static android.app.WindowConfiguration.WINDOWING_MODE_FREEFORM;
+import static android.app.WindowConfiguration.WINDOWING_MODE_PINNED;
 import static android.app.WindowConfiguration.WINDOWING_MODE_FULLSCREEN;
 import static android.app.WindowConfiguration.WINDOWING_MODE_MULTI_WINDOW;
 import static android.content.Intent.ACTION_CHOOSER;
@@ -41,6 +42,7 @@ import android.app.ActivityManager.RunningTaskInfo;
 import android.app.TaskInfo;
 import android.app.WindowConfiguration;
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.ArrayMap;
 import android.util.Log;
 
@@ -100,6 +102,33 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
     private final SplitStageInfo mSideStagePosition = new SplitStageInfo();
     private int mPinnedTaskId = INVALID_TASK_ID;
 
+    // TrebuforkPip: right after the user dismisses/exits a PiP window (onActivityUnpinned),
+    // the task's entry in the recents list still reports a stale fullscreen windowing mode
+    // for a few hundred ms. The plain mPinnedTaskId filter stops working exactly then,
+    // so remember the last pinned task for a short grace period and keep filtering it.
+    private static final long PINNED_EXIT_GRACE_MS = 2000;
+    private int mLastPinnedTaskId = INVALID_TASK_ID;
+    private long mPinnedGraceUntilElapsed = 0;
+
+    /**
+     * TrebuforkPip: task id whose post-PiP-exit grace filter is currently active, otherwise
+     * {@link android.app.ActivityTaskManager#INVALID_TASK_ID}. Static so the nested
+     * {@link CachedTaskInfo} (which holds no tracker reference) and {@link RecentTasksList}
+     * can reach the singleton.
+     */
+    public static int getPinnedExitGraceFilteredTaskId(@Nullable Context context) {
+        if (context == null) {
+            return INVALID_TASK_ID;
+        }
+        return INSTANCE.get(context).getPinnedExitGraceTaskIdInternal();
+    }
+
+    private int getPinnedExitGraceTaskIdInternal() {
+        return (mLastPinnedTaskId != INVALID_TASK_ID
+                && SystemClock.elapsedRealtime() < mPinnedGraceUntilElapsed)
+                ? mLastPinnedTaskId : INVALID_TASK_ID;
+    }
+
     // Only used when Flags.enableShellTopTaskTracking() is enabled
     // Mapping of display id to visible tasks.  Visible tasks are ordered from top most to bottom
     // most.
@@ -149,6 +178,16 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
     void handleTaskMovedToFront(TaskInfo taskInfo) {
         if (enableShellTopTaskTracking()) {
             return;
+        }
+
+        // TrebuforkPip: if the grace-filtered task is explicitly brought back to the front
+        // (e.g. expanded from PiP back to fullscreen), stop filtering it - it is a live,
+        // intentional foreground task now.
+        if (taskInfo.taskId == mLastPinnedTaskId) {
+            mPinnedGraceUntilElapsed = 0;
+            mLastPinnedTaskId = INVALID_TASK_ID;
+            Log.d("TrebuforkPip", "handleTaskMovedToFront: grace filter cleared for task "
+                    + taskInfo.taskId);
         }
 
         mOrderedTaskList.removeIf(rto -> rto.taskId == taskInfo.taskId);
@@ -204,12 +243,31 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
         }
     }
 
+    // TrebuforkPip: the shell transition observer can report a task that is *entering* PiP
+    // (or has stale windowingMode info) as the top visible task. Rendering it as the running
+    // task in Overview flashes the app's preview for a few frames even though the task is
+    // excluded from the recents list. See TODO(346588978) upstream.
+    private static boolean isPipTask(TaskInfo taskInfo) {
+        return taskInfo != null && taskInfo.getWindowingMode() == WINDOWING_MODE_PINNED;
+    }
+
     /**
      * Called when the set of visible tasks have changed.
      */
     public void onVisibleTasksChanged(GroupedTaskInfo[] visibleTasks) {
         if (!enableShellTopTaskTracking()) {
             return;
+        }
+
+        // TrebuforkPip: skip tasks that are pinned (or are transitioning into PiP with stale
+        // windowingMode) so they never become the cached top task.
+        // TODO: remove once b/346588978 tracks this upstream.
+        Log.d("TrebuforkPip", "onVisibleTasksChanged count=" + visibleTasks.length);
+        for (GroupedTaskInfo groupedTask : visibleTasks) {
+            if (isPipTask(groupedTask.getBaseGroupedTask().getTaskInfo1())) {
+                Log.d("TrebuforkPip", "skipping pinned task id="
+                        + groupedTask.getBaseGroupedTask().getTaskInfo1().taskId);
+            }
         }
 
         // Clear existing tasks for each display
@@ -219,6 +277,9 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
         Log.d(TAG, "onVisibleTasksChanged:");
         for (GroupedTaskInfo groupedTask : visibleTasks) {
             Log.d(TAG, "\t" + groupedTask);
+            if (isPipTask(groupedTask.getBaseGroupedTask().getTaskInfo1())) {
+                continue;
+            }
             GroupedTaskInfo baseGroupedTask = groupedTask.getBaseGroupedTask();
             int displayId;
             if (enableMultipleDesktops(mContext) && baseGroupedTask.isBaseType(TYPE_DESK)) {
@@ -287,6 +348,10 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
         }
 
         mPinnedTaskId = taskId;
+        // TrebuforkPip
+        mLastPinnedTaskId = taskId;
+        mPinnedGraceUntilElapsed = 0;
+        Log.d("TrebuforkPip", "onActivityPinned task=" + taskId);
     }
 
     @Override
@@ -296,6 +361,13 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
         }
 
         mPinnedTaskId = INVALID_TASK_ID;
+        // TrebuforkPip: keep filtering the just-unpinned task for a short grace period; the
+        // recents list still reports it with a stale fullscreen windowing mode.
+        if (mLastPinnedTaskId != INVALID_TASK_ID) {
+            mPinnedGraceUntilElapsed = SystemClock.elapsedRealtime() + PINNED_EXIT_GRACE_MS;
+            Log.d("TrebuforkPip", "onActivityUnpinned - grace filter on task "
+                    + mLastPinnedTaskId + " for " + PINNED_EXIT_GRACE_MS + "ms");
+        }
     }
 
     /**
@@ -357,6 +429,14 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
             // TODO(346588978): Currently ignore filterOnlyVisibleRecents, but perhaps make this an
             //  explicit filter For things to ignore (ie. PIP/Bubbles/Assistant/etc/so that this is
             //  explicit)
+            final GroupedTaskInfo topVisibleTask = mVisibleTasks.get(displayId);
+            if (topVisibleTask != null
+                    && isPipTask(topVisibleTask.getBaseGroupedTask().getTaskInfo1())) {
+                Log.d("TrebuforkPip", "getCachedTopTask: top task is PiP (id="
+                        + topVisibleTask.getBaseGroupedTask().getTaskInfo1().taskId
+                        + "), clearing cache entry so the gesture does not flash it");
+                mVisibleTasks.remove(displayId);
+            }
             return new CachedTaskInfo(mVisibleTasks.get(displayId));
         } else {
             int activeDeskId = mDesktopVisibilityController.getActiveDeskId(displayId);
@@ -393,7 +473,13 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
 
             Stream<TaskInfo> taskStream = mOrderedTaskList.stream()
                     // Strip the pinned task and recents task.
-                    .filter(t -> t.taskId != mPinnedTaskId && !isRecentsTask(t));
+                    .filter(t -> t.taskId != mPinnedTaskId && !isRecentsTask(t))
+                    // TrebuforkPip: also strip tasks that report a pinned windowing mode.
+                    .filter(t -> !isPipTask(t))
+                    // TrebuforkPip: grace filter for the task that just left PiP - its list
+                    // entry still carries a stale fullscreen windowing mode.
+                    .filter(t -> !(t.taskId == mLastPinnedTaskId
+                            && SystemClock.elapsedRealtime() < mPinnedGraceUntilElapsed));
             if (enableOverviewOnConnectedDisplays()) {
                 taskStream = taskStream.filter(
                         info -> ExternalDisplaysKt.getSafeDisplayId(info) == displayId);
@@ -579,6 +665,18 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
         }
 
         /**
+         * Returns the id of the task whose post-PiP-exit grace filter is active, otherwise
+         * INVALID_TASK_ID (TrebuforkPip). Reaches the tracker singleton statically because
+         * {@link CachedTaskInfo} holds no reference to it.
+         */
+        private int getGraceFilteredTaskId() {
+            if (mContext == null) {
+                return INVALID_TASK_ID;
+            }
+            return getPinnedExitGraceFilteredTaskId(mContext);
+        }
+
+        /**
          * Returns {@link TaskInfo} array corresponding to the provided task ids which can be
          * used as a placeholder until the true object is loaded by the model. Only used when
          * enableShellTopTaskTracking() is disabled.
@@ -623,6 +721,15 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
                 }
                 return mVisibleTasks.getBaseGroupedTask();
             } else {
+                // TrebuforkPip: if the top task is the one that just left PiP, do not hand out a
+                // placeholder from the stale cache entry - let the recents gesture start from
+                // the next task (or empty overview) instead of flashing the exiting PiP app.
+                final TaskInfo topForGrace = getLegacyBaseTask();
+                if (topForGrace != null && topForGrace.taskId == getGraceFilteredTaskId()) {
+                    Log.d("TrebuforkPip", "getPlaceholderGroupedTaskInfo: suppressing stale "
+                            + "PiP-exit task " + topForGrace.taskId + " (grace period active)");
+                    return null;
+                }
                 if (splitTaskIds != null && splitTaskIds.length >= 2) {
                     TaskInfo[] splitTasksInfo = getSplitPlaceholderTasksInfo(splitTaskIds);
                     if (splitTasksInfo[0] == null || splitTasksInfo[1] == null) {

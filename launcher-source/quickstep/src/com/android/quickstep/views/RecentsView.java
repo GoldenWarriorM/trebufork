@@ -18,6 +18,7 @@ package com.android.quickstep.views;
 
 import static android.app.ActivityTaskManager.INVALID_TASK_ID;
 import static android.app.WindowConfiguration.WINDOWING_MODE_FULLSCREEN;
+import static android.app.WindowConfiguration.WINDOWING_MODE_PINNED;
 import static android.os.Trace.traceBegin;
 import static android.os.Trace.traceEnd;
 import static android.view.View.MeasureSpec.EXACTLY;
@@ -90,6 +91,7 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.TaskInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.LocusId;
@@ -3150,6 +3152,18 @@ public abstract class RecentsView<
     private void showCurrentTask(GroupedTaskInfo groupedTaskInfo, String caller) {
         Log.d(TAG, "showCurrentTask(" + caller + ") - groupedTaskInfo: " + groupedTaskInfo);
         if (groupedTaskInfo == null) {
+            return;
+        }
+
+        // TrebuforkPip: never render a PiP task as the running/overview task. When an app is
+        // entering PiP its task info can still carry a stale fullscreen mode and briefly flash
+        // as a stub TaskView for a few frames. Skip it so the gesture goes straight to the
+        // next task / empty overview instead.
+        final TaskInfo baseTaskInfo = groupedTaskInfo.getBaseGroupedTask().getTaskInfo1();
+        if (baseTaskInfo != null
+                && baseTaskInfo.getWindowingMode() == WINDOWING_MODE_PINNED) {
+            Log.d("TrebuforkPip", "showCurrentTask(" + caller + "): suppressing PiP task id="
+                    + baseTaskInfo.taskId + " (base=" + baseTaskInfo.baseActivity + ")");
             return;
         }
 
