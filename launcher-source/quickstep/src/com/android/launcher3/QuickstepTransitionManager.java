@@ -1190,6 +1190,30 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         RectF tmpRectF = new RectF();
         Point tmpPos = new Point();
 
+        // trebufork: LIVE icon tracking. The launch source view (e.g. an app row of the
+        // scrollable home) can keep MOVING while this animation flies: the media row below it
+        // expands/collapses its height, shifting every row after it. The animation captures
+        // launcherIconBounds once; without correction the window crop and floating icon fly to
+        // a stale position, visibly offset up/down from the real icon. Each frame we re-read
+        // the icon's live bounds and apply the drift (dx, dy) to every spatial property —
+        // the window translation, the floating-icon rect and the crop start — so the flight
+        // stays glued to the icon wherever the list moves it.
+        // Only enabled while the original view is attached and laid out (a detached or
+        // recycled view reports stale/zero bounds — fall back to the captured ones then).
+        RectF liveIconBounds = new RectF();
+        Rect tmpViewBounds = new Rect();
+        final float[] iconDrift = new float[2];
+        boolean trackLiveIcon = v.isAttachedToWindow() && v.getWidth() > 0 && v.getHeight() > 0;
+        if (trackLiveIcon) {
+            FloatingIconView.getLocationBoundsForView(mLauncher, v, true /* isOpening */,
+                    liveIconBounds, tmpViewBounds);
+            // Warm up with the current position: a drift measured before the first frame
+            // (view just re-laid-out between capture and animator start) must apply from
+            // frame one, not fade in.
+            iconDrift[0] = liveIconBounds.centerX() - launcherIconBounds.centerX();
+            iconDrift[1] = liveIconBounds.centerY() - launcherIconBounds.centerY();
+        }
+
         AnimatorSet animatorSet = new AnimatorSet();
         ValueAnimator appAnimator = ValueAnimator.ofFloat(0, 1);
         appAnimator.setDuration(APP_LAUNCH_DURATION);
@@ -1281,6 +1305,16 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
             @Override
             public void onUpdate(float percent, boolean initOnly) {
+                // trebufork: re-read the icon's live position and compute its drift from
+                // the captured bounds. The launch source view keeps moving while the media
+                // row's expand/collapse animation shifts the scrollable-home rows; without
+                // this the window/floating icon fly to the captured (stale) position.
+                if (trackLiveIcon && v.isAttachedToWindow() && v.getWidth() > 0) {
+                    FloatingIconView.getLocationBoundsForView(mLauncher, v,
+                            true /* isOpening */, liveIconBounds, tmpViewBounds);
+                    iconDrift[0] = liveIconBounds.centerX() - launcherIconBounds.centerX();
+                    iconDrift[1] = liveIconBounds.centerY() - launcherIconBounds.centerY();
+                }
                 // trebufork: first-frames diagnostic for the single-frame open-icon ghost.
                 if (mLoggedFrames < 8 && (initOnly || percent < 0.15f)) {
                     mLoggedFrames++;
@@ -1357,16 +1391,26 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 float offsetX = (scaledCropWidth - iconWidth) / 2;
                 float offsetY = (scaledCropHeight - iconHeight) / 2;
 
-                // Calculate the window position to match the icon position.
+                // trebufork: apply the live icon drift to the captured bounds — the window
+                // and the floating icon track the real icon position (media row expanding
+                // under the launch animation moves the whole list). The drift fades out
+                // with the opening interpolator: mid-flight the window is detached from
+                // the icon (flying to the fullscreen crop) and must not inherit the icon's
+                // motion, and the FINAL window rect stays the captured windowTargetBounds
+                // so the window lands exactly full-screen at percent=1.
+                float driftFade = 1f - mOpeningInterpolator.getInterpolation(percent);
                 tmpRectF.set(launcherIconBounds);
+                tmpRectF.offset(iconDrift[0] * driftFade, iconDrift[1] * driftFade);
                 tmpRectF.offset(dragLayerBounds[0], dragLayerBounds[1]);
                 tmpRectF.offset(mDx.value, mDy.value);
                 Utilities.scaleRectFAboutCenter(tmpRectF, mIconScaleToFitScreen.value);
                 float windowTransX0 = tmpRectF.left - offsetX - crop.left * scale;
                 float windowTransY0 = tmpRectF.top - offsetY - crop.top * scale;
 
-                // Calculate the icon position.
+                // Calculate the icon position (with the fading live drift, same as the
+                // window: glued to the icon at the start, released mid-flight).
                 floatingIconBounds.set(launcherIconBounds);
+                floatingIconBounds.offset(iconDrift[0] * driftFade, iconDrift[1] * driftFade);
                 floatingIconBounds.offset(mDx.value, mDy.value);
                 Utilities.scaleRectFAboutCenter(floatingIconBounds, mIconScaleToFitScreen.value);
                 floatingIconBounds.left -= offsetX;

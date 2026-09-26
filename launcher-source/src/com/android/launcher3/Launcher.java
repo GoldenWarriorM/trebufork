@@ -1469,6 +1469,18 @@ public class Launcher extends StatefulActivity<LauncherState>
      * fed by the same model that drives Quickstep, so the list stays in sync with the
      * system (icons, labels, installs/removals, work profile).
      */
+    /**
+     * trebufork: freezes a running media-row height animation before an app launch captures
+     * icon bounds — the expanding/collapsing row re-lays-out the desktop every frame and the
+     * flying open-animation window would visibly chase a moving icon. No-op when scrollable
+     * home is off or absent.
+     */
+    public void freezeMediaRowHeight() {
+        if (mScrollableHome != null && LauncherPrefs.SCROLLABLE_HOME.get(this)) {
+            mScrollableHome.freezeMediaRowHeight();
+        }
+    }
+
     private void assembleScrollableHome() {
         mScrollableHome = findViewById(R.id.scrollable_home);
         if (mScrollableHome != null) {

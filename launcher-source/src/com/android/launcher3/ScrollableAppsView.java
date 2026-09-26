@@ -1495,6 +1495,24 @@ public class ScrollableAppsView extends RecyclerView
     }
 
     /**
+     * trebufork: freezes the media row's expand/collapse height animation (if running) at its
+     * current value, right before an app launch captures the icon bounds. The height
+     * animation re-lays-out the rows every frame while an app-open animation flies from a
+     * captured (now stale) icon position — the visible up/down shift of the animating
+     * window. Freezing keeps the desktop static for the whole flight; the pending height
+     * change is adopted when the launcher is idle home again (the row's own re-measure).
+     */
+    public void freezeMediaRowHeight() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof ScrollableMediaRowView row) {
+                row.freezeHeightAnimation();
+                return;
+            }
+        }
+    }
+
+    /**
      * trebufork: finds a visible desktop widget host view matching the app-close target. When
      * {@code svi} is non-null it must match the widget's {@link LauncherAppWidgetInfo} exactly
      * (the widget the app was launched from); otherwise any widget from the same package/user is

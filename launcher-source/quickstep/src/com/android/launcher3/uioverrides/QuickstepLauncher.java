@@ -1433,6 +1433,12 @@ public class QuickstepLauncher extends Launcher implements RecentsViewContainer,
     @NonNull
     @Override
     public ActivityOptionsWrapper getActivityLaunchOptions(View v, @Nullable ItemInfo item) {
+        // trebufork: freeze a running media-row height animation BEFORE the open animation
+        // captures icon bounds — the expanding/collapsing media row re-lays-out the rows
+        // every frame, and the flying window would visibly shift up/down chasing a moving
+        // icon. The pending height is adopted when home is idle again. (The open animation
+        // also live-tracks the icon as a second layer of protection.)
+        freezeMediaRowHeight();
         ActivityOptionsWrapper activityOptions = mAppTransitionManager.getActivityLaunchOptions(
                 v, item != null ? item : (ItemInfo) v.getTag());
         if (mLastTouchUpTime > 0) {

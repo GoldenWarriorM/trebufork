@@ -73,6 +73,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
     private boolean mRebuilding;
     // True while a rebuild is deferred until the launcher leaves its transition.
     private boolean mDeferredRebuild;
+    // trebufork: a height change was deferred (frozen for an app launch, the background
+    // settle could not run because a stopped window gets no traversals) and must be applied
+    // in ONE frame when the launcher becomes visible again — no leftover glide animation.
+    private boolean mSnapPending;
     // trebufork: the row height measured at the last stable (focused, idle home) moment.
     // Kept across unfocused measurements so a session appearing/disappearing mid-launch
     // cannot change the row size and shift the desktop or the animating app window.
@@ -684,11 +688,22 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         if (launcherStable) {
             if (mLastStableHeight >= 0 && height != mLastStableHeight
                     && mHeightAnimator == null) {
-                // trebufork: the row grew (player appeared) or collapsed (sessions gone) at
-                // idle home — animate the change instead of snapping, so the desktop rows
-                // below glide instead of jumping in a single frame.
-                startHeightAnimation(mLastStableHeight, height);
-                height = mLastStableHeight;
+                if (mSnapPending) {
+                    // trebufork: a height change was frozen for an app launch and the
+                    // background settle never ran (a stopped window gets no traversals,
+                    // so the posted requestLayouts waited). The launcher is visible again
+                    // NOW: settle in ONE frame — the very first layout of the returning
+                    // home already carries the final height, so the user never sees a
+                    // leftover animation (a 220ms glide would read as a visible delay).
+                    mSnapPending = false;
+                    mLastStableHeight = height;
+                } else {
+                    // Idle home: the row grew (player appeared) or collapsed (sessions
+                    // gone) — animate the change instead of snapping, so the desktop rows
+                    // below glide instead of jumping in a single frame.
+                    startHeightAnimation(mLastStableHeight, height);
+                    height = mLastStableHeight;
+                }
             } else if (mHeightAnimator != null) {
                 // Report the animated intermediate height while the transition runs.
                 height = (int) mHeightAnimator.getAnimatedValue();
@@ -701,11 +716,57 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                         + " lastStable=" + mLastStableHeight + " cards=" + mCards.size());
             }
             height = mLastStableHeight;
+            // trebufork: while the launcher is NOT visible (another app is in the
+            // foreground) a frozen/pinned height serves no purpose — nobody sees the row.
+            // Snap to the natural height in ONE frame (and kill a still-running height
+            // animator, e.g. the debug 10x one): the pending height change is settled while
+            // home is hidden, so returning to the desktop never plays a leftover animation.
+            boolean launcherVisible = false;
+            try {
+                Launcher launcher = Launcher.getLauncher(getContext());
+                launcherVisible = (launcher.getActivityFlags()
+                        & BaseActivity.ACTIVITY_STATE_WINDOW_FOCUSED) != 0
+                        || launcher.isStarted();
+            } catch (ClassCastException | IllegalStateException ignored) {
+                // No launcher context: keep the pinned height (preview windows).
+                launcherVisible = true;
+            }
+            if (!launcherVisible && mHeightAnimator != null) {
+                mHeightAnimator.cancel();
+                mHeightAnimator = null;
+            }
+            if (!launcherVisible) {
+                int naturalScaled = Math.round(naturalHeight * mHeightScale);
+                mSnapPending = naturalScaled != mLastStableHeight;
+                mLastStableHeight = naturalScaled;
+            }
         }
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
             height = MeasureSpec.getSize(heightMeasureSpec);
         }
         setMeasuredDimension(width, height);
+    }
+
+    /**
+     * trebufork: freezes a running height animation at its current value (no jump): an app
+     * launch is about to capture icon bounds and the flying window must not chase a moving
+     * desktop. The frozen height becomes the last stable one; the pending natural height is
+     * adopted by the regular idle-home re-measure after the user returns.
+     */
+    public void freezeHeightAnimation() {
+        if (mHeightAnimator == null) {
+            return;
+        }
+        int frozen = (int) mHeightAnimator.getAnimatedValue();
+        mHeightAnimator.cancel();
+        mHeightAnimator = null;
+        mLastStableHeight = frozen;
+        // The pending natural height must be settled in one frame (see onMeasure) — in the
+        // background if traversals still run, otherwise on the first frame of the return.
+        mSnapPending = true;
+        requestLayout();
+        android.util.Log.d("TrebuforkMedia",
+                "height animation frozen at " + frozen + " for app launch");
     }
 
     /**
@@ -784,6 +845,29 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             }
             if (mSource != null && leftHome) {
                 mSource.clearPin();
+            }
+            // trebufork: a frozen/pinned height must settle to the natural one while the
+            // launcher is hidden (one-frame snap in onMeasure) — but with the height
+            // animator cancelled nobody schedules a layout pass, so the snap would wait
+            // until the next requestLayout (often the home return — a visible jump when
+            // the user exits the just-opened app). Actively schedule passes: a few posted
+            // requestLayout() calls drain the pending snap as soon as the focus change
+            // (and the BaseActivity flags it updates) settle, while the launcher is still
+            // invisible.
+            if (leftHome) {
+                post(() -> {
+                    requestLayout();
+                    if (getParent() instanceof View parent) {
+                        parent.requestLayout();
+                    }
+                });
+                postDelayed(() -> {
+                    requestLayout();
+                    if (getParent() instanceof View parent) {
+                        parent.requestLayout();
+                    }
+                }, 120);
+                postDelayed(this::requestLayout, 350);
             }
         } else {
             // trebufork: focus returned, but that is NOT "the user came home": the shade's
