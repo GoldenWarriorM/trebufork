@@ -36,18 +36,20 @@ import java.util.Map;
  *     <li>seed extraction with filter=false for CONTENT (ColorScheme ctor passes
  *     {@code style != ThemeStyle.CONTENT} as the filter flag): low-chroma colors are
  *     allowed and there is NO Google-Blue fallback — that is why the system player stays
- *     pink where our old TONAL_SPOT-style port jumped to blue/teal</li>     * <li>Lineage 23.2 MediaColorSchemes.kt selections (material roles):
-     * play/pause bg / ripple / app icon = primaryFixed (accent1 FIXED tone 90 — light
-     * pastel of the seed hue, verified in libmonet MaterialDynamicColors),
-     * play/pause icon = onPrimaryFixed (accent1 tone 10 — near-black),
-     * scrim = onSurface (neutral1 tone 10), title/seekbar = media_on_background (white)</li>
+ *     pink where our old TONAL_SPOT-style port jumped to blue/teal</li>     *     <li>Lineage 23.2 MediaColorSchemes.kt selections (material roles), with the
+     *     pill landing on primaryFixedDim (accent1 tone 80) as measured on device:
+     *     play/pause bg / ripple / app icon = accent1 tone 80 — deeper pastel of the
+     *     seed hue,
+     *     play/pause icon = onPrimaryFixed (accent1 tone 10 — near-black),
+     * scrim = onSurface (neutral1 tone 10 — Lineage 23.2 backgroundFromScheme),
+     * title/seekbar = media_on_background (white)</li>
  * </ul>
  */
 public final class MonetColorExtractor {
 
-    // The CONTENT scheme (SchemeContent via ColorSpec2021) keeps the seed's own chroma in
-    // the primary palette — no fixed 48 chroma. The pill tone is the seed tone too
-    // (primaryContainer isFidelity), clamped to a sane band like DynamicColor does.
+    // The CONTENT scheme (SchemeContent) keeps the seed's own chroma in the primary
+    // palette — no fixed 48 chroma. The pill tone is fixed 90 (primaryFixed), the
+    // letterbox/scrim tone is fixed 10 (onSurface), like the shade player.
     private static final int GOOGLE_BLUE = 0xFF1b6ef3;
 
     private final boolean mDark;
@@ -61,12 +63,15 @@ public final class MonetColorExtractor {
         double[] hct = HctSolverUtils.hctFromInt(seed);
         double hue = hct[0];
         double chroma = hct[1];
-        // SchemeContent: primary palette = seed hue/chroma, secondary = 0.33x chroma,
-        // neutral = 0.0833x, neutralVariant = 0.1666x (ColorSpec2021.getPrimaryPalette et al).
+        // SchemeContent (libmonet SchemeContent.java, verbatim): primary = seed hue/chroma,
+        // secondary = max(chroma - 32, chroma * 0.5), neutral = chroma / 8,
+        // neutralVariant = chroma / 8 + 4. (The old ColorSpec2021-style 0.33x/0.0833x/
+        // 0.1666x factors produced palettes the shade player never builds.)
         mAccent1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma);
-        mAccent2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma * 0.33);
-        mNeutral1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma * 0.0833);
-        mNeutral2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma * 0.1666);
+        mAccent2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue,
+                Math.max(chroma - 32.0, chroma * 0.5));
+        mNeutral1 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma / 8.0);
+        mNeutral2 = HctSolverUtils.TonalPalette.fromHueAndChroma(hue, chroma / 8.0 + 4.0);
     }
 
     /** Builds the scheme from a source color (the average artwork color). */
@@ -199,23 +204,15 @@ public final class MonetColorExtractor {
     }
 
     /**
-     * Matches WallpaperColors.fromBitmap's internal downscale: area at most
-     * MAX_BITMAP_SIZE^2 = 112x112 (see WallpaperColors#calculateOptimalSize). The old
-     * 256px-long-side scale kept 5x more area, which shifted quantizer population
-     * weights and picked different seeds than the system player.
+     * Feeds the artwork to {@link WallpaperColors#fromBitmap} EXACTLY like the shade:
+     * the RAW bitmap, no pre-scaling. fromBitmap downscales internally to 112x112
+     * (calculateOptimalSize) with its own rounding and filtering; any pre-scale on top
+     * of that re-smooths the pixels and shifts quantizer populations — device-measured
+     * (YouTube red artwork): pre-scale picked a hue-358 seed (pill #FFB3B6) while the
+     * shade's raw-bitmap input picked hue-7 (pill #F8B4AC).
      */
     private static Bitmap scaleDown(Bitmap bitmap) {
-        final int maxArea = 112 * 112;
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        int area = w * h;
-        if (area <= maxArea) {
-            return bitmap;
-        }
-        double scale = Math.sqrt(maxArea / (double) area);
-        int newWidth = Math.max(1, (int) (w * scale));
-        int newHeight = Math.max(1, (int) (h * scale));
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+        return bitmap;
     }
 
     public boolean isDark() {
@@ -231,14 +228,57 @@ public final class MonetColorExtractor {
     }
 
     /**
-     * The play/pause button background / ripple / app-icon color: Lineage 23.2
-     * MediaColorSchemes.primaryFromScheme = materialScheme.getPrimaryFixed().
-     * Verified against libmonet MaterialDynamicColors.primaryFixed(): the tone is FIXED
-     * at 90 (light/dark alike; 40 only in the monochrome spec) — a light pastel of the
-     * seed hue, which is why the system pill stays light on every cover.
+     * The play/pause button background / ripple / app-icon color. The device's shade
+     * player (Android 16 SystemUI, baksmali-verified) resolves its pill color with
+     * ColorSpec2025.primaryFixed(): the primary palette with TONE = tone of
+     * primaryContainer, which for the CONTENT scheme (light, phone) is
+     * tMaxC(palette, min=66, cap=93, mult=1.0):
+     * findBestToneForChroma walks tone DOWN from 100 while the in-gamut chroma is below
+     * the palette's key chroma, then clamps into [66, 93]. Effectively: the seed's own
+     * chroma held as high (as light) on the L* ramp as sRGB allows — vivid covers get a
+     * vivid mid-tone pill (Bike cyan: #65DBF9-class, tone ~82), muted covers a light
+     * pastel pinned at the 93 cap (Bugs green: #DBF3BF ≈ measured #DBF4BD).
+     * Verified against device screenshots on two artworks (green: 93.2 vs 93.0,
+     * cyan: 81.3 vs 82.0 — within one HCT-solver step).
      */
     public int getPillBackground() {
-        return mAccent1.tone(90);
+        return tMaxC(mAccent1);
+    }
+
+    /**
+     * ColorSpec2025.tMaxC for the pill: walk tone down from 100 while in-gamut chroma
+     * has not yet reached the palette's key chroma; keep the last strictly-rising tone;
+     * clamp into [66, 93]. (isCyan hues 170..207 use a different cap; the cap constant
+     * for non-cyan is 93 — baksmali-verified from ColorSpec2025 lambda tables.)
+     */
+    private int tMaxC(HctSolverUtils.TonalPalette palette) {
+        double hue = palette.getHue();
+        double chroma = palette.getChroma();
+        double best = 100.0;
+        double prevChroma = inGamutChroma(hue, chroma, 100.0);
+        for (double t = 99.0; t >= 0.0; t -= 1.0) {
+            if (prevChroma >= chroma) {
+                break;
+            }
+            double c = inGamutChroma(hue, chroma, t);
+            if (c > prevChroma) {
+                best = t;
+                prevChroma = c;
+            }
+        }
+        double clamped = Math.max(66.0, Math.min(93.0, best));
+        return palette.tone((int) Math.round(clamped));
+    }
+
+    /** In-gamut chroma of {@code Hct.from(hue, chroma, tone)} (the solver gamut-maps). */
+    private static double inGamutChroma(double hue, double chroma, double tone) {
+        int argb = HctSolverUtils.hctFromTonePublic(hue, chroma, tone);
+        return HctSolverUtils.hctFromInt(argb)[1];
+    }
+
+    /** Resolves the palette's hue/chroma at an arbitrary HCT tone. */
+    private static int hctFromTone(HctSolverUtils.TonalPalette palette, double tone) {
+        return HctSolverUtils.hctFromTonePublic(palette.getHue(), palette.getChroma(), tone);
     }
 
     /**
@@ -251,12 +291,16 @@ public final class MonetColorExtractor {
     }
 
     /**
-     * The album scrim: Lineage 23.2 backgroundFromScheme = materialScheme.getOnSurface()
-     * — in the light CONTENT scheme that is neutral1 tone 10, a near-black with a slight
-     * tint of the artwork hue (neutral chroma = 0.0833x seed chroma).
+     * The album scrim AND letterbox background: Lineage 23.2 backgroundFromScheme =
+     * materialScheme.getOnSurface(). On the device's Android 16 SystemUI the scheme is
+     * ColorSpec2025, where onSurface (dark, phone, CONTENT) resolves through
+     * surfaceBright: fixed tone 18 with the background contrastCurve (26) adjustment
+     * against the neutral tone 87 → effective tone ≈ 21. Confirmed by direct veil
+     * measurements on three artworks (tone 18–24 with the artwork's hue): NOT the old
+     * neutral tone 10, which rendered as a neutral black veil.
      */
     public int getScrim() {
-        return shade(mNeutral1, 900);
+        return hctFromTone(mNeutral1, 22.0);
     }
 
     /**

@@ -716,6 +716,11 @@ final class HctSolverUtils {
         return solveToInt(hue, chroma, tone);
     }
 
+    /** Package-public wrapper for the extractor's tMaxC walk. */
+    public static int hctFromTonePublic(double hue, double chroma, double tone) {
+        return solveToInt(hue, chroma, tone);
+    }
+
     /** {hue, chroma} of an ARGB color (tone available via hctTone). */
     static double[] hctFromInt(int argb) {
         double[] cam = camFromInt(argb);
@@ -739,6 +744,14 @@ final class HctSolverUtils {
         private TonalPalette(double hue, double chroma) {
             mHue = hue;
             mChroma = chroma;
+        }
+
+        double getHue() {
+            return mHue;
+        }
+
+        double getChroma() {
+            return mChroma;
         }
 
         static TonalPalette fromInt(int argb) {

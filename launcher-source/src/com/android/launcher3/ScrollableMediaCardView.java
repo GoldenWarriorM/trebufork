@@ -64,11 +64,13 @@ public class ScrollableMediaCardView extends FrameLayout
         implements com.android.launcher3.views.UpdateDeferrableView {
 
     private static final long PROGRESS_TICK_MS = 500L;
-    // Lineage 23.2 MediaControlPanel.MEDIA_PLAYER_SCRIM_START/END_ALPHA is 0.65/0.75 for
-    // the shade player; trebufork lightens it for the home-screen widget so the artwork
-    // stays clearly visible (text remains readable over the radial gradient).
-    private static final float SCRIM_START_ALPHA = 0.45f;
-    private static final float SCRIM_END_ALPHA = 0.60f;
+    // Shade remedia source (Media.kt CardBackground): radial gradient of onSurface
+    // at 0.65 (center) → 0.75 (edge), radius = max(w,h)/2. With the ColorSpec2025
+    // onSurface (neutral tone ~22 of the artwork scheme) this reproduces the measured
+    // system veil; the darker screen read came from our old tone-10 (near-black) color,
+    // not from the alphas.
+    private static final float SCRIM_START_ALPHA = 0.65f;
+    private static final float SCRIM_END_ALPHA = 0.75f;
     // Desaturation filter for the app icon (MediaControlViewBinder.getGrayscaleFilter).
     private static final android.graphics.ColorMatrixColorFilter GRAYSCALE_FILTER =
             createGrayscaleFilter();
@@ -718,12 +720,12 @@ public class ScrollableMediaCardView extends FrameLayout
     }
 
     /**
-     * Applies the monet scheme derived from the artwork to every colored surface. Faithful
-     * port of Lineage 23.2 ColorSchemeTransition + MediaColorSchemes: scrim =
-     * onSurface (neutral1 t10, 0.65/0.75 alpha); title, artist, seekbar wave/thumb,
-     * prev/next and custom action icons = plain white (media_on_background, no runtime
-     * tint); play/pause background = primaryFixed (accent1 tone tracking the seed) with
-     * an onPrimaryFixed icon (accent1 t10, near-black); tap ripple + app icon filter =
+     * Applies the monet scheme derived from the artwork to every colored surface. Port of
+     * Lineage 23.2 ColorSchemeTransition + MediaColorSchemes: scrim + letterbox = onSurface
+     * (neutral1 tone 10) at the shade's 0.65/0.75 alphas; title, artist, seekbar
+     * wave/thumb, prev/next and custom action icons = plain white (media_on_background,
+     * no runtime tint); play/pause background = primaryFixed (accent1 tone 90) with an
+     * onPrimaryFixed icon (accent1 tone 10, near-black); tap ripple + app icon filter =
      * primaryFixed.
      */
     private void updateColorScheme(@Nullable Bitmap artwork) {
@@ -798,7 +800,7 @@ public class ScrollableMediaCardView extends FrameLayout
     }
 
     // The three color slots of ColorSchemeTransition that our player uses:
-    // background = album art letterbox background (onSurface),
+    // background = album art letterbox background (artwork-tinted dark shade),
     // primary = play/pause container (primaryFixed),
     // onPrimary = play/pause icon (onPrimaryFixed).
     // Created in the constructor AFTER the views are found (the apply lambdas capture
@@ -893,7 +895,8 @@ public class ScrollableMediaCardView extends FrameLayout
 
     /**
      * Radial scrim over the album art (Lineage 23.2 addGradientToPlayerAlbum: qs_media_scrim
-     * with the onSurface color at trebufork's lightened 0.45 / 0.60 alphas).
+     * with the onSurface color at the shade's 0.65 / 0.75 alphas; both stops share one
+     * color, exactly like setupGradientColorOnDrawable with equal start/end sources).
      */
     private void applyScrim(int scrimColor) {
         Drawable current = mAlbumArt.getForeground();
@@ -921,6 +924,45 @@ public class ScrollableMediaCardView extends FrameLayout
                         scrimColor, (int) (SCRIM_END_ALPHA * 255f)),
         });
         mAlbumArt.setForeground(new LayerDrawable(new Drawable[] {gradient}));
+        updateScrimBounds();
+    }
+
+    /**
+     * Sizes the scrim gradient to the art view. Device-measured (shade vs widget
+     * screenshots): the XML gradientRadius=100%p left the view's corners UNCOVERED
+     * (raw artwork visible in a corner arc) because %-of-parent resolution does not
+     * track this view's final size. The shade's Compose scrim uses radius =
+     * max(width, height) / 2 with the center at the view center — mirror that and
+     * re-apply the bounds on every size change.
+     */
+    private void updateScrimBounds() {
+        Drawable current = mAlbumArt.getForeground();
+        if (!(current instanceof LayerDrawable)) {
+            return;
+        }
+        Drawable gradient = ((LayerDrawable) current).getDrawable(0);
+        if (!(gradient instanceof GradientDrawable)) {
+            return;
+        }
+        int w = mAlbumArt.getWidth();
+        int h = mAlbumArt.getHeight();
+        if (w <= 0 || h <= 0) {
+            return;
+        }
+        // The inflated XML keeps gradientRadius=100%p, which the framework resolves
+        // against a stale/foreign size (device-measured: right-edge strip of raw art).
+        // Rebuild the radial gradient programmatically: center = view center, radius =
+        // half-diagonal (the shade's max(w,h)/2 covers the corners in Compose because
+        // its brush draws in the view bounds; a GradientDrawable radius must reach the
+        // corners, hence 1.42x).
+        GradientDrawable gd = (GradientDrawable) gradient;
+        gd.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+        gd.setGradientCenter(0.5f, 0.5f);
+        gd.setGradientRadius((float) (Math.sqrt(w * w + h * h) / 2.0));
+        gd.setBounds(0, 0, w, h);
+        mAlbumArt.invalidate();
+        android.util.Log.d("TrebuforkMedia", "updateScrimBounds " + w + "x" + h
+                + " r=" + gd.getGradientRadius());
     }
 
     private void applyPlaybackState(@Nullable PlaybackState state) {
@@ -1134,6 +1176,7 @@ public class ScrollableMediaCardView extends FrameLayout
         if (w == 0 || h == 0) {
             return;
         }
+        updateScrimBounds();
         // The art view got its real size (first layout or a resize). If the shown artwork
         // was processed with a different aspect (or not processed at all — bound before
         // layout), reprocess NOW so the zoom-crop is applied before this frame is drawn:
