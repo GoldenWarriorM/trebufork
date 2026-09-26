@@ -18,6 +18,7 @@ package com.android.launcher3;
 import android.content.Context;
 import android.media.session.MediaController;
 import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -236,6 +237,16 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         rebuildCarousel(false);
     }
 
+    /** True when the session reports an actively-playing state. */
+    private static boolean playing(MediaController session) {
+        PlaybackState state = session == null ? null : session.getPlaybackState();
+        return state != null
+                && (state.getState() == PlaybackState.STATE_PLAYING
+                || state.getState() == PlaybackState.STATE_BUFFERING
+                || state.getState() == PlaybackState.STATE_FAST_FORWARDING
+                || state.getState() == PlaybackState.STATE_REWINDING);
+    }
+
     /**
      * Re-anchors the carousel to the card the user is looking at (by session token), or
      * to the active (playing) player on the home-return reorder. Never an index: an index
@@ -296,14 +307,19 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             java.util.List<MediaSession.Token> newTokens = new java.util.ArrayList<>();
             MediaController activeSession = mSource == null ? null : mSource.getController();
             // Pass 1a: the active session's card first — ONLY when a reorder was armed by
-            // returning to the desktop (passed as reorderOnHomeReturn). Otherwise the current
+            // returning to the desktop (passed as reorderOnHomeReturn) AND the active
+            // session is actually PLAYING: the shade's sort key is (isPlaying && local,
+            // …), so a paused player never jumps to the front on home return — pausing in
+            // an app and swiping home must not reshuffle the pages. Otherwise the current
             // order is kept: swipes and play/pause taps never shuffle the pages.
             boolean reorder = reorderOnHomeReturn;
             if (activeSession != null && reorder) {
-                ScrollableMediaCardView card = findCard(activeSession.getSessionToken());
-                if (card != null) {
-                    newCards.add(card);
-                    newTokens.add(activeSession.getSessionToken());
+                if (playing(activeSession)) {
+                    ScrollableMediaCardView card = findCard(activeSession.getSessionToken());
+                    if (card != null) {
+                        newCards.add(card);
+                        newTokens.add(activeSession.getSessionToken());
+                    }
                 }
             }
             // Pass 1b: surviving cards KEEP THEIR CURRENT VISIBLE ORDER (not the system
@@ -322,11 +338,21 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             for (ScrollableMediaCardView existing : mCards) {
                 MediaController bound = existing.getBoundController();
                 MediaSession.Token token = bound == null ? null : bound.getSessionToken();
-                if (token == null || !liveTokens.contains(token) || newTokens.contains(token)
-                        || (activeSession != null && reorder
-                                && token.equals(activeSession.getSessionToken()))) {
+                boolean isActiveCard = activeSession != null && reorder
+                        && token != null && token.equals(activeSession.getSessionToken());
+                if (token == null || !liveTokens.contains(token) || newTokens.contains(token)) {
                     continue;
                 }
+                if (isActiveCard && playing(activeSession)) {
+                    // The active card was placed by pass 1a when playing; it must not
+                    // duplicate at its old position.
+                    continue;
+                }
+                // Everything else survives in its current visible order. The active card
+                // when PAUSED survives too: pass 1a only places a playing active card, so
+                // dropping the paused active card here removed a player from the carousel
+                // on every home-return rebuild (it vanished and reappeared on the next
+                // rebuild — the player-count flapping when opening recents).
                 newCards.add(existing);
                 newTokens.add(token);
             }
@@ -346,6 +372,8 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             for (MediaController session : sessions) {
                 if (findCard(session.getSessionToken()) == null
                         && !newTokens.contains(session.getSessionToken())) {
+                    android.util.Log.d("TrebuforkMedia", "pass2 add "
+                            + session.getPackageName());
                     ScrollableMediaCardView card = null;
                     for (java.util.Iterator<ScrollableMediaCardView> it =
                             orphans.iterator(); it.hasNext(); ) {
@@ -389,6 +417,22 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             if (sameSet) {
                 return;
             }
+            android.util.Log.d("TrebuforkMedia", "rebuild: cards=" + mCards.size()
+                    + " reorder=" + reorder + " active="
+                    + (activeSession == null ? "null" : activeSession.getPackageName())
+                    + " activePlaying=" + playing(activeSession));
+            StringBuilder dbg = new StringBuilder("carousel change:");
+            for (MediaController c : sessions) {
+                if (newTokens.contains(c.getSessionToken())) {
+                    dbg.append(' ').append(c.getPackageName());
+                }
+            }
+            dbg.append(" (src=");
+            for (MediaController c : sessions) {
+                dbg.append(c.getPackageName()).append(',');
+            }
+            dbg.append(") reorder=").append(reorder);
+            android.util.Log.d("TrebuforkMedia", dbg.toString());
             // trebufork: a PURE REORDER (identical session set, different order) applies
             // silently: pages never shuffle while the user interacts — reordering only
             // happens on RETURNING TO THE DESKTOP (reorderOnHomeReturn, passed by window
@@ -683,20 +727,33 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         android.util.Log.d("TrebuforkMedia", "row focus changed=" + hasWindowFocus
                 + " lastStable=" + mLastStableHeight);
         if (!hasWindowFocus) {
-            // trebufork: while the launcher is in the background the carousel behaves like
-            // the shade — the most recently playing session wins. Drop the user's swipe pin
-            // so a session that starts playing in another app becomes the active player;
-            // when home comes back, the visible page follows the (possibly changed) active
-            // session via the rebuild below.
-            if (mSource != null) {
+            // trebufork: while the launcher is REALLY in the background (an app is in the
+            // foreground — state_window_focused was actually owned by another task) the
+            // carousel behaves like the shade — the most recently playing session wins.
+            // The shade's peek/expand also steals focus in a quick burst; treating that as
+            // "left home" dropped the user's pin and reshuffled the active pick on every
+            // shade gesture. Gate on the launcher's own resumed/window-focused state.
+            boolean leftHome = false;
+            try {
+                com.android.launcher3.BaseActivity activity =
+                        com.android.launcher3.BaseActivity.fromContext(getContext());
+                leftHome = !activity.isStarted() || !activity.hasBeenResumed();
+            } catch (ClassCastException | IllegalStateException e) {
+                // Not in a launcher activity context: keep the current pin.
+            }
+            if (mSource != null && leftHome) {
                 mSource.clearPin();
             }
         } else {
-            // trebufork: the user is back at the desktop — run the rebuild WITH the
-            // home-return reorder (active player first). This is one of exactly two call
-            // sites that may reorder; all other rebuilds keep the visible order verbatim.
+            // trebufork: focus returned, but that is NOT "the user came home": the shade's
+            // peek/expand steals and restores window focus in a quick burst (log evidence:
+            // ±state_window_focused flips every few hundred ms while the shade animates),
+            // and reordering here made the players reshuffle/vanish while the shade was
+            // open. The home-return reorder is armed exclusively by the NORMAL-state
+            // transition (registerStableHeightTrigger) — this focus path only re-measures
+            // the pinned height and rebuilds WITHOUT any reorder.
             post(this::requestLayout);
-            post(() -> rebuildCarouselWhenIdle(true));
+            post(() -> rebuildCarouselWhenIdle(false));
         }
     }
 

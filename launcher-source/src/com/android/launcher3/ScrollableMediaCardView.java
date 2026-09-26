@@ -451,6 +451,24 @@ public class ScrollableMediaCardView extends FrameLayout
     // Media content binding (the MediaControlPanel.bindPlayer port)
     // ---------------------------------------------------------------------
 
+    /**
+     * The app name of the card's session package — the shade's last title fallback
+     * (MediaDataLoader: controls_media_empty_title with the app name).
+     */
+    private CharSequence resolveAppName() {
+        if (mController == null) {
+            return null;
+        }
+        String pkg = mController.getPackageName();
+        try {
+            android.content.pm.ApplicationInfo info =
+                    getContext().getPackageManager().getApplicationInfo(pkg, 0);
+            return getContext().getPackageManager().getApplicationLabel(info);
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return pkg;
+        }
+    }
+
     private void bindContent() {
         if (mController == null) {
             return;
@@ -476,6 +494,22 @@ public class ScrollableMediaCardView extends FrameLayout
         // MetadataAnimationHandler.setNext): when the (title, artist) pair changed, the
         // old text exits (slide + fade) and the new text enters only after the exit
         // ends; otherwise the text is applied directly.
+        // Title fallback chain of the shade's MediaDataLoader: DISPLAY_TITLE → TITLE →
+        // the notification's own title (HybridGroupManager.resolveTitle) → the app name
+        // (controls_media_empty_title). YT Shorts / YouTube register sessions with empty
+        // metadata, so their cards show the notification title or the app name.
+        if (title == null || title.length() == 0) {
+            title = metadata == null ? null
+                    : metadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_TITLE);
+        }
+        if (title == null || title.length() == 0) {
+            title = mController == null ? null
+                    : NotificationListener.getMediaNotificationTitle(
+                            mController.getPackageName());
+        }
+        if (title == null || title.length() == 0) {
+            title = resolveAppName();
+        }
         final CharSequence newTitle = title == null ? "" : title;
         final CharSequence newArtist = artist == null ? "" : artist;
         final Runnable applyText = () -> {

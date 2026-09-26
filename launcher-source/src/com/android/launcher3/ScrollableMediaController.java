@@ -113,17 +113,87 @@ public class ScrollableMediaController {
     // Trebufork: true while the media row controller is actively listening. Kept so duplicate
     // start()/stop() calls are cheap no-ops.
     private boolean mListening;
+    // Trebufork: the notification-driven phantom filter is DEBOUNCED. Media notifications
+    // flicker (Bluetooth posts a media-style notification in ERROR state and drops it on
+    // AVRCP updates; players re-post on metadata changes) — applying the gate instantly in
+    // both directions made the carousel player count flap between 2 and 3. SystemUI masks
+    // the same churn with VisualStabilityProvider (reordering suppressed during
+    // notification transactions); here a settle delay merges the burst into a single
+    // re-filter, and a flicker shorter than the delay never changes the carousel.
+    private static final long MEDIA_FILTER_SETTLE_MS = 3000L;
+    private final Runnable mFilterSettle = this::applyRefilterNow;
 
     private final MediaSessionManager.OnActiveSessionsChangedListener mSessionsChangedListener =
             controllers -> {
                 int oldSize = mSessions.size();
-                observeSessions(filterPhantomSessions(controllers));
+                StringBuilder pkgs = new StringBuilder();
+                if (controllers != null) {
+                    for (MediaController c : controllers) {
+                        pkgs.append(c.getPackageName()).append(' ');
+                    }
+                }
+                android.util.Log.d("TrebuforkMedia", "onSessionsChanged old=" + oldSize
+                        + " new=[" + pkgs.toString().trim() + "]");
+                observeSessions(holdVanishingSessions(filterPhantomSessions(controllers)));
                 clearPinIfDead();
                 setActiveController(pickController(mSessions));
                 if (mSessions.size() != oldSize) {
                     notifySessionListChanged();
                 }
             };
+
+    // Trebufork: the raw MediaSessionManager list FLICKERS when apps re-register their
+    // sessions (opening recents / another app briefly drops a session and re-adds it a
+    // moment later — measured: [mpvex, metrolist] → [metrolist] → back within a second).
+    // Tracking that flicker made the carousel player count flap. A package that vanishes
+    // from the list is HELD in the visible set for SESSION_VANISH_GRACE_MS and dropped
+    // only if it is still absent when the grace expires (a real player close).
+    private static final long SESSION_VANISH_GRACE_MS = 5000L;
+    private final java.util.Map<String, Runnable> mVanishGrace = new java.util.HashMap<>();
+
+    /** Keeps recently-vanished packages for the grace window (see {@link #mVanishGrace}). */
+    private List<MediaController> holdVanishingSessions(List<MediaController> filtered) {
+        java.util.Set<String> present = new java.util.HashSet<>();
+        if (filtered != null) {
+            for (MediaController c : filtered) {
+                present.add(c.getPackageName());
+            }
+        }
+        // Cancel grace for packages that are back.
+        for (String pkg : new java.util.HashSet<>(mVanishGrace.keySet())) {
+            if (present.contains(pkg)) {
+                Runnable r = mVanishGrace.remove(pkg);
+                if (r != null) {
+                    mMainHandler.removeCallbacks(r);
+                }
+            }
+        }
+        if (filtered == null || !mListening) {
+            return filtered;
+        }
+        List<MediaController> result = new java.util.ArrayList<>(filtered);
+        for (MediaController kept : mSessions) {
+            String pkg = kept.getPackageName();
+            if (!present.contains(pkg) && !mVanishGrace.containsKey(pkg)) {
+                Runnable grace = new Runnable() {
+                    @Override
+                    public void run() {
+                        mVanishGrace.remove(pkg);
+                        applyRefilterNow();
+                    }
+                };
+                mVanishGrace.put(pkg, grace);
+                mMainHandler.postDelayed(grace, SESSION_VANISH_GRACE_MS);
+                android.util.Log.d("TrebuforkMedia",
+                        "holding vanished session for grace: " + pkg);
+                result.add(kept);
+            } else if (!present.contains(pkg)) {
+                // Already in its grace window: keep holding it.
+                result.add(kept);
+            }
+        }
+        return result;
+    }
 
     /**
      * trebufork: the shade only shows players backed by a live media notification
@@ -137,10 +207,18 @@ public class ScrollableMediaController {
     /**
      * Trebufork: some apps (mpv-based players, some games) register several MediaSessions
      * for a single playback — the carousel must not show the same player twice. One
-     * controller per package is kept: the playing one if the already-kept duplicate is
-     * not playing, otherwise the first registered (system order is stable).
+     * controller per package is kept. The pick is STICKY: the previously kept session
+     * survives while it is still in the live list, even when the system list order flips
+     * (mpv alternates its two sessions 'mpv'/'MediaPlaybackService' — a non-sticky pick
+     * made the representative token alternate, so the card was dropped and re-bound on
+     * every sessions-changed, replaying the bind flash and flipping the anchored page).
+     * Only a NEWLY PLAYING duplicate takes over from a non-playing kept one.
      */
-    private static List<MediaController> dedupeByPackage(List<MediaController> controllers) {
+    private List<MediaController> dedupeByPackage(List<MediaController> controllers) {
+        java.util.Map<String, MediaController> previousByPackage = new java.util.HashMap<>();
+        for (MediaController c : mSessions) {
+            previousByPackage.putIfAbsent(c.getPackageName(), c);
+        }
         List<MediaController> result = new java.util.ArrayList<>(controllers.size());
         java.util.Map<String, MediaController> byPackage = new java.util.HashMap<>();
         for (MediaController controller : controllers) {
@@ -156,7 +234,15 @@ public class ScrollableMediaController {
                         && keptState.getState() == PlaybackState.STATE_PLAYING;
                 boolean newPlaying = newState != null
                         && newState.getState() == PlaybackState.STATE_PLAYING;
-                if (!keptPlaying && newPlaying) {
+                MediaController previous = previousByPackage.get(pkg);
+                boolean previousAlive = previous != null
+                        && controller.getSessionToken().equals(previous.getSessionToken());
+                if (!keptPlaying && newPlaying
+                        && !(previousAlive && !isPlayingState(previous))) {
+                    // A duplicate just started playing while the kept one did not — take
+                    // it over UNLESS the previous representative is still alive and not
+                    // playing (mpv's second session reports PLAYING while the first is
+                    // paused: switching would bounce the card between two sessions).
                     result.set(result.indexOf(kept), controller);
                     byPackage.put(pkg, controller);
                 }
@@ -167,11 +253,31 @@ public class ScrollableMediaController {
         return result;
     }
 
+    private static boolean isPlayingState(MediaController controller) {
+        PlaybackState state = controller == null ? null : controller.getPlaybackState();
+        return state != null && state.getState() == PlaybackState.STATE_PLAYING;
+    }
+
     private List<MediaController> filterPhantomSessions(
             @Nullable List<MediaController> controllers) {
         if (controllers == null || controllers.isEmpty()) {
             return controllers;
         }
+        // Drop dead sessions up front: the Bluetooth stack keeps a persistent session in
+        // PlaybackState.STATE_ERROR ("Bluetooth audio disconnected") that has no metadata,
+        // no artwork and no notification — the shade never shows it (its MediaData comes
+        // from notifications), while the raw session list does.
+        java.util.List<MediaController> live = new java.util.ArrayList<>(controllers.size());
+        for (MediaController controller : controllers) {
+            PlaybackState state = controller.getPlaybackState();
+            if (state != null && state.getState() == PlaybackState.STATE_ERROR) {
+                android.util.Log.d("TrebuforkMedia",
+                        "dropping error-state session: " + controller.getPackageName());
+                continue;
+            }
+            live.add(controller);
+        }
+        controllers = live;
         controllers = dedupeByPackage(controllers);
         if (controllers.isEmpty()
                 || !com.android.launcher3.notification.NotificationListener
@@ -202,15 +308,32 @@ public class ScrollableMediaController {
                 public void onPlaybackStateChanged(@Nullable PlaybackState state) {
                     if (state != null && state.getState() == PlaybackState.STATE_PLAYING) {
                         // The callback is registered per-controller, so its owner is
-                        // whichever session this listener instance is attached to.
+                        // whichever session this listener instance is attached to. Only a
+                        // session that is the package's CURRENT representative may claim
+                        // the last-played slot: apps with two sessions (mpv) report PLAYING
+                        // from the duplicate too, and honoring it flipped the pick between
+                        // the two representatives on every report.
                         MediaController owner = mObserverOwners.get(this);
-                        if (owner != null) {
+                        if (owner != null && isPackageRepresentative(owner)) {
                             mLastPlayedController = new java.lang.ref.WeakReference<>(owner);
                         }
                     }
                     setActiveController(pickController(mSessions));
                 }
             };
+
+    /** True when the controller is the kept (deduped) session of its package. */
+    private boolean isPackageRepresentative(MediaController controller) {
+        String pkg = controller.getPackageName();
+        for (MediaController session : mSessions) {
+            if (pkg.equals(session.getPackageName())) {
+                // mSessions is already deduped: the FIRST entry per package is the
+                // representative.
+                return session.getSessionToken().equals(controller.getSessionToken());
+            }
+        }
+        return false;
+    }
 
     private final MediaController.Callback mControllerCallback = new MediaController.Callback() {
         @Override
@@ -283,6 +406,11 @@ public class ScrollableMediaController {
             return;
         }
         mListening = false;
+        mMainHandler.removeCallbacks(mFilterSettle);
+        for (Runnable grace : mVanishGrace.values()) {
+            mMainHandler.removeCallbacks(grace);
+        }
+        mVanishGrace.clear();
         try {
             mSessionManager.removeOnActiveSessionsChangedListener(mSessionsChangedListener);
         } catch (SecurityException ignored) {
@@ -301,6 +429,18 @@ public class ScrollableMediaController {
             mSmallIconListener = this::refilterSessions;
 
     private void refilterSessions() {
+        if (!mListening || mSessions.isEmpty()) {
+            return;
+        }
+        // Debounce: media notifications flicker; wait for the burst to settle before
+        // reshaping the carousel. A notification that comes back within the window is
+        // never treated as gone.
+        mMainHandler.removeCallbacks(mFilterSettle);
+        mMainHandler.postDelayed(mFilterSettle, MEDIA_FILTER_SETTLE_MS);
+    }
+
+    /** The debounced re-filter body: applies the current notification gate once. */
+    private void applyRefilterNow() {
         if (!mListening || mSessions.isEmpty()) {
             return;
         }
@@ -512,22 +652,36 @@ public class ScrollableMediaController {
     /**
      * trebufork: drops the user's swipe pin (if any) and re-picks the active session by the
      * normal rules. The launcher media row calls this when its window loses focus: while
-     * home is in the background the carousel must behave like the shade — the most recently
-     * playing session wins, a stale pin must not hold the active player on an old session
-     * while a NEW one starts playing in another app.
+     * home is in the background the carousel must behave like the shade — a session that
+     * genuinely STARTS playing takes over, but a mere pause of the current player must not
+     * shuffle the active pick to another stale "playing" session (the shade's carousel is
+     * a TreeMap ordered at insertion; a pause alone never reorders it).
      */
     public void clearPin() {
         if (mPinnedToken == null) {
-            // Even with no swipe pin, re-pick on window unfocus: a stale pause-kept
-            // active session must yield to one that is actually PLAYING when home is
-            // left and the user interacts elsewhere (the shade behavior: while the
-            // launcher is in the background, the most recently playing session wins).
-            setActiveController(pickController(mSessions));
+            // No swipe pin: keep the current active session unless it DIED. A pause must
+            // not re-pick here — the sticky takeover rules (a real STATE_PLAYING
+            // transition) already handle a new app starting playback while unfocused.
+            if (mController != null && !sessionAlive(mController)) {
+                setActiveController(pickController(mSessions));
+            }
             return;
         }
         mPinnedToken = null;
         mPinnedBySwipe = false;
-        setActiveController(pickController(mSessions));
+        if (mController == null || !sessionAlive(mController)) {
+            setActiveController(pickController(mSessions));
+        }
+    }
+
+    /** True when the controller's session is still in the live session set. */
+    private boolean sessionAlive(MediaController controller) {
+        for (MediaController session : mSessions) {
+            if (session.getSessionToken().equals(controller.getSessionToken())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Drops the carousel pin if the pinned session died. */
@@ -582,6 +736,15 @@ public class ScrollableMediaController {
         }
         MediaController lastPlayed = mLastPlayedController == null
                 ? null : mLastPlayedController.get();
+        // The shade's carousel is a TreeMap ordered at INSERTION time: a pause alone
+        // never reshuffles it. So the currently active session stays the pick while its
+        // session is alive, even after it paused — only a genuinely NEW playing session
+        // (a real transition into STATE_PLAYING, which sets mLastPlayedController) or a
+        // dead current session may change the pick.
+        if (mController != null && lastPlayed != null && lastPlayed.equals(mController)
+                && controllers.contains(mController)) {
+            return mController;
+        }
         // Prefer the session that is actively playing; among several "playing" sessions
         // (apps that stagnate in STATE_PLAYING) the one the user played last wins, matching
         // SystemUI which shows the most recently active media. Fall back to the first
