@@ -94,6 +94,25 @@ public class NotificationListener extends NotificationListenerService {
             sMediaClickIntents = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
+     * trebufork: the resolved song title of the package's current media-style
+     * notification — the shade's MediaDataLoader fallback chain when the session's
+     * metadata has no title: DISPLAY_TITLE → TITLE → the notification's own
+     * title/text (HybridGroupManager.resolveTitle). YT Shorts / YouTube register
+     * sessions with empty metadata, so the card title comes from the notification.
+     * Updated on the worker thread; read on any.
+     */
+    private static final Map<String, CharSequence>
+            sMediaNotificationTitles = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * trebufork: whether the listener is connected and has completed at least one
+     * refresh — replaces the old "non-empty icon map" heuristic, which disabled the
+     * media row's phantom-session filter whenever phantom-only sessions were the
+     * ONLY entries (empty map) and let bare YouTube/YT Shorts sessions through.
+     */
+    private static volatile boolean sListenerConnected = false;
+
+    /**
      * Returns the content intent (clickIntent) of the package's current media-style
      * notification, or null when there is none.
      */
@@ -122,13 +141,22 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     /**
-     * trebufork: whether the icon map holds any entries at all — i.e. the notification
-     * listener is connected and has processed at least one refresh/post. While false (e.g.
-     * right after boot, before onListenerConnected), the media row must not filter sessions
-     * against an empty map or it would hide every real player.
+     * trebufork: the notification-side title for the package's media card — the shade's
+     * fallback when session metadata carries no song title (MediaDataLoader:
+     * DISPLAY_TITLE → TITLE → HybridGroupManager.resolveTitle(notification)).
+     */
+    @Nullable
+    public static CharSequence getMediaNotificationTitle(String packageName) {
+        return packageName == null ? null : sMediaNotificationTitles.get(packageName);
+    }
+
+    /**
+     * trebufork: whether the notification listener is connected and populated — the media
+     * row may apply the media-notification gate only then; while false (e.g. right after
+     * boot, before onListenerConnected), sessions are kept so a real player is never lost.
      */
     public static boolean isListenerPopulated() {
-        return !sMediaSmallIcons.isEmpty();
+        return sListenerConnected;
     }
 
     /** Observers notified whenever a media small icon is added/removed/changed. */
@@ -173,6 +201,13 @@ public class NotificationListener extends NotificationListenerService {
                 } else {
                     sMediaSmallIcons.remove(sbn.getPackageName());
                 }
+                // Notification-side title for the metadata fallback chain.
+                CharSequence notifTitle = resolveNotificationTitle(sbn);
+                if (notifTitle != null) {
+                    sMediaNotificationTitles.put(sbn.getPackageName(), notifTitle);
+                } else {
+                    sMediaNotificationTitles.remove(sbn.getPackageName());
+                }
                 // trebufork: remember the media notification's content intent for the
                 // card click (the shade player's clickIntent source).
                 android.app.PendingIntent contentIntent =
@@ -193,8 +228,29 @@ public class NotificationListener extends NotificationListenerService {
         if (sbn.getNotification().isMediaNotification()) {
             sMediaSmallIcons.remove(sbn.getPackageName());
             sMediaClickIntents.remove(sbn.getPackageName());
+            sMediaNotificationTitles.remove(sbn.getPackageName());
             notifyMediaSmallIconListeners();
         }
+    }
+
+    /**
+     * The notification title fallback of the shade's MediaDataLoader:
+     * HybridGroupManager.resolveTitle — the extras' EXTRA_TITLE, falling back to the
+     * big text, then the plain text (null/empty when the notification has neither).
+     */
+    private static CharSequence resolveNotificationTitle(StatusBarNotification sbn) {
+        android.os.Bundle extras = sbn.getNotification().extras;
+        if (extras == null) {
+            return null;
+        }
+        CharSequence title = extras.getCharSequence(android.app.Notification.EXTRA_TITLE);
+        if (title == null || title.length() == 0) {
+            title = extras.getCharSequence(android.app.Notification.EXTRA_BIG_TEXT);
+        }
+        if (title == null || title.length() == 0) {
+            title = extras.getCharSequence(android.app.Notification.EXTRA_TEXT);
+        }
+        return (title == null || title.length() == 0) ? null : title;
     }
 
     private SettingsCache mSettingsCache;
@@ -346,6 +402,7 @@ public class NotificationListener extends NotificationListenerService {
         super.onListenerConnected();
         Log.i(TAG, "onListenerConnected");
         mIsConnected = true;
+        sListenerConnected = true;
 
         // Register an observer to rebind the notification listener when dots are re-enabled.
         mSettingsCache = SettingsCache.INSTANCE.get(this);
@@ -372,6 +429,7 @@ public class NotificationListener extends NotificationListenerService {
         super.onListenerDisconnected();
         Log.i(TAG, "onListenerDisconnected");
         mIsConnected = false;
+        sListenerConnected = false;
         mSettingsCache.unregister(NOTIFICATION_BADGING_URI, mNotificationSettingsChangedListener);
         onNotificationFullRefresh();
     }
