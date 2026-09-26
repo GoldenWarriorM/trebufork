@@ -175,13 +175,7 @@ public class ScrollableMediaController {
         for (MediaController kept : mSessions) {
             String pkg = kept.getPackageName();
             if (!present.contains(pkg) && !mVanishGrace.containsKey(pkg)) {
-                Runnable grace = new Runnable() {
-                    @Override
-                    public void run() {
-                        mVanishGrace.remove(pkg);
-                        applyRefilterNow();
-                    }
-                };
+                Runnable grace = () -> expireVanishGrace(pkg);
                 mVanishGrace.put(pkg, grace);
                 mMainHandler.postDelayed(grace, SESSION_VANISH_GRACE_MS);
                 android.util.Log.d("TrebuforkMedia",
@@ -193,6 +187,55 @@ public class ScrollableMediaController {
             }
         }
         return result;
+    }
+
+    /**
+     * trebufork: a vanish grace expired — the package was absent from the live session list
+     * for the whole grace window. Drop its held sessions UNCONDITIONALLY: the phantom filter
+     * cannot do this, because orphaned foreground-service notifications outlive the killed
+     * process (measured: metrolist/mpvex notifications remain posted after the apps are
+     * killed, mpvex with importance=NONE — invisible in the shade but still delivered to
+     * listeners), so a notification-based check would hold the dead sessions forever
+     * (each expiry re-armed the grace instead — an infinite hold loop). Re-verify against
+     * the CURRENT live list first: the package may have returned without the listener
+     * having cancelled the runnable yet.
+     */
+    private void expireVanishGrace(String pkg) {
+        mVanishGrace.remove(pkg);
+        if (!mListening || mSessions.isEmpty()) {
+            return;
+        }
+        List<MediaController> live;
+        try {
+            live = mSessionManager.getActiveSessions(new ComponentName(mContext, "none"));
+        } catch (SecurityException e) {
+            return;
+        }
+        if (live != null) {
+            for (MediaController controller : live) {
+                if (pkg.equals(controller.getPackageName())) {
+                    return; // Came back quietly: keep the held session.
+                }
+            }
+        }
+        java.util.List<MediaController> kept = new java.util.ArrayList<>(mSessions.size());
+        boolean changed = false;
+        for (MediaController controller : mSessions) {
+            if (pkg.equals(controller.getPackageName())) {
+                changed = true;
+            } else {
+                kept.add(controller);
+            }
+        }
+        if (changed) {
+            android.util.Log.d("TrebuforkMedia",
+                    "grace expired: dropping vanished session " + pkg);
+            observeSessions(kept);
+            clearPinIfDead();
+            setActiveController(pickController(mSessions));
+            notifyControllerChanged();
+            notifySessionListChanged();
+        }
     }
 
     /**
