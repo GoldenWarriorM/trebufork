@@ -18,7 +18,6 @@ package com.android.quickstep.views;
 
 import static android.app.ActivityTaskManager.INVALID_TASK_ID;
 import static android.app.WindowConfiguration.WINDOWING_MODE_FULLSCREEN;
-import static android.app.WindowConfiguration.WINDOWING_MODE_PINNED;
 import static android.os.Trace.traceBegin;
 import static android.os.Trace.traceEnd;
 import static android.view.View.MeasureSpec.EXACTLY;
@@ -91,7 +90,6 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.TaskInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.LocusId;
@@ -3152,20 +3150,6 @@ public abstract class RecentsView<
     private void showCurrentTask(GroupedTaskInfo groupedTaskInfo, String caller) {
         Log.d(TAG, "showCurrentTask(" + caller + ") - groupedTaskInfo: " + groupedTaskInfo);
         if (groupedTaskInfo == null) {
-            return;
-        }
-
-        // TrebuforkPip: never render a task that is really in PiP as the running/overview
-        // tile. Its TaskInfo can still carry a stale fullscreen mode right after entering
-        // PiP, so the pinned windowing mode is checked directly. Unlike the reverted
-        // attempt this does not consume the gesture placeholder (handlers get their
-        // geometry from recents-anim targets before this view call), it only keeps the
-        // pinned task out of the visible overview.
-        final TaskInfo baseInfo = groupedTaskInfo.getBaseGroupedTask().getTaskInfo1();
-        if (baseInfo != null
-                && baseInfo.getWindowingMode() == WINDOWING_MODE_PINNED) {
-            Log.d("TrebuforkPip", "showCurrentTask(" + caller + "): suppressing PiP task id="
-                    + baseInfo.taskId);
             return;
         }
 

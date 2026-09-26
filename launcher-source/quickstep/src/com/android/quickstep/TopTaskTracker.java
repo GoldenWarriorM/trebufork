@@ -41,7 +41,6 @@ import android.app.ActivityManager.RunningTaskInfo;
 import android.app.TaskInfo;
 import android.app.WindowConfiguration;
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.ArrayMap;
 import android.util.Log;
 
@@ -101,43 +100,6 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
     private final SplitStageInfo mSideStagePosition = new SplitStageInfo();
     private int mPinnedTaskId = INVALID_TASK_ID;
 
-    // TrebuforkPip: right after a task enters or leaves PiP, its TaskInfo in the recents
-    // list still carries a stale fullscreen windowing mode for a short while, so the plain
-    // mPinnedTaskId filter does not catch it and it can flash as a ghost tile in Overview.
-    // Remember the task for a short grace period and keep it out of the recents *list*
-    // (RecentTasksList) only. Never filter it from getCachedTopTask: that resolves the
-    // gesture's running task, and dropping the real foreground task right after a PiP expand
-    // breaks the swipe-pip-to-home spring (fade PiP entry plays instead).
-    private static final long PINNED_GRACE_MS = 1500;
-    private int mLastPinnedTaskId = INVALID_TASK_ID;
-    private long mPinnedGraceUntilElapsed = 0;
-
-    /**
-     * TrebuforkPip: id of the task whose post-PiP grace filter is currently active, otherwise
-     * {@link android.app.ActivityTaskManager#INVALID_TASK_ID}. Static so {@link RecentTasksList}
-     * (which loads recents on a background executor) can reach the singleton.
-     */
-    public static int getPinnedGraceFilteredTaskId(@Nullable Context context) {
-        if (context == null) {
-            return INVALID_TASK_ID;
-        }
-        return INSTANCE.get(context).getPinnedGraceFilteredTaskIdInternal();
-    }
-
-    private int getPinnedGraceFilteredTaskIdInternal() {
-        return (mLastPinnedTaskId != INVALID_TASK_ID
-                && SystemClock.elapsedRealtime() < mPinnedGraceUntilElapsed)
-                ? mLastPinnedTaskId : INVALID_TASK_ID;
-    }
-
-    private void startPinnedGraceFilter() {
-        if (mLastPinnedTaskId != INVALID_TASK_ID) {
-            mPinnedGraceUntilElapsed = SystemClock.elapsedRealtime() + PINNED_GRACE_MS;
-            Log.d("TrebuforkPip", "PiP transition - grace filter on task "
-                    + mLastPinnedTaskId + " for " + PINNED_GRACE_MS + "ms");
-        }
-    }
-
     // Only used when Flags.enableShellTopTaskTracking() is enabled
     // Mapping of display id to visible tasks.  Visible tasks are ordered from top most to bottom
     // most.
@@ -187,21 +149,6 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
     void handleTaskMovedToFront(TaskInfo taskInfo) {
         if (enableShellTopTaskTracking()) {
             return;
-        }
-
-        // TrebuforkPip: if the grace-filtered task is explicitly brought back to the front
-        // (e.g. expanded from PiP back to fullscreen), stop filtering it - it is a live,
-        // intentional foreground task now. Only when it is really visible fullscreen: during
-        // PiP exit the reparent fires onTaskMovedToFront while the entry still carries a
-        // stale fullscreen mode.
-        if (taskInfo.taskId == mLastPinnedTaskId) {
-            if (taskInfo.isVisible
-                    && taskInfo.getWindowingMode() == WINDOWING_MODE_FULLSCREEN) {
-                mPinnedGraceUntilElapsed = 0;
-                mLastPinnedTaskId = INVALID_TASK_ID;
-                Log.d("TrebuforkPip", "handleTaskMovedToFront: grace filter cleared (task "
-                        + taskInfo.taskId + " is visible fullscreen)");
-            }
         }
 
         mOrderedTaskList.removeIf(rto -> rto.taskId == taskInfo.taskId);
@@ -340,11 +287,6 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
         }
 
         mPinnedTaskId = taskId;
-        // TrebuforkPip: a task just entered PiP. Its cached entry can still report fullscreen
-        // for a short while - keep it out of the recents cache during the grace window.
-        mLastPinnedTaskId = taskId;
-        mPinnedGraceUntilElapsed = 0;
-        startPinnedGraceFilter();
     }
 
     @Override
@@ -354,9 +296,6 @@ public class TopTaskTracker extends ISplitScreenListener.Stub implements TaskSta
         }
 
         mPinnedTaskId = INVALID_TASK_ID;
-        // TrebuforkPip: a task just left PiP. Its list entry still reports a stale fullscreen
-        // windowing mode - keep the grace filter running so it does not flash in Overview.
-        startPinnedGraceFilter();
     }
 
     /**

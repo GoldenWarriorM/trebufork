@@ -26,7 +26,6 @@ import static com.android.wm.shell.shared.GroupedTaskInfo.TYPE_SPLIT;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.KeyguardManager;
 import android.app.TaskInfo;
-import android.app.WindowConfiguration;
 import android.companion.virtual.VirtualDeviceManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -45,8 +44,6 @@ import com.android.launcher3.util.DaggerSingletonTracker;
 import com.android.launcher3.util.LooperExecutor;
 import com.android.quickstep.util.DesktopTask;
 import com.android.quickstep.util.ExternalDisplaysKt;
-import com.android.systemui.shared.system.TaskStackChangeListener;
-import com.android.systemui.shared.system.TaskStackChangeListeners;
 import com.android.quickstep.util.GroupTask;
 import com.android.quickstep.util.SingleTask;
 import com.android.quickstep.util.SplitTask;
@@ -179,24 +176,6 @@ public class RecentTasksList {
         mSysUiProxy.registerRecentTasksListener(recentTasksListener);
         tracker.addCloseable(
                 () -> mSysUiProxy.unregisterRecentTasksListener(recentTasksListener));
-
-        // TrebuforkPip: TaskStackChangeListeners notify the tracker directly, bypassing the
-        // recent-tasks change notification. When a task enters/leaves PiP the stale-mode ghost
-        // must not survive in the loaded list, so invalidate the cached list on every pin
-        // transition and let the next Overview open reload it without the ghost tile.
-        TaskStackChangeListeners.getInstance().registerTaskStackListener(
-                new TaskStackChangeListener() {
-                    @Override
-                    public void onActivityPinned(String packageName, int userId,
-                            int taskId, int stackId) {
-                        invalidateLoadedTasks();
-                    }
-
-                    @Override
-                    public void onActivityUnpinned() {
-                        invalidateLoadedTasks();
-                    }
-                });
 
         // We may receive onRunningTaskAppeared events later for tasks which have already been
         // included in the list returned by mSysUiProxy.getRunningTasks(), or may receive
@@ -454,17 +433,6 @@ public class RecentTasksList {
             // [getTaskInfo1] will not be null for types below beside [TYPE_DESK].
             if (Flags.enableShellTopTaskTracking()) {
                 final TaskInfo taskInfo1 = rawTask.getBaseGroupedTask().getTaskInfo1();
-                // TrebuforkPip: skip the task that just entered/left PiP during its grace
-                // window (stale fullscreen mode in its entry). The recents-anim handlers use
-                // animation targets, not this list, so filtering here never touches the
-                // gesture animation path.
-                if (taskInfo1.taskId == TopTaskTracker.getPinnedGraceFilteredTaskId(mContext)
-                        || taskInfo1.getWindowingMode()
-                                == WindowConfiguration.WINDOWING_MODE_PINNED) {
-                    Log.d("TrebuforkPip", "loadTasksInBackground: filtering task "
-                            + taskInfo1.taskId + " (PiP transition / pinned)");
-                    continue;
-                }
                 final Task.TaskKey task1Key = createTaskKey(taskInfo1);
                 final Task task1 = Task.from(task1Key, taskInfo1,
                         tmpLockedUsers.get(task1Key.userId) /* isLocked */);
@@ -481,16 +449,6 @@ public class RecentTasksList {
                 }
             } else {
                 TaskInfo taskInfo1 = rawTask.getTaskInfo1();
-                // TrebuforkPip: same filter for the legacy branch - skip the task that just
-                // entered/left PiP during its grace window (stale fullscreen mode entry).
-                if (taskInfo1.taskId == TopTaskTracker.getPinnedGraceFilteredTaskId(mContext)
-                        || taskInfo1.getWindowingMode()
-                                == WindowConfiguration.WINDOWING_MODE_PINNED) {
-                    Log.d("TrebuforkPip", "loadTasksInBackground: filtering task "
-                            + taskInfo1.taskId + " ("
-                            + taskInfo1.baseIntent.getComponent() + ") - PiP transition/pinned");
-                    continue;
-                }
                 TaskInfo taskInfo2 = rawTask.getTaskInfo2();
                 Task.TaskKey task1Key = createTaskKey(taskInfo1);
                 Task task1 = loadKeysOnly
