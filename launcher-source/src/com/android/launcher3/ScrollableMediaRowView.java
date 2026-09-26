@@ -213,8 +213,18 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             rebuildCarousel(reorderOnHomeReturn);
             return;
         }
-        if (launcher.getStateManager().isInTransition()
-                || launcher.getStateManager().getState() != LauncherState.NORMAL) {
+        // trebufork: only a rebuild that CHANGES THE CARD SET moves the row height (a new
+        // card appears or an old one drops out) — that must wait for the launch/home
+        // animation so the relayout cannot shift an animating window. A PURE REORDER
+        // (same cards, new order) keeps the height: it is applied right away, so the
+        // pages are already in their final order while the home animation is still
+        // running — the reorder happens in the background, before the user sees home.
+        boolean setChangesPending = mSource == null
+                ? !mCardTokens.isEmpty()
+                : !hasSameCardSet(mSource.getSessionList());
+        if ((launcher.getStateManager().isInTransition()
+                || launcher.getStateManager().getState() != LauncherState.NORMAL)
+                && setChangesPending) {
             // Defer: run the rebuild when the launch animation is done.
             if (!mDeferredRebuild) {
                 mDeferredRebuild = true;
@@ -230,6 +240,19 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             return;
         }
         rebuildCarousel(reorderOnHomeReturn);
+    }
+
+    /** True when the live session set matches the built card set (order-insensitive). */
+    private boolean hasSameCardSet(java.util.List<MediaController> sessions) {
+        if (sessions == null || sessions.size() != mCardTokens.size()) {
+            return false;
+        }
+        for (MediaController session : sessions) {
+            if (!mCardTokens.contains(session.getSessionToken())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** No-reorder rebuild (session events, playback changes, play/pause taps). */
@@ -369,6 +392,9 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                     orphans.add(card);
                 }
             }
+            // Set when a brand-new ACTIVE PLAYING session's card was inserted at the
+            // front (below): the carousel must anchor onto it right away.
+            boolean anchoredToNewActive = false;
             for (MediaController session : sessions) {
                 if (findCard(session.getSessionToken()) == null
                         && !newTokens.contains(session.getSessionToken())) {
@@ -390,8 +416,22 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
                         card = new ScrollableMediaCardView(getContext());
                     }
                     card.setController(mSource, session);
-                    newCards.add(card);
-                    newTokens.add(session.getSessionToken());
+                    // trebufork: a brand-new session that is the ACTIVE one and actually
+                    // PLAYING enters at the FRONT — the shade's TreeMap sorts a playing
+                    // player first the moment it is added (e.g. leaving a PiP video into
+                    // background playback while home is visible shows that player right
+                    // away instead of appending it at the end). This visible insertion is
+                    // the one exception to "reorder happens in the background".
+                    if (activeSession != null && playing(activeSession)
+                            && session.getSessionToken()
+                                    .equals(activeSession.getSessionToken())) {
+                        newCards.add(0, card);
+                        newTokens.add(0, session.getSessionToken());
+                        anchoredToNewActive = true;
+                    } else {
+                        newCards.add(card);
+                        newTokens.add(session.getSessionToken());
+                    }
                 }
             }
             // Unregister cards that dropped out for real (their controller callbacks are
@@ -478,9 +518,10 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
             // Keep the pinned/visible session's page on screen when the set changes: the
             // page is located by SESSION TOKEN (the visible card the user is looking at),
             // never by index — an index anchor after a reorder would show a DIFFERENT
-            // player than the one the user had on screen. On the home-return reorder the
-            // ACTIVE (playing) player is shown instead — see anchorCarousel.
-            anchorCarousel(reorder);
+            // player than the one the user had on screen. On the home-return reorder —
+            // or when the active playing session's card was just inserted at the front —
+            // the ACTIVE (playing) player is shown instead — see anchorCarousel.
+            anchorCarousel(reorder || anchoredToNewActive);
         } finally {
             mRebuilding = false;
         }
@@ -767,6 +808,19 @@ public class ScrollableMediaRowView extends FrameLayout implements ScrollableRes
         }
         launcher.getStateManager().addStateListener(
                 new StateManager.StateListener<LauncherState>() {
+                    @Override
+                    public void onStateTransitionStart(LauncherState toState) {
+                        // trebufork: the transition INTO home is the "user is coming
+                        // back" moment — arm the home-return reorder at the START of the
+                        // home animation so the pages are already in their final order
+                        // when the workspace becomes visible (a pure reorder applies
+                        // immediately — in the background; a pending card-set change
+                        // still waits for the transition to end).
+                        if (toState == LauncherState.NORMAL) {
+                            post(() -> rebuildCarouselWhenIdle(true));
+                        }
+                    }
+
                     @Override
                     public void onStateTransitionComplete(LauncherState finalState) {
                         // Covers paths where window focus never changed (e.g. a player killed
