@@ -58,9 +58,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Song name -->
+    <!-- trebufork: the Home settings item title's font (Google Sans Flex, wght 500,
+         opsz 16 — the "variable-title-medium" family). -->
     <TextView
         android:id="@+id/scrollable_media_header_title"
-        android:fontFamily="@*android:string/config_headlineFontFamilyMedium"
+        android:fontFamily="variable-title-medium"
         android:singleLine="true"
         android:textSize="16sp"
         android:textColor="@color/scrollable_media_on_background"
@@ -75,9 +77,11 @@
         app:layout_constraintHorizontal_bias="0" />
 
     <!-- Artist name -->
+    <!-- trebufork: the Home settings item summary's font (Google Sans Flex, wght 400,
+         opsz 14 — the "variable-body-medium" family). -->
     <TextView
         android:id="@+id/scrollable_media_header_artist"
-        android:fontFamily="@*android:string/config_headlineFontFamily"
+        android:fontFamily="variable-body-medium"
         android:singleLine="true"
         android:textSize="14sp"
         android:textColor="@color/scrollable_media_on_background"
