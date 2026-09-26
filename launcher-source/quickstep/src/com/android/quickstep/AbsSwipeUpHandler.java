@@ -430,9 +430,20 @@ public abstract class AbsSwipeUpHandler<
             // stock fast-finish, otherwise a follow-up swipe starts while the transition is
             // still animating and gets swallowed (recents stays stuck mid-entrance). Only
             // release the launcher transition controller.
+            // trebufork: the exception covers ONLY the close-to-icon spring — the
+            // PiP-enter spring flies to a FIXED destination and tracks no scroll, so it
+            // must die here like in stock: kept alive, its app-icon overlay ghosts under
+            // the recents opening on top of it.
             if (!LauncherPrefs.SCROLLABLE_HOME.get(mContext)
-                    || mGestureState.getEndTarget() != HOME) {
+                    || mGestureState.getEndTarget() != HOME
+                    || mSwipePipToHomeAnimator != null) {
                 endRunningWindowAnim(mGestureState.getEndTarget() == HOME /* cancel */);
+            } else if (mRunningWindowAnim != null) {
+                // trebufork: diagnostic for the recents-open ghost icon (the flying
+                // FloatingIconView surviving this touch because of the scrollable
+                // scroll-protection exception).
+                android.util.Log.d("TrebuforkAnim",
+                        "touch-down: scrollable HOME exception keeps the flying icon alive");
             }
             endLauncherTransitionController();
         }, new InputProxyHandlerFactory(mContainerInterface, mGestureState));
@@ -1898,6 +1909,14 @@ public abstract class AbsSwipeUpHandler<
         // covers the case where the new gesture started without hitting that path.
         if (endTarget == RECENTS) {
             killFlyingIcon();
+            // trebufork: the PiP-enter spring never registers in sFlyingIconSpring — end
+            // it here too so its app-icon overlay cannot ghost under the opening recents
+            // (in stock the touch-down path already killed it).
+            if (mSwipePipToHomeAnimator != null) {
+                android.util.Log.d("TrebuforkAnim",
+                        "recents commit: ending surviving PiP spring");
+                mSwipePipToHomeAnimator.cancel();
+            }
         }
         // trebufork: the gesture is ending somewhere other than home (rejected, overview,
         // quick-switch) - clear the frozen launch state from the app's real task surface so the
@@ -2647,6 +2666,8 @@ public abstract class AbsSwipeUpHandler<
      */
     public static void killFlyingIcon() {
         if (sFlyingIconSpring != null) {
+            android.util.Log.d("TrebuforkAnim", "killFlyingIcon: cancelling flying spring "
+                    + Integer.toHexString(System.identityHashCode(sFlyingIconSpring)));
             sFlyingIconSpring.cancel();
             sFlyingIconSpring = null;
         }
@@ -2811,7 +2832,8 @@ public abstract class AbsSwipeUpHandler<
         // spring settles. For recents/quick-switch the spring must still be ended so the recents
         // view settles and a follow-up horizontal swipe is not swallowed mid-transition.
         if (!LauncherPrefs.SCROLLABLE_HOME.get(mContext)
-                || mGestureState.getEndTarget() != HOME) {
+                || mGestureState.getEndTarget() != HOME
+                || mSwipePipToHomeAnimator != null) {
             endRunningWindowAnim(false /* cancel */);
         }
 
