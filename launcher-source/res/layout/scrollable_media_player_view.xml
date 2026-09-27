@@ -59,10 +59,12 @@
 
     <!-- Song name -->
     <!-- trebufork: the Home settings item title's font (Google Sans Flex, wght 500,
-         opsz 16 — the "variable-title-medium" family). -->
+         opsz 16 — the "variable-title-medium" family), plus ROND 100 on top: the family
+         axis values win for unlisted axes, so only roundness changes. -->
     <TextView
         android:id="@+id/scrollable_media_header_title"
         android:fontFamily="variable-title-medium"
+        android:fontVariationSettings="'ROND' 100"
         android:singleLine="true"
         android:textSize="16sp"
         android:textColor="@color/scrollable_media_on_background"
@@ -78,7 +80,8 @@
 
     <!-- Artist name -->
     <!-- trebufork: the Home settings item summary's font (Google Sans Flex, wght 400,
-         opsz 14 — the "variable-body-medium" family). -->
+         opsz 14 — the "variable-body-medium" family). Deliberately without ROND:
+         roundness is applied to the title only. -->
     <TextView
         android:id="@+id/scrollable_media_header_artist"
         android:fontFamily="variable-body-medium"

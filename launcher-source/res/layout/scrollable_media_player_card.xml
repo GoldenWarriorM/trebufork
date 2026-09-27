@@ -60,11 +60,14 @@
     <!-- Song name -->
     <!-- trebufork: the Home settings item title's font — Google Sans Flex with the same
          variable axes (wght 500, opsz 16 — the device's "variable-title-medium" family,
-         SettingsLib TextAppearance.SettingsLib.PreferenceTitle). Matches the letterforms
-         and weight of the preferences titles the user sees in the same UI. -->
+         SettingsLib TextAppearance.SettingsLib.PreferenceTitle), plus ROND 100 on top:
+         the family axis values win for unlisted axes, so only roundness changes.
+         Matches the letterforms and weight of the preferences titles the user sees in
+         the same UI. -->
     <TextView
         android:id="@+id/card_media_header_title"
         android:fontFamily="variable-title-medium"
+        android:fontVariationSettings="'ROND' 100"
         android:singleLine="true"
         android:textSize="16sp"
         android:textColor="@color/scrollable_media_on_background"
@@ -81,7 +84,8 @@
     <!-- Artist name -->
     <!-- trebufork: the Home settings item summary's font — Google Sans Flex with the same
          variable axes (wght 400, opsz 14 — the device's "variable-body-medium" family,
-         SettingsLib TextAppearance.SettingsLib.PreferenceSummary). -->
+         SettingsLib TextAppearance.SettingsLib.PreferenceSummary). Deliberately without
+         ROND: roundness is applied to the title only. -->
     <TextView
         android:id="@+id/card_media_header_artist"
         android:fontFamily="variable-body-medium"
